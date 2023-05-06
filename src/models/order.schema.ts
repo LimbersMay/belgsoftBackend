@@ -1,4 +1,4 @@
-import {BeforeInit, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 import {CustomerSchema} from "./customer.schema";
 import TableSchema from "./table.schema";
 import UserSchema from "./user.schema";
