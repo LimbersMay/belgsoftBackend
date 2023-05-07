@@ -1,7 +1,7 @@
-import {Column, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {Column, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 
 @Table
-export class RoleSchema {
+export class RoleSchema extends Model {
 
     @PrimaryKey
     @Unique

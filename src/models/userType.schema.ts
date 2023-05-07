@@ -1,7 +1,7 @@
-import {Column, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {Column, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 
 @Table
-export class UserTypeSchema {
+export class UserTypeSchema extends Model{
     @PrimaryKey
     @Unique
     @Column
