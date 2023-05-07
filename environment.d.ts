@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
@@ -8,6 +10,7 @@ declare global {
             MYSQL_HOST: string;
             MYSQL_PORT: string;
             NODE_ENV: string;
+            COOKIE_SECRET: string;
         }
     }
 }
