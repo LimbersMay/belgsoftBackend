@@ -2,9 +2,10 @@ import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-ty
 import {RoleSchema} from "./role.schema";
 import {UserTypeSchema} from "./userType.schema";
 import {UserStateSchema} from "./userState.schema";
+import {User} from "../interfaces/user.interface";
 
 @Table
-export class UserSchema extends Model{
+export class UserSchema extends Model<User>{
     @PrimaryKey
     @Unique
     @Column
