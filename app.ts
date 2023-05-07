@@ -1,3 +1,9 @@
-console.log("Hello world");
+import {config } from 'dotenv';
+config({
+    path: '.development.env'
+});
 
-console.log('THIS IS A HELLO WORLD')
+import { AppServer } from "./src/app.server";
+const server = new AppServer();
+
+server.listen();
