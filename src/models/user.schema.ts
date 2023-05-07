@@ -1,4 +1,7 @@
-import {Column, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {RoleSchema} from "./role.schema";
+import {UserTypeSchema} from "./userType.schema";
+import {UserStateSchema} from "./userState.schema";
 
 @Table
 export class UserSchema extends Model{
@@ -10,21 +13,24 @@ export class UserSchema extends Model{
     @Column
     name!: string;
 
-    @Column
-    surname!: string;
-
     @Unique
     @Column
     email!: string;
 
+    @ForeignKey(() => RoleSchema)
     @Column
-    role!: string;
+    roleId!: string;
+
+    @ForeignKey(() => UserTypeSchema)
+    @Column
+    userTypeId!: string;
+
+    @ForeignKey(() => UserStateSchema)
+    @Column
+    userStateId!: string;
 
     @Column
     password!: string;
-
-    @Column
-    lastname!: string;
 
     @Column
     createdAt!: Date;
