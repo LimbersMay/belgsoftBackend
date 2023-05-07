@@ -12,4 +12,24 @@ export class MenuSchema extends Model{
     @ForeignKey(() => CategorySchema)
     categoryId!: string;
 
+    @Column
+    name!: string;
+
+    @Column
+    description!: string;
+
+    @Column
+    price!: number;
+
+    @Column
+    status!: string;
+
+    @Column
+    image!: string;
+
+    @Column
+    createdAt!: Date;
+
+    @Column
+    updatedAt!: Date;
 }
