@@ -412,18 +412,18 @@ const profileAttributes = {
 
 sequelize.addModels([CustomerSchema, TableSchema, AreaSchema, UserSchema, CategorySchema, MenuSchema, OrderSchema, OrderStatusSchema, RoleSchema, UserTypeSchema, UserStateSchema, ProfileSchema])
 
-UserSchema.init(userAttributes, { sequelize, modelName: 'User' });
-AreaSchema.init(areaAttributes, { sequelize, modelName: 'Area' });
-TableSchema.init(tableAttributes, { sequelize, modelName: 'Table' });
-CustomerSchema.init(customerAttributes, { sequelize, modelName: 'Customer' });
-OrderSchema.init(orderAttributes, { sequelize, modelName: 'Order' });
-OrderStatusSchema.init(orderStatusAttributes, { sequelize, modelName: 'OrderStatus' });
-CategorySchema.init(categoryAttributes, { sequelize, modelName: 'Category' });
-MenuSchema.init(menuAttributes, { sequelize, modelName: 'Menu' });
+UserSchema.init(userAttributes, { sequelize, tableName: 'User' });
+AreaSchema.init(areaAttributes, { sequelize, tableName: 'Area' });
+TableSchema.init(tableAttributes, { sequelize, tableName: 'Table' });
+CustomerSchema.init(customerAttributes, { sequelize, tableName: 'Customer' });
+OrderSchema.init(orderAttributes, { sequelize, tableName: 'Order' });
+OrderStatusSchema.init(orderStatusAttributes, { sequelize, tableName: 'OrderStatus' });
+CategorySchema.init(categoryAttributes, { sequelize, tableName: 'Category' });
+MenuSchema.init(menuAttributes, { sequelize, tableName: 'Menu' });
 
-RoleSchema.init(roleAttributes, { sequelize, modelName: 'Role' });
-UserTypeSchema.init(userTypeAttributes, { sequelize, modelName: 'UserType' });
-UserStateSchema.init(userStateAttributes, { sequelize, modelName: 'UserState' });
-ProfileSchema.init(profileAttributes, { sequelize, modelName: 'Profile' });
+RoleSchema.init(roleAttributes, { sequelize, tableName: 'Role' });
+UserTypeSchema.init(userTypeAttributes, { sequelize, tableName: 'UserType' });
+UserStateSchema.init(userStateAttributes, { sequelize, tableName: 'UserState' });
+ProfileSchema.init(profileAttributes, { sequelize, tableName: 'Profile' });
 
 export default sequelize;
