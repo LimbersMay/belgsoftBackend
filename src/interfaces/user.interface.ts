@@ -6,6 +6,6 @@ export interface User {
     userTypeId: string;
     userStateId: string;
     password: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
