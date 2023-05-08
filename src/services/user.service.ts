@@ -1,19 +1,20 @@
-import {User} from "../interfaces/user.interface";
 import {UserSchema} from "../models";
-
-export const createUser = async (user: User) => {
-    const userCreated = await UserSchema.create(user);
-    await userCreated.save();
-
-    return userCreated;
-}
+import {UserResponse} from "../mappers";
+import {USER_ERRORS} from "../errors/user.errors";
 
 export const getUserById = async (userId: number) => {
-    return await UserSchema.findOne({where: {userId}});
+    const user = await UserSchema.findOne({where: {userId}});
+
+    if (!user) {
+        return USER_ERRORS.USER_NOT_FOUND;
+    }
+
+    return UserResponse.fromUser(user);
 }
 
 export const getAllUsers = async () => {
-    return await UserSchema.findAll({});
+    const users = await UserSchema.findAll({});
+    return users.map(user => UserResponse.fromUser(user));
 }
 
 export const updateUser = async (userId: string, updatedFields: any) => {
