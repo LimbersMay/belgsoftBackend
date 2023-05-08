@@ -1,5 +1,5 @@
 import { Sequelize, DataType } from 'sequelize-typescript';
-import {DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER} from "../utils/secrets";
+import {DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER} from "../utils";
 import {RoleSchema} from "./role.schema";
 import {UserTypeSchema} from "./userType.schema";
 import {UserStateSchema} from "./userState.schema";
