@@ -6,3 +6,4 @@ export const DB_PORT = process.env.MYSQL_PORT ?? '';
 export const DB_USER = process.env.MYSQL_USER ?? '';
 
 export const COOKIE_SECRET = process.env.COOKIE_SECRET ?? '';
+export const JWT_SECRET = process.env.JWT_SECRET ?? '';
