@@ -34,14 +34,15 @@ CREATE TABLE Area
 
 CREATE TABLE User
 (
-    userId    varchar(110) PRIMARY KEY NOT NULL,
-    name      varchar(110)             NOT NULL,
-    surname   varchar(110)             NOT NULL,
-    email     varchar(110)             NOT NULL UNIQUE,
-    password  varchar(110)             NOT NULL,
-    role      varchar(110)             NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    userId      varchar(110) PRIMARY KEY NOT NULL,
+    name        varchar(110)             NOT NULL,
+    email       varchar(110)             NOT NULL UNIQUE,
+    password    varchar(110)             NOT NULL,
+    roleId      varchar(110)             NOT NULL,
+    userTypeId  varchar(110)             NOT NULL,
+    userStateId varchar(110)             NOT NULL,
+    createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Role
