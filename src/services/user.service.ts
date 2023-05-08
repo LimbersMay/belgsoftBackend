@@ -1,6 +1,6 @@
 import {UserSchema} from "../models";
 import {UserResponse} from "../mappers";
-import {USER_ERRORS} from "../errors/user.errors";
+import {USER_ERRORS} from "../errors";
 
 export const getUserById = async (userId: number) => {
     const user = await UserSchema.findOne({where: {userId}});
