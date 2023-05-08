@@ -11,6 +11,7 @@ declare global {
             MYSQL_PORT: string;
             NODE_ENV: string;
             COOKIE_SECRET: string;
+            JWT_SECRET: string;
         }
     }
 }
