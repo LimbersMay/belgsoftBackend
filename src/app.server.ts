@@ -2,8 +2,11 @@ import express from "express";
 import {Application} from "express";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import {COOKIE_SECRET, SERVER_PORT} from "./utils/secrets";
 
+import {createExpressServer} from "routing-controllers";
+import {UserController, AuthController} from "./controllers";
+
+import {COOKIE_SECRET, SERVER_PORT} from "./utils";
 import db from "./models/init";
 
 export class AppServer {
@@ -11,7 +14,11 @@ export class AppServer {
     public port: number;
 
     constructor() {
-        this.app = express();
+
+        this.app = createExpressServer({
+            controllers: [UserController, AuthController]
+        });
+
         this.port = parseInt(SERVER_PORT)
 
         // DB connection
