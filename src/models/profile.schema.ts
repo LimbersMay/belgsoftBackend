@@ -14,10 +14,10 @@ export class ProfileSchema extends Model{
     userId!: string;
 
     @Column
-    firstSurname!: string;
+    surname!: string;
 
     @Column
-    secondSurname!: string;
+    middleName!: string;
 
     @Column
     phone!: string;
