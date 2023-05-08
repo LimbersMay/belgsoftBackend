@@ -76,8 +76,8 @@ CREATE TABLE Profile
 (
     profileId     varchar(110) PRIMARY KEY NOT NULL,
     userId        varchar(110)             NOT NULL,
-    firstSurname  varchar(20)              NOT NULL,
-    secondSurname varchar(20)              NOT NULL,
+    surname  varchar(20)              NOT NULL,
+    middleName varchar(20)              NOT NULL,
     phone         varchar(20)              NOT NULL,
     createdAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
