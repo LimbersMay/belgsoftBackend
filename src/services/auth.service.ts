@@ -3,7 +3,7 @@ import {Auth} from "../interfaces";
 import {UserSchema} from "../models";
 import {UserResponse} from "../mappers";
 import {compareHash, encrypt, generateToken} from "../utils";
-import {USER_ERRORS} from "../errors/user.errors";
+import {AUTH_ERRORS, USER_ERRORS} from "../errors";
 
 export const registerUser = async (authProps: Auth): Promise<UserResponse> => {
 
@@ -25,7 +25,7 @@ export const loginUser = async ({ email, password }: { email: string, password: 
     if (!user) return USER_ERRORS.USER_NOT_FOUND;
 
     const isPasswordValid = await compareHash(password, user.password);
-    if (!isPasswordValid) return USER_ERRORS.INCORRECT_PASSWORD;
+    if (!isPasswordValid) return AUTH_ERRORS.ERROR_INCORRECT_PASSWORD;
 
     const token = generateToken(user.userId);
 
