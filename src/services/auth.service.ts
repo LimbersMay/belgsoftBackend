@@ -1,12 +1,13 @@
-import {v4 as uuidv4 } from 'uuid';
-import bcryptjs from 'bcryptjs';
-import {Auth} from "../interfaces/auth.interface";
+import {v4 as uuidv4} from 'uuid';
+import {Auth} from "../interfaces";
 import {UserSchema} from "../models";
+import {UserResponse} from "../mappers";
+import {compareHash, encrypt, generateToken} from "../utils";
+import {USER_ERRORS} from "../errors/user.errors";
 
-export const registerUser = async (authProps: Auth): Promise<UserSchema> => {
+export const registerUser = async (authProps: Auth): Promise<UserResponse> => {
 
-    const salt = bcryptjs.genSaltSync();
-    const encryptedPassword = await bcryptjs.hash(authProps.password, salt);
+    const encryptedPassword = await encrypt(authProps.password);
 
     const user = await UserSchema.create({
         ...authProps,
@@ -15,9 +16,21 @@ export const registerUser = async (authProps: Auth): Promise<UserSchema> => {
     });
 
     await user.save();
-    return user;
+    return UserResponse.fromUser(user);
 }
 
 export const loginUser = async ({ email, password }: { email: string, password: string }) => {
 
+    const user = await UserSchema.findOne({ where: { email } });
+    if (!user) return USER_ERRORS.USER_NOT_FOUND;
+
+    const isPasswordValid = await compareHash(password, user.password);
+    if (!isPasswordValid) return USER_ERRORS.INCORRECT_PASSWORD;
+
+    const token = generateToken(user.userId);
+
+    return {
+        token,
+        user: UserResponse.fromUser(user)
+    };
 }
