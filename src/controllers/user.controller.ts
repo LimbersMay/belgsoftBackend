@@ -1,8 +1,7 @@
-import {Body, Get, JsonController, Param, Post, Put, Res} from "routing-controllers";
-import {handleHttp} from "../utils/error.handler";
+import {Body, Get, JsonController, Param, Put, Res} from "routing-controllers";
+import {handleHttp} from "../utils";
 import {Response} from "express";
-import {User} from "../interfaces/user.interface";
-import {createUser, getAllUsers, getUserById, updateUser} from "../services/user.service";
+import {getAllUsers, getUserById, updateUser} from "../services";
 
 @JsonController('/users')
 export class UserController {
@@ -23,15 +22,6 @@ export class UserController {
             return await getUserById(id);
         } catch (e) {
             handleHttp(res, 'ERROR_GET_USER');
-        }
-    }
-
-    @Post('/')
-    async post(@Res() res: Response, @Body() user: User) {
-        try {
-            return await createUser(user);
-        } catch (e) {
-            handleHttp(res, 'ERROR_PUT_USER', e);
         }
     }
 
