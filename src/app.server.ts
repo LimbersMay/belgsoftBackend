@@ -8,6 +8,7 @@ import {UserController, AuthController, OrderController} from "./controllers";
 
 import {COOKIE_SECRET, SERVER_PORT} from "./utils";
 import db from "./models/init";
+import {ErrorMiddleware} from "./middlewares";
 
 export class AppServer {
     public app: Application;
@@ -16,7 +17,8 @@ export class AppServer {
     constructor() {
 
         this.app = createExpressServer({
-            controllers: [UserController, AuthController, OrderController]
+            controllers: [UserController, AuthController, OrderController],
+            middlewares: [ErrorMiddleware]
         });
 
         this.port = parseInt(SERVER_PORT)
