@@ -25,7 +25,7 @@ export const loginUser = async ({ email, password }: { email: string, password: 
     if (!user) return USER_ERRORS.USER_NOT_FOUND;
 
     const isPasswordValid = await compareHash(password, user.password);
-    if (!isPasswordValid) return AUTH_ERRORS.ERROR_INCORRECT_PASSWORD;
+    if (!isPasswordValid) return AUTH_ERRORS.AUTH_INCORRECT_PASSWORD;
 
     const token = generateToken(user.userId);
 

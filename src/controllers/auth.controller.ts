@@ -13,7 +13,7 @@ export class AuthController {
         try {
             return await registerUser(body);
         } catch (e) {
-            return handleHttp(res, AUTH_ERRORS.ERROR_REGISTER_USER, e)
+            return handleHttp(res, AUTH_ERRORS.AUTH_CANNOT_REGISTER_USER, e)
         }
     }
 
@@ -27,13 +27,13 @@ export class AuthController {
                 case USER_ERRORS.USER_NOT_FOUND:
                     return handleHttp(res, USER_ERRORS.USER_NOT_FOUND);
 
-                case AUTH_ERRORS.ERROR_INCORRECT_PASSWORD:
-                    return handleHttp(res, AUTH_ERRORS.ERROR_INCORRECT_PASSWORD);
+                case AUTH_ERRORS.AUTH_INCORRECT_PASSWORD:
+                    return handleHttp(res, AUTH_ERRORS.AUTH_INCORRECT_PASSWORD);
             }
 
             return responseUser;
         } catch (e) {
-            return handleHttp(res, AUTH_ERRORS.ERROR_LOGIN_USER, e)
+            return handleHttp(res, AUTH_ERRORS.AUTH_CANNOT_LOGIN_USER, e)
         }
     }
 }
