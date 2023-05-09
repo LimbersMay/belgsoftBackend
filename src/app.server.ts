@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 
 import {createExpressServer} from "routing-controllers";
-import {UserController, AuthController} from "./controllers";
+import {UserController, AuthController, OrderController} from "./controllers";
 
 import {COOKIE_SECRET, SERVER_PORT} from "./utils";
 import db from "./models/init";
@@ -16,7 +16,7 @@ export class AppServer {
     constructor() {
 
         this.app = createExpressServer({
-            controllers: [UserController, AuthController]
+            controllers: [UserController, AuthController, OrderController]
         });
 
         this.port = parseInt(SERVER_PORT)
