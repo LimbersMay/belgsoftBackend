@@ -1,24 +1,32 @@
-import express from "express";
-import {Application} from "express";
+import express, {Application} from "express";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 
-import {createExpressServer} from "routing-controllers";
-import {UserController, AuthController, OrderController} from "./controllers";
+import {createExpressServer, useExpressServer} from "routing-controllers";
+import {AuthController, OrderController, UserController} from "./controllers";
 
 import {COOKIE_SECRET, SERVER_PORT} from "./utils";
 import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
+import {Server as SocketServer} from "socket.io";
+import {createServer} from "http";
 
 export class AppServer {
     public app: Application;
     public port: number;
+    public httpServer: any;
+    public io: any;
 
     constructor() {
 
-        this.app = createExpressServer({
-            controllers: [UserController, AuthController, OrderController],
-            middlewares: [ErrorMiddleware]
+        this.app = express();
+        this.httpServer = createServer(this.app);
+        this.io = new SocketServer(this.httpServer, {
+            cors: {
+                origin: ["http://localhost:5000"],
+                methods: ["GET", "POST", "PUT", "DELETE"],
+                credentials: true
+            }
         });
 
         this.port = parseInt(SERVER_PORT)
@@ -52,7 +60,22 @@ export class AppServer {
                 sameSite: true,
                 maxAge: 1000 * 60 * 60 * 24, // 1 day
             }
-        }))
+        }));
+
+        useExpressServer(this.app, {
+            routePrefix: "/api",
+            controllers: [UserController, AuthController, OrderController],
+            middlewares: [ErrorMiddleware],
+            cors: {
+                origin: ["http://localhost:5000"],
+                methods: ["GET", "POST", "PUT", "DELETE"],
+                credentials: true
+            }
+        });
+    }
+
+    public websockets() {
+
     }
 
     public listen() {
