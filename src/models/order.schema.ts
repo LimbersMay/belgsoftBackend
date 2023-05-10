@@ -14,7 +14,7 @@ export class OrderSchema extends Model {
 
     @Column
     @ForeignKey(() => CustomerSchema)
-    customerId!: string;
+    customerId: string | undefined;
 
     @Column
     @ForeignKey(() => TableSchema)
