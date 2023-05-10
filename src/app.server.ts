@@ -2,20 +2,20 @@ import express, {Application} from "express";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 
-import {createExpressServer, useExpressServer} from "routing-controllers";
+import {useExpressServer} from "routing-controllers";
 import {AuthController, OrderController, UserController} from "./controllers";
 
 import {COOKIE_SECRET, SERVER_PORT} from "./utils";
 import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
 import {Server as SocketServer} from "socket.io";
-import {createServer} from "http";
+import {createServer, Server} from "http";
 
 export class AppServer {
     public app: Application;
     public port: number;
-    public httpServer: any;
-    public io: any;
+    public httpServer: Server;
+    public io: SocketServer;
 
     constructor() {
 
@@ -36,6 +36,9 @@ export class AppServer {
 
         // middlewares
         this.middlewares();
+
+        // websockets
+        this.websockets();
     }
 
     public connectDB() {
@@ -75,6 +78,15 @@ export class AppServer {
     }
 
     public websockets() {
+
+        this.io.on("connection", (socket) => {
+            console.log("Client connected")
+
+            socket.on("disconnect", () => {
+                console.log("Client disconnected")
+            });
+
+        });
 
     }
 
