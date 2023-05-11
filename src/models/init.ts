@@ -203,9 +203,11 @@ const orderAttributes = {
     },
     customerId: {
         type: DataType.STRING,
+        allowNull: true,
+        defaultValue: null,
         references: {
             model: CustomerSchema,
-            key: 'customerId'
+            key: 'customerId',
         }
     },
     menuId: {
