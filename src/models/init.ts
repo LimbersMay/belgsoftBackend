@@ -316,7 +316,7 @@ const roleAttributes = {
         type: DataType.STRING,
         allowNull: false
     },
-    description: {
+    value: {
         type: DataType.STRING,
         allowNull: false
     },
@@ -425,5 +425,17 @@ RoleSchema.init(roleAttributes, { sequelize, tableName: 'Role' });
 UserTypeSchema.init(userTypeAttributes, { sequelize, tableName: 'UserType' });
 UserStateSchema.init(userStateAttributes, { sequelize, tableName: 'UserState' });
 ProfileSchema.init(profileAttributes, { sequelize, tableName: 'Profile' });
+
+// relations user - role : 1 - 1
+UserSchema.belongsTo(RoleSchema, { foreignKey: 'roleId', as: 'role'});
+RoleSchema.hasOne(UserSchema, { foreignKey: 'roleId' });
+
+// relations user - userState : 1 - 1
+UserSchema.belongsTo(UserStateSchema, { foreignKey: 'userStateId', as: 'userState'});
+UserStateSchema.hasOne(UserSchema, { foreignKey: 'userStateId' });
+
+// relations user - userType : 1 - 1
+UserSchema.belongsTo(UserTypeSchema, { foreignKey: 'userTypeId', as: 'userType'});
+UserTypeSchema.hasOne(UserSchema, { foreignKey: 'userTypeId' });
 
 export default sequelize;
