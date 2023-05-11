@@ -119,14 +119,20 @@ CREATE TABLE OrderStatus
 CREATE TABLE `Order`
 (
     orderId       varchar(110) PRIMARY KEY NOT NULL,
+    menuId        varchar(110)             NOT NULL,
     customerId    varchar(110),
+    areaId        varchar(110)             NOT NULL,
     tableId       varchar(110)             NOT NULL,
     userId        varchar(110)             NOT NULL,
     orderStatusId varchar(110)             NOT NULL,
+    price         int             NOT NULL,
+    quantity      int             NOT NULL,
     FOREIGN KEY (customerId) REFERENCES Customer (customerId),
     FOREIGN KEY (orderStatusId) REFERENCES OrderStatus (orderStatusId),
     FOREIGN KEY (tableId) REFERENCES `Table` (tableId),
     FOREIGN KEY (userId) REFERENCES User (userId),
+    FOREIGN KEY (menuId) REFERENCES Menu (menuId),
+    FOREIGN KEY (areaId) REFERENCES Area (areaId),
     createdAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
