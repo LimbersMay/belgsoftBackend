@@ -4,6 +4,9 @@ import {UserSchema} from "../models";
 import {UserResponse} from "../mappers";
 import {compareHash, encrypt, generateToken} from "../utils";
 import {AUTH_ERRORS, USER_ERRORS} from "../errors";
+import {RoleSchema} from "../models/role.schema";
+import {UserTypeSchema} from "../models/userType.schema";
+import {UserStateSchema} from "../models/userState.schema";
 
 export const registerUser = async (authProps: Auth): Promise<UserResponse> => {
 
@@ -21,16 +24,26 @@ export const registerUser = async (authProps: Auth): Promise<UserResponse> => {
 
 export const loginUser = async ({ email, password }: { email: string, password: string }) => {
 
-    const user = await UserSchema.findOne({ where: { email } });
+    const user = await UserSchema.findOne({
+        where: { email },
+        include: [
+            { model: RoleSchema, as: 'role' },
+            { model: UserTypeSchema, as: 'userType' },
+            { model: UserStateSchema, as: 'userState' }
+        ]
+    });
+
     if (!user) return USER_ERRORS.USER_NOT_FOUND;
 
     const isPasswordValid = await compareHash(password, user.password);
     if (!isPasswordValid) return AUTH_ERRORS.AUTH_INCORRECT_PASSWORD;
 
-    const token = generateToken(user.userId);
+    const userResponse = UserResponse.fromUser(user);
+
+    const token = generateToken(userResponse);
 
     return {
         token,
-        user: UserResponse.fromUser(user)
+        user: userResponse
     };
 }
