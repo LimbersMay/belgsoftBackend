@@ -295,7 +295,7 @@ const tableAttributes = {
         allowNull: false
     },
     customers: {
-        type: DataType.STRING,
+        type: DataType.NUMBER,
         allowNull: false
     },
     createdAt: {
