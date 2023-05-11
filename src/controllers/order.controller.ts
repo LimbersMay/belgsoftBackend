@@ -1,13 +1,13 @@
-import {Get, JsonController, Req, Res, UseBefore} from "routing-controllers";
+import {Get, JsonController, Res, UseBefore} from "routing-controllers";
 import {IsAuthenticated} from "../middlewares";
 import {getAllOrders} from "../services/order.service";
 import {handleHttp} from "../utils";
-import {Request, Response} from "express";
+import {Response} from "express";
 
-@JsonController("/orders")
+@JsonController('/orders')
 export class OrderController {
 
-    @Get("/")
+    @Get('/')
     @UseBefore(IsAuthenticated)
     public async getAll(@Res() res: Response) {
 
