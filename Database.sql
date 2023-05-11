@@ -130,3 +130,7 @@ CREATE TABLE `Order`
     createdAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+INSERT INTO Role (roleId, name, value) VALUES ('1', 'Admin', 'admin');
+INSERT INTO UserType (userTypeId, name, type) VALUES ('2', 'Free', 'Free');
+INSERT INTO UserState (userStateId, name, state) VALUES ('3', 'Active', 'Active');
