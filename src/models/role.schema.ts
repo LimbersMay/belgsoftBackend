@@ -1,4 +1,5 @@
-import {Column, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {Column, HasOne, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import UserSchema from "./user.schema";
 
 @Table
 export class RoleSchema extends Model {
@@ -7,6 +8,9 @@ export class RoleSchema extends Model {
     @Unique
     @Column
     roleId!: string;
+
+    @HasOne(() => UserSchema, 'userId')
+    user!: UserSchema;
 
     @Column
     name!: string;

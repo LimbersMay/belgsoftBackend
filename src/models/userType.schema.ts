@@ -1,4 +1,5 @@
-import {Column, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {Column, HasOne, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import UserSchema from "./user.schema";
 
 @Table
 export class UserTypeSchema extends Model{
@@ -6,6 +7,9 @@ export class UserTypeSchema extends Model{
     @Unique
     @Column
     userTypeId!: string;
+
+    @HasOne(() => UserSchema, 'userId')
+    user!: UserSchema;
 
     @Column
     name!: string;
