@@ -18,7 +18,7 @@ CREATE TABLE `Table`
 (
     tableId   varchar(110) PRIMARY KEY NOT NULL,
     number    varchar(110)             NOT NULL,
-    customers int(2)                   NOT NULL,
+    customers int                      NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -74,13 +74,13 @@ CREATE TABLE UserState
 
 CREATE TABLE Profile
 (
-    profileId     varchar(110) PRIMARY KEY NOT NULL,
-    userId        varchar(110)             NOT NULL,
-    surname  varchar(20)              NOT NULL,
+    profileId  varchar(110) PRIMARY KEY NOT NULL,
+    userId     varchar(110)             NOT NULL,
+    surname    varchar(20)              NOT NULL,
     middleName varchar(20)              NOT NULL,
-    phone         varchar(20)              NOT NULL,
-    createdAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    phone      varchar(20)              NOT NULL,
+    createdAt  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (userId) REFERENCES User (userId)
 );
 
@@ -125,8 +125,8 @@ CREATE TABLE `Order`
     tableId       varchar(110)             NOT NULL,
     userId        varchar(110)             NOT NULL,
     orderStatusId varchar(110)             NOT NULL,
-    price         int             NOT NULL,
-    quantity      int             NOT NULL,
+    price         int                      NOT NULL,
+    quantity      int                      NOT NULL,
     FOREIGN KEY (customerId) REFERENCES Customer (customerId),
     FOREIGN KEY (orderStatusId) REFERENCES OrderStatus (orderStatusId),
     FOREIGN KEY (tableId) REFERENCES `Table` (tableId),
@@ -137,6 +137,9 @@ CREATE TABLE `Order`
     updatedAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO Role (roleId, name, value) VALUES ('1', 'Admin', 'admin');
-INSERT INTO UserType (userTypeId, name, type) VALUES ('2', 'Free', 'Free');
-INSERT INTO UserState (userStateId, name, state) VALUES ('3', 'Active', 'Active');
+INSERT INTO Role (roleId, name, value)
+VALUES ('1', 'ADMIN', 'admin');
+INSERT INTO UserType (userTypeId, name, type)
+VALUES ('2', 'FREE', 'Free');
+INSERT INTO UserState (userStateId, name, state)
+VALUES ('3', 'ACTIVE', 'Active');
