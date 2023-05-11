@@ -3,6 +3,8 @@ import {CustomerSchema} from "./customer.schema";
 import TableSchema from "./table.schema";
 import UserSchema from "./user.schema";
 import {OrderStatusSchema} from "./orderStatus.schema";
+import {MenuSchema} from "./menu.schema";
+import {AreaSchema} from "./area.schema";
 
 @Table
 export class OrderSchema extends Model {
@@ -18,6 +20,14 @@ export class OrderSchema extends Model {
     customerId?: string;
 
     @Column
+    @ForeignKey(() => MenuSchema)
+    menuId!: string;
+
+    @Column
+    @ForeignKey(() => AreaSchema)
+    areaId!: string;
+
+    @Column
     @ForeignKey(() => TableSchema)
     tableId!: string;
 
@@ -30,8 +40,14 @@ export class OrderSchema extends Model {
     orderStatusId!: string;
 
     @Column
-    createdAt!: string;
+    price!: number;
 
     @Column
-    updatedAt!: string;
+    quantity!: number;
+
+    @Column
+    createdAt!: Date;
+
+    @Column
+    updatedAt!: Date;
 }
