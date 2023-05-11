@@ -251,10 +251,10 @@ const orderAttributes = {
         }
     },
     price: {
-        type: DataType.STRING,
+        type: DataType.NUMBER,
     },
     quantity: {
-        type: DataType.STRING,
+        type: DataType.NUMBER,
     },
     createdAt: {
         type: DataType.DATE,
