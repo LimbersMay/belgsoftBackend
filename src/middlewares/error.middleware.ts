@@ -1,4 +1,4 @@
-import {BadRequestError, ExpressErrorMiddlewareInterface, Middleware} from "routing-controllers";
+import {ExpressErrorMiddlewareInterface, Middleware} from "routing-controllers";
 import {NextFunction, Request, Response} from "express";
 import {HttpErrorHandler} from "../interfaces/httpError.interface";
 import {ValidationError} from "class-validator";
