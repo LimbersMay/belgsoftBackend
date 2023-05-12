@@ -8,26 +8,14 @@ import {AuthController, OrderController, UserController, TableController} from "
 import {COOKIE_SECRET, SERVER_PORT} from "./utils";
 import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
-import {Server as SocketServer} from "socket.io";
-import {createServer, Server} from "http";
 
 export class AppServer {
     public app: Application;
     public port: number;
-    public httpServer: Server;
-    public io: SocketServer;
 
     constructor() {
 
         this.app = express();
-        this.httpServer = createServer(this.app);
-        this.io = new SocketServer(this.httpServer, {
-            cors: {
-                origin: ["http://localhost:5000"],
-                methods: ["GET", "POST", "PUT", "DELETE"],
-                credentials: true
-            }
-        });
 
         this.port = parseInt(SERVER_PORT)
 
@@ -36,9 +24,6 @@ export class AppServer {
 
         // middlewares
         this.middlewares();
-
-        // websockets
-        this.websockets();
     }
 
     public connectDB() {
@@ -73,21 +58,9 @@ export class AppServer {
                 origin: ["http://localhost:5000"],
                 methods: ["GET", "POST", "PUT", "DELETE"],
                 credentials: true
-            }
+            },
+            defaultErrorHandler: false
         });
-    }
-
-    public websockets() {
-
-        this.io.on("connection", (socket) => {
-            console.log("Client connected")
-
-            socket.on("disconnect", () => {
-                console.log("Client disconnected")
-            });
-
-        });
-
     }
 
     public listen() {
