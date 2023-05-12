@@ -1,7 +1,8 @@
+import {Table as TableInterface} from "../interfaces";
 import {Column, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 
 @Table
-export class TableSchema extends Model{
+export class TableSchema extends Model<TableInterface>{
     @PrimaryKey
     @Unique
     @Column
