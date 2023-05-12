@@ -4,6 +4,7 @@ import {Response} from "express";
 import {getAllTables} from "../../services/table.service";
 import {handleHttp} from "../../utils";
 import {CreateTableDTO} from "./validators/table.create";
+import {TABLE_ERRORS} from "../../errors/table.errors";
 
 @JsonController('/tables')
 export class TableController {
@@ -11,11 +12,10 @@ export class TableController {
     @Get('/')
     @UseBefore(IsAuthenticated)
     public async getAll(@Res() res: Response) {
-
         try {
             return await getAllTables();
         } catch (e) {
-            handleHttp(res, "CANNOT_GET_TABLES", e);
+            return handleHttp(res, TABLE_ERRORS.ERROR_CANNOT_GET_TABLES, e);
         }
     }
 
@@ -23,10 +23,10 @@ export class TableController {
     @UseBefore(IsAuthenticated)
     @Post('/')
     public async createTable(@Res() res: Response, @Body({validate: true}) createTableDTO: CreateTableDTO) {
-            try {
-                return await getAllTables();
-            } catch (e: any) {
-                return handleHttp(res, "CANNOT_GET_TABLES", e);
-            }
+        try {
+            return await getAllTables();
+        } catch (e) {
+            return handleHttp(res, TABLE_ERRORS.ERROR_CANNOT_CREATE_TABLE, e);
+        }
     }
 }
