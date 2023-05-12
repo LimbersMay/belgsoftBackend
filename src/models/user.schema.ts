@@ -11,6 +11,10 @@ export class UserSchema extends Model<User>{
     @Column
     userId!: string;
 
+    @ForeignKey(() => UserSchema)
+    @Column
+    createdByUserId?: string;
+
     @Column
     name!: string;
 
