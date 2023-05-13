@@ -16,7 +16,7 @@ export class UserController {
     }
 
     @Get('/:id')
-    async getOne(@Res() res: Response, @Param('id') id: number) {
+    async getOne(@Res() res: Response, @Param('id') id: string) {
 
         try {
             return await getUserById(id);
