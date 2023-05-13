@@ -1,5 +1,5 @@
 import {AllowNull, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import {MenuSchema, AreaSchema, TableSchema, UserSchema, OrderStatusSchema} from "./";
+import {AreaSchema, TableSchema, UserSchema, OrderStatusSchema} from "./";
 
 @Table
 export class OrderSchema extends Model {
@@ -12,10 +12,6 @@ export class OrderSchema extends Model {
     @AllowNull
     @Column
     customerName?: string;
-
-    @Column
-    @ForeignKey(() => MenuSchema)
-    menuId!: string;
 
     @Column
     @ForeignKey(() => AreaSchema)
