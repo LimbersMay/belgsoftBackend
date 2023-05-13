@@ -2,7 +2,7 @@ import {OrderSchema} from "../models";
 
 interface OrderResponseProps {
     orderId: string;
-    customerId?: string;
+    customerName?: string;
     tableId: string;
     userId: string;
     orderStatusId: string;
@@ -16,7 +16,7 @@ interface OrderResponseProps {
 
 export class OrderResponse {
     private orderId: string;
-    private customerId?: string;
+    private customerName?: string;
     private tableId: string;
     private userId: string;
     private orderStatusId: string;
@@ -27,9 +27,9 @@ export class OrderResponse {
     private createdAt: Date;
     private updatedAt: Date;
 
-    constructor({ orderId, customerId, tableId, userId, orderStatusId, menuId, areaId, price, quantity, createdAt, updatedAt }: OrderResponseProps) {
+    constructor({ orderId, customerName, tableId, userId, orderStatusId, menuId, areaId, price, quantity, createdAt, updatedAt }: OrderResponseProps) {
         this.orderId = orderId;
-        this.customerId = customerId;
+        this.customerName = customerName;
         this.tableId = tableId;
         this.userId = userId;
         this.orderStatusId = orderStatusId;
@@ -44,7 +44,7 @@ export class OrderResponse {
     public static fromOrder(orderModel: OrderSchema) {
         return new OrderResponse({
             orderId: orderModel.orderId,
-            customerId: orderModel.customerId,
+            customerName: orderModel.customerName,
             tableId: orderModel.tableId,
             userId: orderModel.userId,
             orderStatusId: orderModel.orderStatusId,
