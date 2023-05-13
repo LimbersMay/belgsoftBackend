@@ -1,5 +1,5 @@
 import {BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import {UserTypeSchema, UserStateSchema, RoleSchema} from "./";
+import {UserTypeSchema, UserStateSchema, RoleSchema, BranchSchema} from "./";
 import {User} from "../interfaces";
 
 @Table
@@ -12,6 +12,10 @@ export class UserSchema extends Model<User>{
     @ForeignKey(() => UserSchema)
     @Column
     createdByUserId?: string;
+
+    @Column
+    @ForeignKey(() => BranchSchema)
+    branchId!: string;
 
     @Column
     name!: string;
