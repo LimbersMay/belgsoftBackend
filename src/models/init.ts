@@ -4,7 +4,7 @@ import {
     UserSchema, CategorySchema, ProfileSchema,
     RoleSchema, UserTypeSchema, UserStateSchema,
     AreaSchema, TableSchema, MenuSchema, OrderSchema,
-    OrderStatusSchema
+    OrderStatusSchema, BranchSchema
 } from "./";
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
@@ -14,12 +14,52 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     logging: false
 });
 
+const branchAttributes = {
+    branchId: {
+        type: DataType.STRING,
+        primaryKey: true,
+        allowNull: false,
+        unique: true
+    },
+    name: {
+        type: DataType.STRING,
+    },
+    address: {
+        type: DataType.STRING,
+    },
+    city: {
+        type: DataType.STRING,
+    },
+    state: {
+        type: DataType.STRING,
+    },
+    phone: {
+        type: DataType.STRING,
+    },
+    createdAt: {
+        type: DataType.DATE,
+        allowNull: false
+    },
+    updatedAt: {
+        type: DataType.DATE,
+        allowNull: false
+    }
+}
+
 const userAttributes = {
     userId: {
         type: DataType.STRING,
         primaryKey: true,
         allowNull: false,
         unique: true
+    },
+    branchId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: BranchSchema,
+            key: 'branchId'
+        },
     },
     roleId: {
         type: DataType.STRING,
@@ -373,8 +413,9 @@ const profileAttributes = {
     }
 }
 
-sequelize.addModels([TableSchema, AreaSchema, UserSchema, CategorySchema, MenuSchema, OrderSchema, OrderStatusSchema, RoleSchema, UserTypeSchema, UserStateSchema, ProfileSchema])
+sequelize.addModels([BranchSchema, TableSchema, AreaSchema, UserSchema, CategorySchema, MenuSchema, OrderSchema, OrderStatusSchema, RoleSchema, UserTypeSchema, UserStateSchema, ProfileSchema])
 
+BranchSchema.init(branchAttributes, { sequelize, tableName: 'Branch' });
 UserSchema.init(userAttributes, { sequelize, tableName: 'User' });
 AreaSchema.init(areaAttributes, { sequelize, tableName: 'Area' });
 TableSchema.init(tableAttributes, { sequelize, tableName: 'Table' });
