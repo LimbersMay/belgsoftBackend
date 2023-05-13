@@ -1,5 +1,5 @@
 import {Column, HasOne, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import UserSchema from "./user.schema";
+import {UserSchema} from "./";
 
 @Table
 export class RoleSchema extends Model {
