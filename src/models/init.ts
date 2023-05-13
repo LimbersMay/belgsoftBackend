@@ -1,17 +1,11 @@
 import { Sequelize, DataType } from 'sequelize-typescript';
 import {DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER} from "../utils";
-import {RoleSchema} from "./role.schema";
-import {UserTypeSchema} from "./userType.schema";
-import {UserStateSchema} from "./userState.schema";
-import {CategorySchema} from "./category.schema";
-import {CustomerSchema} from "./customer.schema";
-import TableSchema from "./table.schema";
-import UserSchema from "./user.schema";
-import {OrderStatusSchema} from "./orderStatus.schema";
-import {AreaSchema} from "./area.schema";
-import {MenuSchema} from "./menu.schema";
-import {OrderSchema} from "./order.schema";
-import {ProfileSchema} from "./profile.schema";
+import {
+    UserSchema, CategorySchema, ProfileSchema,
+    RoleSchema, UserTypeSchema, UserStateSchema,
+    AreaSchema, TableSchema, MenuSchema, OrderSchema,
+    OrderStatusSchema
+} from "./";
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     host: DB_HOST,
@@ -124,35 +118,6 @@ const categoryAttributes = {
     }
 }
 
-const customerAttributes = {
-    customerId: {
-        type: DataType.STRING,
-        primaryKey: true,
-        allowNull: false,
-        unique: true
-    },
-    name: {
-        type: DataType.STRING,
-        allowNull: false
-    },
-    surname: {
-        type: DataType.STRING,
-        allowNull: false
-    },
-    phone: {
-        type: DataType.STRING,
-        allowNull: true
-    },
-    createdAt: {
-        type: DataType.DATE,
-        allowNull: false
-    },
-    updatedAt: {
-        type: DataType.DATE,
-        allowNull: false
-    }
-}
-
 const menuAttributes = {
     menuId: {
         type: DataType.STRING,
@@ -201,14 +166,10 @@ const orderAttributes = {
         allowNull: false,
         unique: true
     },
-    customerId: {
+    customerName: {
         type: DataType.STRING,
         allowNull: true,
-        defaultValue: null,
-        references: {
-            model: CustomerSchema,
-            key: 'customerId',
-        }
+        defaultValue: null
     },
     menuId: {
         type: DataType.STRING,
@@ -412,12 +373,11 @@ const profileAttributes = {
     }
 }
 
-sequelize.addModels([CustomerSchema, TableSchema, AreaSchema, UserSchema, CategorySchema, MenuSchema, OrderSchema, OrderStatusSchema, RoleSchema, UserTypeSchema, UserStateSchema, ProfileSchema])
+sequelize.addModels([TableSchema, AreaSchema, UserSchema, CategorySchema, MenuSchema, OrderSchema, OrderStatusSchema, RoleSchema, UserTypeSchema, UserStateSchema, ProfileSchema])
 
 UserSchema.init(userAttributes, { sequelize, tableName: 'User' });
 AreaSchema.init(areaAttributes, { sequelize, tableName: 'Area' });
 TableSchema.init(tableAttributes, { sequelize, tableName: 'Table' });
-CustomerSchema.init(customerAttributes, { sequelize, tableName: 'Customer' });
 OrderSchema.init(orderAttributes, { sequelize, tableName: 'Order' });
 OrderStatusSchema.init(orderStatusAttributes, { sequelize, tableName: 'OrderStatus' });
 CategorySchema.init(categoryAttributes, { sequelize, tableName: 'Category' });
