@@ -1,5 +1,5 @@
 import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import UserSchema from "./user.schema";
+import {UserSchema} from "./";
 
 @Table
 export class ProfileSchema extends Model{
