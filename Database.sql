@@ -161,3 +161,5 @@ INSERT INTO UserType (userTypeId, name, type)
 VALUES ('2', 'FREE', 'Free');
 INSERT INTO UserState (userStateId, name, state)
 VALUES ('3', 'ACTIVE', 'Active');
+
+INSERT INTO Branch (branchId, name, address, city, state, phone) VALUES ('1', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
