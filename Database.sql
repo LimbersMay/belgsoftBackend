@@ -155,6 +155,16 @@ CREATE TABLE `Order`
     updatedAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE Order_Menu (
+    orderMenuId varchar(110) PRIMARY KEY NOT NULL,
+    orderId     varchar(110)             NOT NULL,
+    menuId      varchar(110)             NOT NULL,
+    FOREIGN KEY (orderId) REFERENCES `Order` (orderId),
+    FOREIGN KEY (menuId) REFERENCES Menu (menuId),
+    createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 INSERT INTO Role (roleId, name, value)
 VALUES ('1', 'ADMIN', 'admin');
 INSERT INTO UserType (userTypeId, name, type)
