@@ -20,5 +20,3 @@ export class TableSchema extends Model<TableInterface>{
     @Column
     updatedAt!: Date;
 }
-
-export default TableSchema;
