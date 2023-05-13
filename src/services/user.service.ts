@@ -1,9 +1,6 @@
-import {UserSchema} from "../models";
 import {UserResponse} from "../mappers";
 import {USER_ERRORS} from "../errors";
-import {RoleSchema} from "../models/role.schema";
-import {UserTypeSchema} from "../models/userType.schema";
-import {UserStateSchema} from "../models/userState.schema";
+import {UserSchema, RoleSchema, UserTypeSchema, UserStateSchema} from "../models";
 
 export const getUserById = async (userId: string) => {
     const user = await UserSchema.findOne(

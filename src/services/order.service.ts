@@ -1,5 +1,5 @@
 import {OrderSchema} from "../models";
-import {OrderResponse} from "../mappers/order.response";
+import {OrderResponse} from "../mappers";
 
 export const getAllOrders = async () => {
     const orders = await OrderSchema.findAll({});

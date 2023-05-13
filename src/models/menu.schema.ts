@@ -1,5 +1,5 @@
 import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import {CategorySchema} from "./category.schema";
+import {CategorySchema} from "./";
 
 @Table
 export class MenuSchema extends Model{
