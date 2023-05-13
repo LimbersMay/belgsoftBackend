@@ -2,6 +2,7 @@ import {Body, Get, JsonController, Param, Put, Res} from "routing-controllers";
 import {handleHttp} from "../utils";
 import {Response} from "express";
 import {getAllUsers, getUserById, updateUser} from "../services";
+import {USER_ERRORS} from "../errors";
 
 @JsonController('/users')
 export class UserController {
@@ -11,7 +12,7 @@ export class UserController {
         try {
             return await getAllUsers();
         } catch (e) {
-            handleHttp(res, 'ERROR_GET_USERS');
+            return handleHttp(res, USER_ERRORS.USER_ERROR_CANNOT_GET_USERS, e);
         }
     }
 
@@ -21,7 +22,7 @@ export class UserController {
         try {
             return await getUserById(id);
         } catch (e) {
-            handleHttp(res, 'ERROR_GET_USER');
+            return handleHttp(res, USER_ERRORS.USER_ERROR_CANNOT_GET_USER, e);
         }
     }
 
@@ -37,7 +38,7 @@ export class UserController {
 
             return await updateUser(id, updatedFields);
         } catch (e) {
-            handleHttp(res, 'ERROR_PUT_USER');
+            return handleHttp(res, USER_ERRORS.USER_ERROR_CANNOT_UPDATE_USER, e);
         }
     }
 }
