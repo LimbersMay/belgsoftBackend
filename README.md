@@ -15,6 +15,11 @@ products. The software will also be able to generate reports and statistics.
     
      npm run dev
 
+## Aditional installation
+`` npm install -g nodemon ``
+
+`` npm install -g ts-node ``
+
 ## API Usage
 ### Authentication
 #### Login
