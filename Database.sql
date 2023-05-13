@@ -4,21 +4,25 @@ CREATE database BelgSoft;
 
 USE BelgSoft;
 
-CREATE TABLE `Customer`
+CREATE TABLE Branch
 (
-    customerId varchar(110) PRIMARY KEY NOT NULL,
-    name       varchar(110)             NOT NULL,
-    surname    varchar(110)             NOT NULL,
-    phone      varchar(110),
-    createdAt  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    branchId  varchar(110) PRIMARY KEY NOT NULL,
+    name      varchar(25)              NOT NULL,
+    address   varchar(40)              NOT NULL,
+    city      varchar(15)              NOT NULL,
+    state     varchar(15)              NOT NULL,
+    phone     varchar(20)              NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `Table`
 (
     tableId   varchar(110) PRIMARY KEY NOT NULL,
+    branchId  varchar(110)             NOT NULL,
     number    varchar(110)             NOT NULL,
     customers int                      NOT NULL,
+    FOREIGN KEY (branchId) REFERENCES Branch (branchId),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -26,8 +30,10 @@ CREATE TABLE `Table`
 CREATE TABLE Area
 (
     areaId      varchar(110) PRIMARY KEY NOT NULL,
+    branchId    varchar(110)             NOT NULL,
     name        varchar(110)             NOT NULL,
     description varchar(110)             NOT NULL,
+    FOREIGN KEY (branchId) REFERENCES Branch (branchId),
     createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -63,12 +69,14 @@ CREATE TABLE User
 (
     userId          varchar(110) PRIMARY KEY NOT NULL,
     createdByUserId varchar(110),
+    branchId        varchar(110)             NOT NULL,
     name            varchar(110)             NOT NULL,
     email           varchar(110)             NOT NULL UNIQUE,
     password        varchar(110)             NOT NULL,
     roleId          varchar(110)             NOT NULL,
     userTypeId      varchar(110)             NOT NULL,
     userStateId     varchar(110)             NOT NULL,
+    FOREIGN KEY (branchId) REFERENCES Branch (branchId),
     FOREIGN KEY (roleId) REFERENCES Role (roleId),
     FOREIGN KEY (userTypeId) REFERENCES UserType (userTypeId),
     FOREIGN KEY (userStateId) REFERENCES UserState (userStateId),
@@ -92,8 +100,10 @@ CREATE TABLE Profile
 CREATE TABLE Category
 (
     categoryId  varchar(110) PRIMARY KEY NOT NULL,
+    branchId    varchar(110)             NOT NULL,
     name        varchar(110)             NOT NULL,
     description varchar(110)             NOT NULL,
+    FOREIGN KEY (branchId) REFERENCES Branch (branchId),
     createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -101,13 +111,15 @@ CREATE TABLE Category
 CREATE TABLE Menu
 (
     menuId      varchar(110) PRIMARY KEY NOT NULL,
-    FOREIGN KEY (categoryId) REFERENCES Category (categoryId),
     categoryId  varchar(110)             NOT NULL,
+    branchId    varchar(110)             NOT NULL,
     name        varchar(110)             NOT NULL,
     price       varchar(110)             NOT NULL,
     status      varchar(110)             NOT NULL,
     description varchar(110)             NOT NULL,
     image       varchar(110)             NOT NULL,
+    FOREIGN KEY (branchId) REFERENCES Branch (branchId),
+    FOREIGN KEY (categoryId) REFERENCES Category (categoryId),
     createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -125,14 +137,15 @@ CREATE TABLE `Order`
 (
     orderId       varchar(110) PRIMARY KEY NOT NULL,
     menuId        varchar(110)             NOT NULL,
-    customerId    varchar(110),
     areaId        varchar(110)             NOT NULL,
     tableId       varchar(110)             NOT NULL,
     userId        varchar(110)             NOT NULL,
+    branchId      varchar(110)             NOT NULL,
     orderStatusId varchar(110)             NOT NULL,
+    customerName  varchar(110),
     price         int                      NOT NULL,
     quantity      int                      NOT NULL,
-    FOREIGN KEY (customerId) REFERENCES Customer (customerId),
+    FOREIGN KEY (branchId) REFERENCES Branch (branchId),
     FOREIGN KEY (orderStatusId) REFERENCES OrderStatus (orderStatusId),
     FOREIGN KEY (tableId) REFERENCES `Table` (tableId),
     FOREIGN KEY (userId) REFERENCES User (userId),
