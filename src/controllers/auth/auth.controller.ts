@@ -1,9 +1,9 @@
 import {Body, BodyParam, JsonController, Post, Res} from "routing-controllers";
-import {loginUser, registerUser} from "../services";
-import {Auth} from "../interfaces";
+import {loginUser, registerUser} from "../../services";
+import {Auth} from "../../interfaces";
 import {Response} from "express";
-import {handleHttp} from "../utils";
-import {AUTH_ERRORS, USER_ERRORS} from "../errors";
+import {handleHttp} from "../../utils";
+import {AUTH_ERRORS, USER_ERRORS} from "../../errors";
 
 @JsonController('/auth')
 export class AuthController {
