@@ -32,24 +32,6 @@ CREATE TABLE Area
     updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE User
-(
-    userId          varchar(110) PRIMARY KEY NOT NULL,
-    createdByUserId varchar(110),
-    name            varchar(110)             NOT NULL,
-    email           varchar(110)             NOT NULL UNIQUE,
-    password        varchar(110)             NOT NULL,
-    roleId          varchar(110)             NOT NULL,
-    userTypeId      varchar(110)             NOT NULL,
-    userStateId     varchar(110)             NOT NULL,
-    FOREIGN KEY (roleId) REFERENCES Role (roleId),
-    FOREIGN KEY (userTypeId) REFERENCES UserType (userTypeId),
-    FOREIGN KEY (userStateId) REFERENCES UserState (userStateId),
-    FOREIGN KEY (createdByUserId) REFERENCES User (userId),
-    createdAt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
 CREATE TABLE Role
 (
     roleId    varchar(110) PRIMARY KEY NOT NULL,
@@ -75,6 +57,24 @@ CREATE TABLE UserState
     state       varchar(110)             NOT NULL,
     createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE User
+(
+    userId          varchar(110) PRIMARY KEY NOT NULL,
+    createdByUserId varchar(110),
+    name            varchar(110)             NOT NULL,
+    email           varchar(110)             NOT NULL UNIQUE,
+    password        varchar(110)             NOT NULL,
+    roleId          varchar(110)             NOT NULL,
+    userTypeId      varchar(110)             NOT NULL,
+    userStateId     varchar(110)             NOT NULL,
+    FOREIGN KEY (roleId) REFERENCES Role (roleId),
+    FOREIGN KEY (userTypeId) REFERENCES UserType (userTypeId),
+    FOREIGN KEY (userStateId) REFERENCES UserState (userStateId),
+    FOREIGN KEY (createdByUserId) REFERENCES User (userId),
+    createdAt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Profile
