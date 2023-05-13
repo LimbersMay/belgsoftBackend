@@ -8,18 +8,28 @@ import {RoleSchema} from "../models/role.schema";
 import {UserTypeSchema} from "../models/userType.schema";
 import {UserStateSchema} from "../models/userState.schema";
 
-export const registerUser = async (authProps: Auth): Promise<UserResponse> => {
+export const registerUser = async (authProps: Auth) => {
 
     const encryptedPassword = await encrypt(authProps.password);
-
     const user = await UserSchema.create({
         ...authProps,
         password: encryptedPassword,
-        userId: uuidv4()
+        userId: uuidv4(),
     });
 
+    const newUser = await UserSchema.findOne({
+        where: {userId: user.userId},
+        include: [
+            { model: RoleSchema, as: 'role' },
+            { model: UserTypeSchema, as: 'userType' },
+            { model: UserStateSchema, as: 'userState' }
+        ]
+    });
+
+    if (!newUser) return AUTH_ERRORS.AUTH_CANNOT_REGISTER_USER;
+
     await user.save();
-    return UserResponse.fromUser(user);
+    return UserResponse.fromUser(newUser);
 }
 
 export const loginUser = async ({ email, password }: { email: string, password: string }) => {
