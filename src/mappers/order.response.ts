@@ -6,7 +6,6 @@ interface OrderResponseProps {
     tableId: string;
     userId: string;
     orderStatusId: string;
-    menuId: string;
     areaId: string;
     price: number;
     quantity: number;
@@ -20,20 +19,18 @@ export class OrderResponse {
     private tableId: string;
     private userId: string;
     private orderStatusId: string;
-    private menuId: string;
     private areaId: string;
     private price: number;
     private quantity: number;
     private createdAt: Date;
     private updatedAt: Date;
 
-    constructor({ orderId, customerName, tableId, userId, orderStatusId, menuId, areaId, price, quantity, createdAt, updatedAt }: OrderResponseProps) {
+    constructor({ orderId, customerName, tableId, userId, orderStatusId, areaId, price, quantity, createdAt, updatedAt }: OrderResponseProps) {
         this.orderId = orderId;
         this.customerName = customerName;
         this.tableId = tableId;
         this.userId = userId;
         this.orderStatusId = orderStatusId;
-        this.menuId = menuId;
         this.areaId = areaId;
         this.price = price;
         this.quantity = quantity;
@@ -48,7 +45,6 @@ export class OrderResponse {
             tableId: orderModel.tableId,
             userId: orderModel.userId,
             orderStatusId: orderModel.orderStatusId,
-            menuId: orderModel.menuId,
             areaId: orderModel.areaId,
             price: orderModel.price,
             quantity: orderModel.quantity,
