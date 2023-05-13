@@ -2,7 +2,7 @@ import {UserSchema} from "../models";
 import {UserResponse} from "../mappers";
 import {USER_ERRORS} from "../errors";
 
-export const getUserById = async (userId: number) => {
+export const getUserById = async (userId: string) => {
     const user = await UserSchema.findOne({where: {userId}});
 
     if (!user) {
