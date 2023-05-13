@@ -4,10 +4,7 @@ import {UserSchema} from "../models";
 import {UserResponse} from "../mappers";
 import {compareHash, encrypt, generateToken} from "../utils";
 import {AUTH_ERRORS, USER_ERRORS} from "../errors";
-import {RoleSchema} from "../models/role.schema";
-import {UserTypeSchema} from "../models/userType.schema";
-import {UserStateSchema} from "../models/userState.schema";
-
+import {RoleSchema, UserTypeSchema, UserStateSchema} from "../models";
 export const registerUser = async (authProps: Auth) => {
 
     const encryptedPassword = await encrypt(authProps.password);
