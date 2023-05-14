@@ -55,7 +55,7 @@ export class AppServer {
             controllers: [UserController, AuthController, OrderController, TableController],
             middlewares: [ErrorMiddleware],
             cors: {
-                origin: ["http://localhost:5000"],
+                origin: ["http://localhost:5173"],
                 methods: ["GET", "POST", "PUT", "DELETE"],
                 credentials: true
             },
