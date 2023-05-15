@@ -1,5 +1,5 @@
 import {Authorized, Body, Get, JsonController, Post, Res, UseBefore} from "routing-controllers";
-import {IsAuthenticated, permissionChecker} from "../../middlewares";
+import {IsAuthenticated} from "../../middlewares";
 import {Response} from "express";
 import {getAllTables} from "../../services";
 import {handleHttp} from "../../utils";
