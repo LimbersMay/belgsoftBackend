@@ -51,7 +51,7 @@ export const updateTable = async (id: string, table: UpdateTableDTO) => {
         return TABLE_ERRORS.TABLE_ERROR_TABLE_DOES_NOT_EXIST;
     }
 
-    const [ affectedFields ] = await TableSchema.update({
+    const [affectedFields] = await TableSchema.update({
         number: table.number,
         customers: table.customers
     }, {
@@ -60,7 +60,20 @@ export const updateTable = async (id: string, table: UpdateTableDTO) => {
         }
     });
 
-    return {
-        affectedFields
-    };
+    return affectedFields;
+}
+
+export const deleteTable = async (id: string) => {
+
+    const tableExists = await findTableBy(id);
+
+    if (!tableExists) {
+        return TABLE_ERRORS.TABLE_ERROR_TABLE_DOES_NOT_EXIST;
+    }
+
+    return await TableSchema.destroy({
+        where: {
+            tableId: id
+        }
+    });
 }
