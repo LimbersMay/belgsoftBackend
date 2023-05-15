@@ -22,6 +22,8 @@ export const registerUser = async (authProps: Auth) => {
         userId: uuidv4(),
     });
 
+    await user.save();
+
     const newUser = await UserSchema.findOne({
         where: {userId: user.userId},
         include: [
@@ -33,7 +35,6 @@ export const registerUser = async (authProps: Auth) => {
 
     if (!newUser) return AUTH_ERRORS.AUTH_CANNOT_REGISTER_USER;
 
-    await user.save();
     return UserResponse.fromUser(newUser);
 }
 
