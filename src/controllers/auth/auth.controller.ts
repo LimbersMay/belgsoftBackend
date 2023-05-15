@@ -1,5 +1,5 @@
 import {Response} from "express";
-import {Body, BodyParam, JsonController, Post, Res} from "routing-controllers";
+import {Body, JsonController, Post, Res} from "routing-controllers";
 import {loginUser, registerUser} from "../../services";
 import {handleHttp} from "../../utils";
 import {AUTH_ERRORS, USER_ERRORS} from "../../errors";
