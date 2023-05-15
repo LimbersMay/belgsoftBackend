@@ -1,6 +1,6 @@
-import {IsNotEmpty, IsString} from "class-validator";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 
-export class TableUpdateDTO {
+export class UpdateTableDTO {
     @IsString({
         message: 'Number must be a string'
     })
@@ -9,11 +9,11 @@ export class TableUpdateDTO {
     })
     number!: string;
 
-    @IsString({
-        message: 'Customers must be a string'
+    @IsNumber({}, {
+        message: 'Customers must be a number'
     })
     @IsNotEmpty({
         message: 'Customers is required'
     })
-    customers!: string;
+    customers!: number;
 }
