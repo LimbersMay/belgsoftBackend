@@ -1,4 +1,4 @@
-import {Body, Get, JsonController, Post, Res, UseBefore} from "routing-controllers";
+import {Authorized, Body, Get, JsonController, Post, Res, UseBefore} from "routing-controllers";
 import {IsAuthenticated, permissionChecker} from "../../middlewares";
 import {Response} from "express";
 import {getAllTables} from "../../services";
@@ -19,8 +19,8 @@ export class TableController {
         }
     }
 
-    @UseBefore(permissionChecker(['ADMIN']))
     @UseBefore(IsAuthenticated)
+    @Authorized('ADMIN')
     @Post('/')
     public async createTable(@Res() res: Response, @Body({validate: true}) createTableDTO: CreateTableDTO) {
         try {
