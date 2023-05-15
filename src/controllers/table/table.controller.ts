@@ -45,7 +45,7 @@ export class TableController {
 
             return responseTable;
         } catch (e) {
-            return handleHttp(res, TABLE_ERRORS.ERROR_CANNOT_CREATE_TABLE, e);
+            return handleHttp(res, TABLE_ERRORS.TABLE_ERROR_CANNOT_CREATE_TABLE, e);
         }
     }
 
@@ -63,7 +63,7 @@ export class TableController {
 
             return responseTable;
         } catch (e) {
-            return handleHttp(res, TABLE_ERRORS.ERROR_CANNOT_UPDATE_TABLE, e);
+            return handleHttp(res, TABLE_ERRORS.TABLE_ERROR_CANNOT_UPDATE_TABLE, e);
         }
     }
 }
