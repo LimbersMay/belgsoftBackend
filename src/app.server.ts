@@ -5,7 +5,7 @@ import session from "express-session";
 import {useExpressServer} from "routing-controllers";
 import {AuthController, OrderController, UserController, TableController} from "./controllers";
 
-import {COOKIE_SECRET, SERVER_PORT} from "./utils";
+import {COOKIE_SECRET, SERVER_PORT, verifyToken} from "./utils";
 import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
 
@@ -59,7 +59,14 @@ export class AppServer {
                 methods: ["GET", "POST", "PUT", "DELETE"],
                 credentials: true
             },
-            defaultErrorHandler: false
+            defaultErrorHandler: false,
+            authorizationChecker: async (action, roles: string[]) => {
+
+                const token = action.request.headers["x-token"];
+                const payload = await verifyToken(`${token}`);
+
+                return roles.includes(payload.role);
+            }
         });
     }
 
