@@ -66,6 +66,10 @@ export class AppServer {
                 const payload = await verifyToken(`${token}`);
 
                 return roles.includes(payload.role);
+            },
+            currentUserChecker: async (action) => {
+                const token = action.request.headers["x-token"];
+                return await verifyToken(`${token}`);
             }
         });
     }
