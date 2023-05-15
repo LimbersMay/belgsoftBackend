@@ -291,9 +291,18 @@ const tableAttributes = {
         allowNull: false,
         unique: true
     },
+    branchId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: BranchSchema,
+            key: 'branchId'
+        }
+    },
     number: {
         type: DataType.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     customers: {
         type: DataType.NUMBER,
