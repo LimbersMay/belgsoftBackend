@@ -9,6 +9,10 @@ export class TableSchema extends Model<TableInterface>{
     tableId!: string;
 
     @Column
+    branchId!: string;
+
+    @Unique
+    @Column
     number!: string;
 
     @Column
