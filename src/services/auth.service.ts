@@ -7,6 +7,14 @@ import {AUTH_ERRORS, USER_ERRORS} from "../errors";
 import {RoleSchema, UserTypeSchema, UserStateSchema} from "../models";
 export const registerUser = async (authProps: Auth) => {
 
+    // check if user exists
+    const userExists = await UserSchema.findOne({
+        where: { email: authProps.email }
+    });
+
+
+    if (userExists) return AUTH_ERRORS.AUTH_EMAIL_ALREADY_EXISTS;
+
     const encryptedPassword = await encrypt(authProps.password);
     const user = await UserSchema.create({
         ...authProps,
