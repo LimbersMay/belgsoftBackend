@@ -20,7 +20,7 @@ CREATE TABLE `Table`
 (
     tableId   varchar(110) PRIMARY KEY NOT NULL,
     branchId  varchar(110)             NOT NULL,
-    number    varchar(110)             NOT NULL,
+    number    varchar(110) UNIQUE      NOT NULL,
     customers int                      NOT NULL,
     FOREIGN KEY (branchId) REFERENCES Branch (branchId),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -155,10 +155,12 @@ CREATE TABLE `Order`
     updatedAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Order_Menu (
+CREATE TABLE Order_Menu
+(
     orderMenuId varchar(110) PRIMARY KEY NOT NULL,
     orderId     varchar(110)             NOT NULL,
     menuId      varchar(110)             NOT NULL,
+    quantity    int                      NOT NULL,
     FOREIGN KEY (orderId) REFERENCES `Order` (orderId),
     FOREIGN KEY (menuId) REFERENCES Menu (menuId),
     createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -172,4 +174,5 @@ VALUES ('2', 'FREE', 'Free');
 INSERT INTO UserState (userStateId, name, state)
 VALUES ('3', 'ACTIVE', 'Active');
 
-INSERT INTO Branch (branchId, name, address, city, state, phone) VALUES ('1', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
+INSERT INTO Branch (branchId, name, address, city, state, phone)
+VALUES ('1', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
