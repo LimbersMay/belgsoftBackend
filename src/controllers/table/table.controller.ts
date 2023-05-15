@@ -2,6 +2,7 @@ import {
     Authorized,
     Body,
     CurrentUser,
+    Delete,
     Get,
     JsonController,
     Param,
@@ -12,7 +13,7 @@ import {
 } from "routing-controllers";
 import {IsAuthenticated} from "../../middlewares";
 import {Response} from "express";
-import {createTable, findAllTables, updateTable} from "../../services";
+import {createTable, deleteTable, findAllTables, updateTable} from "../../services";
 import {handleHttp} from "../../utils";
 import {CreateTableDTO} from "./validators/table.create";
 import {TABLE_ERRORS} from "../../errors/table.errors";
@@ -52,7 +53,7 @@ export class TableController {
     @UseBefore(IsAuthenticated)
     @Authorized('ADMIN')
     @Put('/:id')
-    public async updateTable(@Res() res: Response, @Param('id') id: string, @Body({ validate: true}) updateTableDTO: UpdateTableDTO) {
+    public async updateTable(@Res() res: Response, @Param('id') id: string, @Body({validate: true}) updateTableDTO: UpdateTableDTO) {
 
         try {
             const responseTable = await updateTable(id, updateTableDTO);
@@ -61,9 +62,30 @@ export class TableController {
                 return handleHttp(res, responseTable);
             }
 
-            return responseTable;
+            return {
+                affectedFields: responseTable
+            };
         } catch (e) {
             return handleHttp(res, TABLE_ERRORS.TABLE_ERROR_CANNOT_UPDATE_TABLE, e);
+        }
+    }
+
+    @UseBefore(IsAuthenticated)
+    @Authorized('ADMIN')
+    @Delete('/:id')
+    public async deleteTable(@Res() res: Response, @Param('id') id: string) {
+        try {
+            const deleteResponse = await deleteTable(id);
+
+            if (typeof deleteResponse === 'string') {
+                return handleHttp(res, deleteResponse);
+            }
+
+            return {
+                affectedFields: deleteResponse
+            };
+        } catch (e) {
+            return handleHttp(res, TABLE_ERRORS.TABLE_ERROR_CANNOT_DELETE_TABLE, e);
         }
     }
 }
