@@ -4,9 +4,23 @@ import {TableResponse} from "../mappers";
 import {CreateTableDTO} from "../controllers";
 import {TABLE_ERRORS} from "../errors/table.errors";
 
-export const getAllTables = async() => {
+export const findAllTables = async() => {
     const tables = await TableSchema.findAll({});
     return tables.map(table => TableResponse.fromTable(table));
+}
+
+export const findTableById = async(id: string) => {
+    const table = await TableSchema.findOne({
+        where: {
+            tableId: id
+        }
+    });
+
+    if (!table) {
+        return TABLE_ERRORS.TABLE_ERROR_CANNOT_GET_TABLE;
+    }
+
+    return TableResponse.fromTable(table);
 }
 
 export const createTable = async(table: CreateTableDTO, branchId: string) => {
