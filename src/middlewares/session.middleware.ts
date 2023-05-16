@@ -11,7 +11,7 @@ export class IsAuthenticated implements ExpressMiddlewareInterface {
             if (!jwtAuth) {
                 return next({
                     status: 401,
-                    message: AUTH_ERRORS.AUTH_INVALID_SESSION
+                    message: AUTH_ERRORS.AUTH_ERROR_INVALID_SESSION
                 });
             }
 
@@ -21,7 +21,7 @@ export class IsAuthenticated implements ExpressMiddlewareInterface {
             } catch (e) {
                 return next({
                     status: 401,
-                    message: AUTH_ERRORS.AUTH_INVALID_SESSION
+                    message: AUTH_ERRORS.AUTH_ERROR_INVALID_SESSION
                 });
             }
         }
