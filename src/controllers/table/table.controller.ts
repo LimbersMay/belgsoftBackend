@@ -5,7 +5,7 @@ import {
     Delete,
     Get,
     JsonController,
-    Param,
+    Param, Params,
     Post,
     Put,
     Res,
@@ -17,7 +17,7 @@ import {createTable, deleteTable, findAllTables, updateTable} from "../../servic
 import {handleHttp} from "../../utils";
 import {CreateTableDTO} from "./validators/table.create";
 import {TABLE_ERRORS} from "../../errors/table.errors";
-import {UpdateTableDTO} from "./validators/table.update";
+import {UpdateTableDTO, UpdateTableIdDTO} from "./validators/table.update";
 import {UserResponse} from "../../mappers";
 
 @JsonController('/tables')
@@ -38,13 +38,7 @@ export class TableController {
     @Post('/')
     public async createTable(@Res() res: Response, @Body({validate: true}) createTableDTO: CreateTableDTO, @CurrentUser({required: true}) user: UserResponse) {
         try {
-            const responseTable = await createTable(createTableDTO, user.branchId);
-
-            if (typeof responseTable === 'string') {
-                return handleHttp(res, responseTable);
-            }
-
-            return responseTable;
+            return await createTable(createTableDTO, user.branchId);
         } catch (e) {
             return handleHttp(res, TABLE_ERRORS.TABLE_ERROR_CANNOT_CREATE_TABLE, e);
         }
@@ -53,14 +47,10 @@ export class TableController {
     @UseBefore(IsAuthenticated)
     @Authorized('ADMIN')
     @Put('/:id')
-    public async updateTable(@Res() res: Response, @Param('id') id: string, @Body({validate: true}) updateTableDTO: UpdateTableDTO) {
+    public async updateTable(@Res() res: Response, @Params({validate: true}) { id }: UpdateTableIdDTO, @Body({validate: true}) updateTableDTO: UpdateTableDTO) {
 
         try {
             const responseTable = await updateTable(id, updateTableDTO);
-
-            if (typeof responseTable === 'string') {
-                return handleHttp(res, responseTable);
-            }
 
             return {
                 affectedFields: responseTable
