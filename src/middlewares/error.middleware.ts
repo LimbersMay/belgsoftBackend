@@ -1,6 +1,6 @@
 import {ExpressErrorMiddlewareInterface, Middleware} from "routing-controllers";
 import {NextFunction, Request, Response} from "express";
-import {HttpErrorHandler} from "../interfaces/httpError.interface";
+import {HttpErrorHandler} from "../interfaces";
 import {ValidationError} from "class-validator";
 
 @Middleware({ type: "after" })
