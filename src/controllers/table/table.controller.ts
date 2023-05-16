@@ -63,13 +63,9 @@ export class TableController {
     @UseBefore(IsAuthenticated)
     @Authorized('ADMIN')
     @Delete('/:id')
-    public async deleteTable(@Res() res: Response, @Param('id') id: string) {
+    public async deleteTable(@Res() res: Response, @Params({validate: true}) { id }: UpdateTableIdDTO) {
         try {
             const deleteResponse = await deleteTable(id);
-
-            if (typeof deleteResponse === 'string') {
-                return handleHttp(res, deleteResponse);
-            }
 
             return {
                 affectedFields: deleteResponse
