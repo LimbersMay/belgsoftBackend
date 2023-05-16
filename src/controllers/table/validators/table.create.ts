@@ -1,4 +1,6 @@
 import {IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsTableDoesNotExist, IsTableExist} from "./table-exists";
+import {TABLE_ERRORS} from "../../../errors/table.errors";
 
 export class CreateTableDTO {
     @IsString({
@@ -6,6 +8,9 @@ export class CreateTableDTO {
     })
     @IsNotEmpty({
         message: "Table number is required"
+    })
+    @IsTableDoesNotExist({
+        message: TABLE_ERRORS.TABLE_ERROR_TABLE_ALREADY_EXISTS
     })
     number!: string;
 
