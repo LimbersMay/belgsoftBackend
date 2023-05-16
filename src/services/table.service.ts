@@ -9,16 +9,6 @@ export const findAllTables = async () => {
     return tables.map(table => TableResponse.fromTable(table));
 }
 
-const findTableBy = async (id: string) => {
-    const table = await TableSchema.findOne({
-        where: {
-            tableId: id
-        }
-    });
-
-    return !!table;
-}
-
 export const findTableByQuery = async (query: Record<any, any>) => {
     return await TableSchema.findOne({
         where: {
