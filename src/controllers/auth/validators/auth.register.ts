@@ -1,4 +1,6 @@
-import {IsNotEmpty, IsString} from "class-validator";
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {IsUserAlreadyExist} from "../../validators/email-exists";
+import {AUTH_ERRORS} from "../../../errors";
 
 export class AuthRegisterDTO {
     @IsString({
@@ -17,11 +19,14 @@ export class AuthRegisterDTO {
     })
     branchId!: string;
 
-    @IsString({
-        message: "Email must be a string"
+    @IsEmail({}, {
+        message: "Invalid email"
     })
     @IsNotEmpty({
         message: "Email is required"
+    })
+    @IsUserAlreadyExist({
+        message: AUTH_ERRORS.AUTH_ERROR_EMAIL_ALREADY_EXISTS
     })
     email!: string;
 
