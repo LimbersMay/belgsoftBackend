@@ -1,10 +1,11 @@
-import {Authorized, Body, Get, JsonController, Param, Post, Put, Res, UseBefore} from "routing-controllers";
+import {Authorized, Body, Get, JsonController, Param, Params, Post, Put, Res, UseBefore} from "routing-controllers";
 import {handleHttp} from "../../utils";
 import {Response} from "express";
 import { getAllUsers, getUserById, registerUser, updateUser} from "../../services";
 import {USER_ERRORS} from "../../errors";
 import {IsAuthenticated} from "../../middlewares";
 import {CreateUserDTO} from "./validators/user.create";
+import {UpdateUserDTO, UpdateUserIdDTO} from "./validators/user.update";
 
 @JsonController('/users')
 export class UserController {
@@ -35,16 +36,9 @@ export class UserController {
     @UseBefore(IsAuthenticated)
     @Authorized('ADMIN')
     @Put('/:id')
-    async updateUser(@Res() res: Response, @Param('id') id: string, @Body() body: any) {
+    async updateUser(@Res() res: Response, @Params({validate: true}) { id }: UpdateUserIdDTO, @Body({validate: true}) updateUserDTO: UpdateUserDTO) {
         try {
-
-            const updatedFields = {
-                name: body.name,
-                email: body.email,
-                password: body.password
-            }
-
-            return await updateUser(id, updatedFields);
+            return await updateUser(id, updateUserDTO);
         } catch (e) {
             return handleHttp(res, USER_ERRORS.USER_ERROR_CANNOT_UPDATE_USER, e);
         }
