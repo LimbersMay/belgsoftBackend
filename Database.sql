@@ -115,7 +115,7 @@ CREATE TABLE Menu
     branchId    varchar(110)             NOT NULL,
     name        varchar(110)             NOT NULL,
     price       varchar(110)             NOT NULL,
-    status      varchar(110)             NOT NULL,
+    isAvailable BOOLEAN                  NOT NULL,
     description varchar(110)             NOT NULL,
     image       varchar(110)             NOT NULL,
     FOREIGN KEY (branchId) REFERENCES Branch (branchId),
