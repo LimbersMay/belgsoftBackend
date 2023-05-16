@@ -1,8 +1,9 @@
 import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 import {CategorySchema} from "./";
+import {Menu} from "../interfaces/menu.interface";
 
 @Table
-export class MenuSchema extends Model{
+export class MenuSchema extends Model<Menu>{
     @PrimaryKey
     @Unique
     @Column
@@ -22,7 +23,7 @@ export class MenuSchema extends Model{
     price!: number;
 
     @Column
-    status!: string;
+    isAvailable!: boolean;
 
     @Column
     image!: string;
