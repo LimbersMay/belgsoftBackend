@@ -1,5 +1,5 @@
 import {IsNotEmpty, IsNumber, IsString} from "class-validator";
-import {IsTableDoesNotExist, IsTableExist} from "./table-exists";
+import {IsTableDoesNotExist} from "./table-existance";
 import {TABLE_ERRORS} from "../../../errors/table.errors";
 
 export class CreateTableDTO {

@@ -20,18 +20,15 @@ const findTableBy = async (id: string) => {
     return !!table;
 }
 
-export const createTable = async (table: CreateTableDTO, branchId: string) => {
-
-    // check if the table number already exists
-    const tableExists = await TableSchema.findOne({
+export const findTableByQuery = async (query: Record<any, any>) => {
+    return await TableSchema.findOne({
         where: {
-            number: table.number
+            ...query
         }
     });
+}
 
-    if (tableExists) {
-        return TABLE_ERRORS.TABLE_ERROR_TABLE_ALREADY_EXISTS;
-    }
+export const createTable = async (table: CreateTableDTO, branchId: string) => {
 
     const newTable = await TableSchema.create({
         tableId: uuidv4(),
@@ -44,13 +41,6 @@ export const createTable = async (table: CreateTableDTO, branchId: string) => {
 }
 
 export const updateTable = async (id: string, table: UpdateTableDTO) => {
-
-    const tableExists = await findTableBy(id);
-
-    if (!tableExists) {
-        return TABLE_ERRORS.TABLE_ERROR_TABLE_DOES_NOT_EXIST;
-    }
-
     const [affectedFields] = await TableSchema.update({
         number: table.number,
         customers: table.customers
@@ -68,7 +58,7 @@ export const deleteTable = async (id: string) => {
     const tableExists = await findTableBy(id);
 
     if (!tableExists) {
-        return TABLE_ERRORS.TABLE_ERROR_TABLE_DOES_NOT_EXIST;
+        return TABLE_ERRORS.TABLE_ERROR_TABLE_NOT_FOUND;
     }
 
     return await TableSchema.destroy({
