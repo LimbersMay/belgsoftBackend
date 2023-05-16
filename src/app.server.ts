@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 
 import {useExpressServer} from "routing-controllers";
-import {AuthController, OrderController, UserController, TableController} from "./controllers";
+import {AuthController, OrderController, UserController, TableController, MenuController} from "./controllers";
 
 import {COOKIE_SECRET, SERVER_PORT, verifyToken} from "./utils";
 import db from "./models/init";
@@ -52,7 +52,7 @@ export class AppServer {
 
         useExpressServer(this.app, {
             routePrefix: "/api",
-            controllers: [UserController, AuthController, OrderController, TableController],
+            controllers: [UserController, AuthController, OrderController, TableController, MenuController],
             middlewares: [ErrorMiddleware],
             cors: {
                 origin: ["http://localhost:5173"],
