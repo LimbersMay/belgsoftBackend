@@ -20,6 +20,10 @@ export const getUserById = async (userId: string) => {
     return UserResponse.fromUser(user);
 }
 
+export const findUserByEmail = async (email: string) => {
+    return await UserSchema.findOne({where: {email}});
+}
+
 export const getAllUsers = async () => {
     const users = await UserSchema.findAll({
         include: [
