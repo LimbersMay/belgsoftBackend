@@ -1,6 +1,8 @@
 import {UserResponse} from "../mappers";
 import {USER_ERRORS} from "../errors";
 import {UserSchema, RoleSchema, UserTypeSchema, UserStateSchema} from "../models";
+import {UpdateUserDTO} from "../controllers/user/validators/user.update";
+import {encrypt} from "../utils";
 
 export const getUserById = async (userId: string) => {
     const user = await UserSchema.findOne(
@@ -24,6 +26,10 @@ export const findUserByEmail = async (email: string) => {
     return await UserSchema.findOne({where: {email}});
 }
 
+export const findUserById = async (userId: string) => {
+    return await UserSchema.findByPk(userId);
+}
+
 export const getAllUsers = async () => {
     const users = await UserSchema.findAll({
         include: [
@@ -36,8 +42,14 @@ export const getAllUsers = async () => {
     return users.map(user => UserResponse.fromUser(user));
 }
 
-export const updateUser = async (userId: string, updatedFields: any) => {
+export const updateUser = async (userId: string, updateUserDTO: UpdateUserDTO) => {
+
+    // If the password is updated, encrypt it
+    if (updateUserDTO.password) {
+        updateUserDTO.password = await encrypt(updateUserDTO.password);
+    }
+
     return await UserSchema.update({
-        ...updatedFields
+        ...updateUserDTO
     }, {where: {userId}});
 }
