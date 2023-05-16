@@ -181,8 +181,8 @@ const menuAttributes = {
         type: DataType.STRING,
         allowNull: false
     },
-    status: {
-        type: DataType.STRING,
+    isAvailable: {
+        type: DataType.BOOLEAN,
         allowNull: false
     },
     description: {
@@ -197,6 +197,10 @@ const menuAttributes = {
         type: DataType.DATE,
         allowNull: false
     },
+    updatedAt: {
+        type: DataType.DATE,
+        allowNull: false
+    }
 }
 
 const orderAttributes = {
