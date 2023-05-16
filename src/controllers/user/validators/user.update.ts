@@ -18,14 +18,13 @@ export class UpdateUserIdDTO {
 export class UpdateUserDTO {
 
     @IsOptional()
+    @ValidateIf((_, value) => value !== undefined)
     @IsString({
         message: 'Name must be a string'
     })
-    @ValidateIf(o => o.name !== undefined)
     name?: string;
 
     @IsOptional()
-    @ValidateIf(o => o.email !== undefined)
     @IsEmail({},{
         message: 'Name must be a string'
     })
@@ -35,7 +34,6 @@ export class UpdateUserDTO {
     email?: string;
 
     @IsOptional()
-    @ValidateIf(o => o.password !== undefined)
     @IsString({
         message: 'Name must be a string'
     })
