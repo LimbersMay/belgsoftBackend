@@ -21,10 +21,10 @@ import {UpdateTableDTO, UpdateTableIdDTO} from "./validators/table.update";
 import {UserResponse} from "../../mappers";
 
 @JsonController('/tables')
+@UseBefore(IsAuthenticated)
 export class TableController {
 
     @Get('/')
-    @UseBefore(IsAuthenticated)
     public async getAll(@Res() res: Response) {
         try {
             return await findAllTables();
@@ -33,7 +33,6 @@ export class TableController {
         }
     }
 
-    @UseBefore(IsAuthenticated)
     @Authorized('ADMIN')
     @Post('/')
     public async createTable(@Res() res: Response, @Body({validate: true}) createTableDTO: CreateTableDTO, @CurrentUser({required: true}) user: UserResponse) {
@@ -44,7 +43,6 @@ export class TableController {
         }
     }
 
-    @UseBefore(IsAuthenticated)
     @Authorized('ADMIN')
     @Put('/:id')
     public async updateTable(@Res() res: Response, @Params({validate: true}) { id }: UpdateTableIdDTO, @Body({validate: true}) updateTableDTO: UpdateTableDTO) {
@@ -60,7 +58,6 @@ export class TableController {
         }
     }
 
-    @UseBefore(IsAuthenticated)
     @Authorized('ADMIN')
     @Delete('/:id')
     public async deleteTable(@Res() res: Response, @Params({validate: true}) { id }: UpdateTableIdDTO) {
