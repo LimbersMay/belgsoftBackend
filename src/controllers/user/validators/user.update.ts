@@ -1,4 +1,4 @@
-import {IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength, ValidateIf} from "class-validator";
+import {IsEmail, IsNotEmpty, IsOptional, IsString, ValidateIf} from "class-validator";
 import {IsUserExist} from "./user-exists";
 import {IsUserAlreadyExist} from "../../validators/email-exists";
 
