@@ -5,7 +5,7 @@ import {
     Delete,
     Get,
     JsonController,
-    Param, Params,
+    Params,
     Post,
     Put,
     Res,
