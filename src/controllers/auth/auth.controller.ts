@@ -2,7 +2,7 @@ import {Response} from "express";
 import {Body, JsonController, Post, Res} from "routing-controllers";
 import {loginUser, registerUser} from "../../services";
 import {handleHttp} from "../../utils";
-import {AUTH_ERRORS, USER_ERRORS} from "../../errors";
+import {AUTH_ERRORS} from "../../errors";
 import {AuthRegisterDTO} from "./validators/auth.register";
 import {AuthLoginDTO} from "./validators/auth.login";
 
