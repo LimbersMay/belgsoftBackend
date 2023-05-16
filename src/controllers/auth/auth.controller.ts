@@ -15,11 +15,11 @@ export class AuthController {
             const responseUser = await registerUser(authRegisterDTO);
 
             // Error handling - if registeredUser is a string, then it's an error
-            if (typeof responseUser === "string") return this.handleError(res, responseUser);
+            if (typeof responseUser === "string") return handleHttp(res, responseUser);
 
             return responseUser;
         } catch (e) {
-            return handleHttp(res, AUTH_ERRORS.AUTH_CANNOT_REGISTER_USER, e)
+            return handleHttp(res, AUTH_ERRORS.AUTH_ERROR_CANNOT_REGISTER_USER, e)
         }
     }
 
@@ -32,35 +32,11 @@ export class AuthController {
             const responseUser = await loginUser({email, password});
 
             // Error handling - if responseUser is a string, then it's an error
-            if (typeof responseUser === "string") return this.handleError(res, responseUser);
-
+            if (typeof responseUser === "string") return handleHttp(res, responseUser)
 
             return responseUser;
         } catch (e) {
-            return handleHttp(res, AUTH_ERRORS.AUTH_CANNOT_LOGIN_USER, e)
-        }
-    }
-
-    public handleError(res: Response, error: any) {
-
-        switch (error) {
-            case AUTH_ERRORS.AUTH_CANNOT_REGISTER_USER:
-                return handleHttp(res, AUTH_ERRORS.AUTH_CANNOT_REGISTER_USER);
-
-            case AUTH_ERRORS.AUTH_CANNOT_LOGIN_USER:
-                return handleHttp(res, AUTH_ERRORS.AUTH_CANNOT_LOGIN_USER);
-
-            case AUTH_ERRORS.AUTH_EMAIL_ALREADY_EXISTS:
-                return handleHttp(res, AUTH_ERRORS.AUTH_EMAIL_ALREADY_EXISTS);
-
-            case AUTH_ERRORS.AUTH_INCORRECT_PASSWORD:
-                return handleHttp(res, AUTH_ERRORS.AUTH_INCORRECT_PASSWORD);
-
-            case USER_ERRORS.USER_NOT_FOUND:
-                return handleHttp(res, USER_ERRORS.USER_NOT_FOUND);
-
-            default:
-                return handleHttp(res, AUTH_ERRORS.AUTH_CANNOT_REGISTER_USER, error);
+            return handleHttp(res, AUTH_ERRORS.AUTH_ERROR_CANNOT_LOGIN_USER, e)
         }
     }
 }
