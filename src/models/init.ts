@@ -165,6 +165,14 @@ const menuAttributes = {
         allowNull: false,
         unique: true
     },
+    branchId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: BranchSchema,
+            key: 'branchId'
+        }
+    },
     categoryId: {
         type: DataType.STRING,
         allowNull: false,
@@ -453,5 +461,10 @@ UserStateSchema.hasOne(UserSchema, { foreignKey: 'userStateId' });
 // relations user - userType : 1 - 1
 UserSchema.belongsTo(UserTypeSchema, { foreignKey: 'userTypeId', as: 'userType'});
 UserTypeSchema.hasOne(UserSchema, { foreignKey: 'userTypeId' });
+
+// relation Category - Menu : 1 - N
+// A category can have many menus associated with it
+CategorySchema.hasMany(MenuSchema, { foreignKey: 'categoryId', as: 'menus' });
+MenuSchema.belongsTo(CategorySchema, { foreignKey: 'categoryId', as: 'category' });
 
 export default sequelize;
