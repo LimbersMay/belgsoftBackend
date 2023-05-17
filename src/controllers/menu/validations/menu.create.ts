@@ -1,4 +1,4 @@
-import {IsNumber, IsString} from "class-validator";
+import {IsBoolean, IsNumber, IsString} from "class-validator";
 
 export class CreateMenuDTO {
 
@@ -21,6 +21,11 @@ export class CreateMenuDTO {
         message: 'Price must be a number'
     })
     price!: number;
+
+    @IsBoolean({
+        message: 'Is available must be a boolean'
+    })
+    isAvailable!: boolean;
 
     @IsString({
         message: 'Image must be a string'
