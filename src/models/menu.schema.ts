@@ -1,5 +1,5 @@
-import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import {CategorySchema} from "./";
+import {BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {BranchSchema, CategorySchema} from "./";
 import {Menu} from "../interfaces/menu.interface";
 
 @Table
@@ -10,8 +10,15 @@ export class MenuSchema extends Model<Menu>{
     menuId!: string;
 
     @Column
+    @ForeignKey(() => BranchSchema)
+    branchId!: string;
+
+    @Column
     @ForeignKey(() => CategorySchema)
     categoryId!: string;
+
+    @BelongsTo(() => CategorySchema, 'categoryId')
+    category!: CategorySchema
 
     @Column
     name!: string;
