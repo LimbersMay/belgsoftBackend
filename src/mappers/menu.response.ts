@@ -3,6 +3,7 @@ import {MenuSchema} from "../models";
 interface MenuResponseProps {
     menuId: string;
     categoryId: string;
+    category: string;
     name: string;
     description: string;
     price: number;
@@ -13,15 +14,17 @@ interface MenuResponseProps {
 export class MenuResponse {
     private menuId: string;
     private categoryId: string;
+    private category: string;
     private name: string;
     private description: string;
     private price: number;
     private image: string;
     private isAvailable: boolean;
 
-    constructor({ menuId, categoryId, name, description, price, image, isAvailable }: MenuResponseProps) {
+    constructor({ menuId, categoryId, category, name, description, price, image, isAvailable }: MenuResponseProps) {
         this.menuId = menuId;
         this.categoryId = categoryId;
+        this.category = category;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -33,6 +36,7 @@ export class MenuResponse {
         return new MenuResponse({
             menuId: menuModel.menuId,
             categoryId: menuModel.categoryId,
+            category: menuModel.category.name,
             name: menuModel.name,
             description: menuModel.description,
             price: menuModel.price,
