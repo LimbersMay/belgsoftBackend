@@ -1,7 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 import {CategorySchema, MenuSchema} from "../models";
 import {MenuResponse} from "../mappers";
 import {CreateMenuDTO} from "../controllers/menu/validations/menu.create";
+import {UpdateMenuDTO} from "../controllers/menu/validations/menu.update";
 
 export const findAllMenu = async (): Promise<MenuResponse[]> => {
     const menu = await MenuSchema.findAll({
@@ -31,4 +32,25 @@ export const createMenu = async (menuDTO: CreateMenuDTO, branchId: string) => {
     })
 
     return MenuResponse.fromMenu(newMenu);
+}
+
+export const updateMenu = async (menuId: string, menuDTO: UpdateMenuDTO) => {
+    const [ affectedFields ] = await MenuSchema.update(
+        {...menuDTO},
+        {
+            where: {
+                menuId
+            }
+        }
+    );
+
+    return affectedFields;
+}
+
+export const deleteMenu = async (menuId: string) => {
+    return await MenuSchema.destroy({
+        where: {
+            menuId
+        }
+    });
 }
