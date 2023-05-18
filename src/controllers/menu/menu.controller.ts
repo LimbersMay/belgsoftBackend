@@ -13,11 +13,11 @@ import {
     UseBefore
 } from "routing-controllers";
 import {IsAuthenticated} from "../../middlewares";
-import {createMenu, findAllMenu} from "../../services/menu.service";
+import {createMenu, deleteMenu, findAllMenu, updateMenu} from "../../services/menu.service";
 import {handleHttp} from "../../utils";
 import {MenuError} from "../../errors/menu.error";
 import {CreateMenuDTO} from "./validations/menu.create";
-import {UpdateMenuDTO, UpdateMenuIdDTO} from "./validations/menu.update";
+import {UpdateMenuDTO, MenuIdDTO} from "./validations/menu.update";
 import {UserResponse} from "../../mappers";
 
 @JsonController('/menu')
@@ -44,18 +44,28 @@ export class MenuController {
     }
 
     @Put('/:id')
-    public async update(@Res() res: Response, @Params({validate: true}) { id }: UpdateMenuIdDTO  , @Body({validate: true}) updateMenuDTOe: UpdateMenuDTO) {
+    @Authorized('ADMIN')
+    public async update(@Res() res: Response, @Params({validate: true}) { id }: MenuIdDTO  , @Body({validate: true}) updateMenuDTO: UpdateMenuDTO) {
         try {
-            return "Not implemented";
+            const affectedFields = await updateMenu(id, updateMenuDTO);
+            
+            return {
+                affectedFields
+            }
         } catch (e) {
             handleHttp(res, MenuError.MENU_ERROR_CANNOT_UPDATE_MENU, e);
         }
     }
 
     @Delete('/:id')
-    public async delete(@Res() res: Response, @Params({validate: true}) { id }: UpdateMenuIdDTO) {
+    @Authorized('ADMIN')
+    public async delete(@Res() res: Response, @Params({validate: true}) { id }: MenuIdDTO) {
         try {
-            return "Not implemented";
+            const affectedFields = await deleteMenu(id);
+
+            return {
+                affectedFields
+            }
         } catch (e) {
             handleHttp(res, MenuError.MENU_ERROR_CANNOT_DELETE_MENU, e);
         }
