@@ -3,11 +3,12 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 
 import {useExpressServer} from "routing-controllers";
-import {AuthController, OrderController, UserController, TableController, MenuController} from "./controllers";
+import {AuthController, MenuController, OrderController, TableController, UserController} from "./controllers";
 
 import {COOKIE_SECRET, SERVER_PORT, verifyToken} from "./utils";
 import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
+import {findUserById} from "./services";
 
 export class AppServer {
     public app: Application;
@@ -65,11 +66,17 @@ export class AppServer {
                 const token = action.request.headers["x-token"];
                 const payload = await verifyToken(`${token}`);
 
-                return roles.includes(payload.role);
+                const user = await findUserById(payload.userId);
+
+                if (!user) return false;
+
+                return roles.includes(user.role.name);
             },
             currentUserChecker: async (action) => {
                 const token = action.request.headers["x-token"];
-                return await verifyToken(`${token}`);
+                const userToken = await verifyToken(`${token}`);
+
+                return await findUserById(userToken.userId);
             }
         });
     }
