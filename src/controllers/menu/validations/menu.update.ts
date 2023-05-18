@@ -1,11 +1,14 @@
-import {IsNotEmpty, IsOptional, IsString, ValidateIf} from "class-validator";
+import {IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateIf} from "class-validator";
 
-export class UpdateMenuIdDTO {
+export class MenuIdDTO {
     @IsString({
         message: "Id must be a string"
     })
     @IsNotEmpty({
         message: "Id cannot be empty"
+    })
+    @IsUUID(4, {
+        message: "Id must be an uuid"
     })
     id!: string;
 }
@@ -20,14 +23,14 @@ export class UpdateMenuDTO {
     name!: string;
 
     @IsOptional()
-    @IsString({
-        message: "Price must be a string"
+    @IsNumber({},{
+        message: "Price must be a number"
     })
     price!: number;
 
     @IsOptional()
-    @IsString({
-        message: "Is available must be a string"
+    @IsBoolean({
+        message: "Is available must be a boolean"
     })
     isAvailable!: boolean;
 
