@@ -27,7 +27,11 @@ export const findUserByEmail = async (email: string) => {
 }
 
 export const findUserById = async (userId: string) => {
-    return await UserSchema.findByPk(userId);
+    return await UserSchema.findByPk(userId, {
+        include: [
+            {model: RoleSchema, as: 'role'}
+        ]
+    });
 }
 
 export const getAllUsers = async () => {
