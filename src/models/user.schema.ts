@@ -1,8 +1,6 @@
-import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import {RoleSchema} from "./role.schema";
-import {UserTypeSchema} from "./userType.schema";
-import {UserStateSchema} from "./userState.schema";
-import {User} from "../interfaces/user.interface";
+import {BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {UserTypeSchema, UserStateSchema, RoleSchema, BranchSchema} from "./";
+import {User} from "../interfaces";
 
 @Table
 export class UserSchema extends Model<User>{
@@ -10,6 +8,14 @@ export class UserSchema extends Model<User>{
     @Unique
     @Column
     userId!: string;
+
+    @ForeignKey(() => UserSchema)
+    @Column
+    createdByUserId?: string;
+
+    @Column
+    @ForeignKey(() => BranchSchema)
+    branchId!: string;
 
     @Column
     name!: string;
@@ -22,13 +28,22 @@ export class UserSchema extends Model<User>{
     @Column
     roleId!: string;
 
+    @BelongsTo(() => RoleSchema, 'roleId')
+    role!: RoleSchema;
+
     @ForeignKey(() => UserTypeSchema)
     @Column
     userTypeId!: string;
 
+    @BelongsTo(() => UserTypeSchema, 'userTypeId')
+    userType!: UserTypeSchema;
+
     @ForeignKey(() => UserStateSchema)
     @Column
     userStateId!: string;
+
+    @BelongsTo(() => UserStateSchema, 'userStateId')
+    userState!: UserStateSchema;
 
     @Column
     password!: string;
@@ -39,5 +54,3 @@ export class UserSchema extends Model<User>{
     @Column
     updatedAt!: Date;
 }
-
-export default UserSchema;

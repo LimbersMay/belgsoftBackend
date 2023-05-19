@@ -1,17 +1,11 @@
 import { Sequelize, DataType } from 'sequelize-typescript';
 import {DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER} from "../utils";
-import {RoleSchema} from "./role.schema";
-import {UserTypeSchema} from "./userType.schema";
-import {UserStateSchema} from "./userState.schema";
-import {CategorySchema} from "./category.schema";
-import {CustomerSchema} from "./customer.schema";
-import TableSchema from "./table.schema";
-import UserSchema from "./user.schema";
-import {OrderStatusSchema} from "./orderStatus.schema";
-import {AreaSchema} from "./area.schema";
-import {MenuSchema} from "./menu.schema";
-import {OrderSchema} from "./order.schema";
-import {ProfileSchema} from "./profile.schema";
+import {
+    UserSchema, CategorySchema, ProfileSchema,
+    RoleSchema, UserTypeSchema, UserStateSchema,
+    AreaSchema, TableSchema, MenuSchema, OrderSchema,
+    OrderStatusSchema, BranchSchema
+} from "./";
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     host: DB_HOST,
@@ -20,12 +14,60 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     logging: false
 });
 
+const branchAttributes = {
+    branchId: {
+        type: DataType.STRING,
+        primaryKey: true,
+        allowNull: false,
+        unique: true
+    },
+    name: {
+        type: DataType.STRING,
+    },
+    address: {
+        type: DataType.STRING,
+    },
+    city: {
+        type: DataType.STRING,
+    },
+    state: {
+        type: DataType.STRING,
+    },
+    phone: {
+        type: DataType.STRING,
+    },
+    createdAt: {
+        type: DataType.DATE,
+        allowNull: false
+    },
+    updatedAt: {
+        type: DataType.DATE,
+        allowNull: false
+    }
+}
+
 const userAttributes = {
     userId: {
         type: DataType.STRING,
         primaryKey: true,
         allowNull: false,
         unique: true
+    },
+    createdByUserId: {
+        type: DataType.STRING,
+        allowNull: true,
+        references: {
+            model: UserSchema,
+            key: 'userId'
+        }
+    },
+    branchId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: BranchSchema,
+            key: 'branchId'
+        },
     },
     roleId: {
         type: DataType.STRING,
@@ -124,41 +166,20 @@ const categoryAttributes = {
     }
 }
 
-const customerAttributes = {
-    customerId: {
-        type: DataType.STRING,
-        primaryKey: true,
-        allowNull: false,
-        unique: true
-    },
-    name: {
-        type: DataType.STRING,
-        allowNull: false
-    },
-    surname: {
-        type: DataType.STRING,
-        allowNull: false
-    },
-    phone: {
-        type: DataType.STRING,
-        allowNull: true
-    },
-    createdAt: {
-        type: DataType.DATE,
-        allowNull: false
-    },
-    updatedAt: {
-        type: DataType.DATE,
-        allowNull: false
-    }
-}
-
 const menuAttributes = {
     menuId: {
         type: DataType.STRING,
         primaryKey: true,
         allowNull: false,
         unique: true
+    },
+    branchId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: BranchSchema,
+            key: 'branchId'
+        }
     },
     categoryId: {
         type: DataType.STRING,
@@ -176,8 +197,8 @@ const menuAttributes = {
         type: DataType.STRING,
         allowNull: false
     },
-    status: {
-        type: DataType.STRING,
+    isAvailable: {
+        type: DataType.BOOLEAN,
         allowNull: false
     },
     description: {
@@ -192,6 +213,10 @@ const menuAttributes = {
         type: DataType.DATE,
         allowNull: false
     },
+    updatedAt: {
+        type: DataType.DATE,
+        allowNull: false
+    }
 }
 
 const orderAttributes = {
@@ -201,12 +226,10 @@ const orderAttributes = {
         allowNull: false,
         unique: true
     },
-    customerId: {
+    customerName: {
         type: DataType.STRING,
-        references: {
-            model: CustomerSchema,
-            key: 'customerId'
-        }
+        allowNull: true,
+        defaultValue: null
     },
     menuId: {
         type: DataType.STRING,
@@ -249,10 +272,10 @@ const orderAttributes = {
         }
     },
     price: {
-        type: DataType.STRING,
+        type: DataType.NUMBER,
     },
     quantity: {
-        type: DataType.STRING,
+        type: DataType.NUMBER,
     },
     createdAt: {
         type: DataType.DATE,
@@ -288,12 +311,21 @@ const tableAttributes = {
         allowNull: false,
         unique: true
     },
+    branchId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: BranchSchema,
+            key: 'branchId'
+        }
+    },
     number: {
         type: DataType.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     customers: {
-        type: DataType.STRING,
+        type: DataType.NUMBER,
         allowNull: false
     },
     createdAt: {
@@ -316,7 +348,7 @@ const roleAttributes = {
         type: DataType.STRING,
         allowNull: false
     },
-    description: {
+    value: {
         type: DataType.STRING,
         allowNull: false
     },
@@ -410,12 +442,12 @@ const profileAttributes = {
     }
 }
 
-sequelize.addModels([CustomerSchema, TableSchema, AreaSchema, UserSchema, CategorySchema, MenuSchema, OrderSchema, OrderStatusSchema, RoleSchema, UserTypeSchema, UserStateSchema, ProfileSchema])
+sequelize.addModels([BranchSchema, TableSchema, AreaSchema, UserSchema, CategorySchema, MenuSchema, OrderSchema, OrderStatusSchema, RoleSchema, UserTypeSchema, UserStateSchema, ProfileSchema])
 
+BranchSchema.init(branchAttributes, { sequelize, tableName: 'Branch' });
 UserSchema.init(userAttributes, { sequelize, tableName: 'User' });
 AreaSchema.init(areaAttributes, { sequelize, tableName: 'Area' });
 TableSchema.init(tableAttributes, { sequelize, tableName: 'Table' });
-CustomerSchema.init(customerAttributes, { sequelize, tableName: 'Customer' });
 OrderSchema.init(orderAttributes, { sequelize, tableName: 'Order' });
 OrderStatusSchema.init(orderStatusAttributes, { sequelize, tableName: 'OrderStatus' });
 CategorySchema.init(categoryAttributes, { sequelize, tableName: 'Category' });
@@ -425,5 +457,22 @@ RoleSchema.init(roleAttributes, { sequelize, tableName: 'Role' });
 UserTypeSchema.init(userTypeAttributes, { sequelize, tableName: 'UserType' });
 UserStateSchema.init(userStateAttributes, { sequelize, tableName: 'UserState' });
 ProfileSchema.init(profileAttributes, { sequelize, tableName: 'Profile' });
+
+// relations user - role : 1 - 1
+UserSchema.belongsTo(RoleSchema, { foreignKey: 'roleId', as: 'role'});
+RoleSchema.hasOne(UserSchema, { foreignKey: 'roleId' });
+
+// relations user - userState : 1 - 1
+UserSchema.belongsTo(UserStateSchema, { foreignKey: 'userStateId', as: 'userState'});
+UserStateSchema.hasOne(UserSchema, { foreignKey: 'userStateId' });
+
+// relations user - userType : 1 - 1
+UserSchema.belongsTo(UserTypeSchema, { foreignKey: 'userTypeId', as: 'userType'});
+UserTypeSchema.hasOne(UserSchema, { foreignKey: 'userTypeId' });
+
+// relation Category - Menu : 1 - N
+// A category can have many menus associated with it
+CategorySchema.hasMany(MenuSchema, { foreignKey: 'categoryId', as: 'menus' });
+MenuSchema.belongsTo(CategorySchema, { foreignKey: 'categoryId', as: 'category' });
 
 export default sequelize;
