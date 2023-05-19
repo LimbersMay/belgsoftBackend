@@ -4,8 +4,12 @@ import {TableResponse} from "../mappers";
 import {CreateTableDTO} from "../controllers";
 import {UpdateTableDTO} from "../controllers/table/validators/table.update";
 
-export const findAllTables = async () => {
-    const tables = await TableSchema.findAll({});
+export const findAllTables = async (branchId: string) => {
+    const tables = await TableSchema.findAll({
+        where: {
+            branchId
+        }
+    });
     return tables.map(table => TableResponse.fromTable(table));
 }
 
@@ -29,23 +33,25 @@ export const createTable = async (table: CreateTableDTO, branchId: string) => {
     return TableResponse.fromTable(newTable);
 }
 
-export const updateTable = async (id: string, table: UpdateTableDTO) => {
+export const updateTable = async (id: string, branchId: string, table: UpdateTableDTO) => {
     const [affectedFields] = await TableSchema.update({
         number: table.number,
         customers: table.customers
     }, {
         where: {
-            tableId: id
+            tableId: id,
+            branchId
         }
     });
 
     return affectedFields;
 }
 
-export const deleteTable = async (id: string) => {
+export const deleteTable = async (tableId: string, branchId: string) => {
     return await TableSchema.destroy({
         where: {
-            tableId: id
+            tableId,
+            branchId
         }
     });
 }
