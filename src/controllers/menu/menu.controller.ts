@@ -15,7 +15,7 @@ import {
 import {IsAuthenticated} from "../../middlewares";
 import {createMenu, deleteMenu, findAllMenu, updateMenu} from "../../services/menu.service";
 import {handleHttp} from "../../utils";
-import {MenuError} from "../../errors/menu.error";
+import {MenuErrors} from "../../errors";
 import {CreateMenuDTO} from "./validations/menu.create";
 import {UpdateMenuDTO, MenuIdDTO} from "./validations/menu.update";
 import {UserResponse} from "../../mappers";
@@ -32,7 +32,7 @@ export class MenuController {
         try {
             return await findAllMenu(branchId);
         } catch (e) {
-            handleHttp(res, MenuError.MENU_ERROR_CANNOT_GET_MENUS, e);
+            handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_GET_MENUS, e);
         }
     }
 
@@ -46,7 +46,7 @@ export class MenuController {
         try {
             return await createMenu(createMenuDTO, branchId);
         } catch (e) {
-            handleHttp(res, MenuError.MENU_ERROR_CANNOT_CREATE_MENU, e);
+            handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_CREATE_MENU, e);
         }
     }
 
@@ -65,7 +65,7 @@ export class MenuController {
                 affectedFields
             }
         } catch (e) {
-            handleHttp(res, MenuError.MENU_ERROR_CANNOT_UPDATE_MENU, e);
+            handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_UPDATE_MENU, e);
         }
     }
 
@@ -83,7 +83,7 @@ export class MenuController {
                 affectedFields
             }
         } catch (e) {
-            handleHttp(res, MenuError.MENU_ERROR_CANNOT_DELETE_MENU, e);
+            handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_DELETE_MENU, e);
         }
     }
 }
