@@ -35,7 +35,11 @@ export class TableController {
 
     @Authorized('ADMIN')
     @Post('/')
-    public async createTable(@Res() res: Response, @Body({validate: true}) createTableDTO: CreateTableDTO, @CurrentUser({required: true}) user: UserResponse) {
+    public async createTable(
+        @Res() res: Response,
+        @Body({validate: true}) createTableDTO: CreateTableDTO,
+        @CurrentUser({required: true}) user: UserResponse
+    ) {
         try {
             return await createTable(createTableDTO, user.branchId);
         } catch (e) {
@@ -45,7 +49,11 @@ export class TableController {
 
     @Authorized('ADMIN')
     @Put('/:id')
-    public async updateTable(@Res() res: Response, @Params({validate: true}) { id }: UpdateTableIdDTO, @Body({validate: true}) updateTableDTO: UpdateTableDTO) {
+    public async updateTable(
+        @Res() res: Response,
+        @Params({validate: true}) { id }: UpdateTableIdDTO,
+        @Body({validate: true}) updateTableDTO: UpdateTableDTO
+    ) {
 
         try {
             const responseTable = await updateTable(id, updateTableDTO);
@@ -60,7 +68,10 @@ export class TableController {
 
     @Authorized('ADMIN')
     @Delete('/:id')
-    public async deleteTable(@Res() res: Response, @Params({validate: true}) { id }: UpdateTableIdDTO) {
+    public async deleteTable(
+        @Res() res: Response,
+        @Params({validate: true}) { id }: UpdateTableIdDTO
+    ) {
         try {
             const deleteResponse = await deleteTable(id);
 

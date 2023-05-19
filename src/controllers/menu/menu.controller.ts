@@ -35,7 +35,11 @@ export class MenuController {
 
     @Post('/')
     @Authorized('ADMIN')
-    public async create(@Res() res: Response, @Body({validate: true}) createMenuDTO: CreateMenuDTO, @CurrentUser() user: UserResponse) {
+    public async create(
+        @Res() res: Response,
+        @Body({validate: true}) createMenuDTO: CreateMenuDTO,
+        @CurrentUser() user: UserResponse
+    ) {
         try {
             return await createMenu(createMenuDTO, user.branchId);
         } catch (e) {
@@ -45,7 +49,11 @@ export class MenuController {
 
     @Put('/:id')
     @Authorized('ADMIN')
-    public async update(@Res() res: Response, @Params({validate: true}) { id }: MenuIdDTO  , @Body({validate: true}) updateMenuDTO: UpdateMenuDTO) {
+    public async update(
+        @Res() res: Response,
+        @Params({validate: true}) { id }: MenuIdDTO,
+        @Body({validate: true}) updateMenuDTO: UpdateMenuDTO
+    ) {
         try {
             const affectedFields = await updateMenu(id, updateMenuDTO);
             
@@ -59,7 +67,10 @@ export class MenuController {
 
     @Delete('/:id')
     @Authorized('ADMIN')
-    public async delete(@Res() res: Response, @Params({validate: true}) { id }: MenuIdDTO) {
+    public async delete(
+        @Res() res: Response,
+        @Params({validate: true}) { id }: MenuIdDTO
+    ) {
         try {
             const affectedFields = await deleteMenu(id);
 

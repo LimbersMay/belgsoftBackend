@@ -10,7 +10,10 @@ import {AuthLoginDTO} from "./validators/auth.login";
 export class AuthController {
 
     @Post('/register')
-    public async register(@Res() res: Response, @Body({validate: true}) authRegisterDTO: AuthRegisterDTO) {
+    public async register(
+        @Res() res: Response,
+        @Body({validate: true}) authRegisterDTO: AuthRegisterDTO
+    ) {
         try {
             const responseUser = await registerUser(authRegisterDTO);
 
@@ -24,7 +27,10 @@ export class AuthController {
     }
 
     @Post('/login')
-    public async login(@Res() res: Response, @Body({validate: true}) authLoginDTO: AuthLoginDTO) {
+    public async login(
+        @Res() res: Response,
+        @Body({validate: true}) authLoginDTO: AuthLoginDTO
+    ) {
         try {
             // Destructure email and password from body (authLoginDTO)
             const {email, password} = authLoginDTO;
