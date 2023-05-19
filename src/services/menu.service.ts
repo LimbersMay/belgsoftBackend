@@ -54,7 +54,8 @@ export const updateMenu = async (menuId: string, branchId: string, menuDTO: Upda
 export const deleteMenu = async (menuId: string, branchId: string) => {
     return await MenuSchema.destroy({
         where: {
-            menuId
+            menuId,
+            branchId
         }
     });
 }
