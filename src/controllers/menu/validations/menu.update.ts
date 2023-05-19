@@ -29,6 +29,12 @@ export class UpdateMenuDTO {
     price!: number;
 
     @IsOptional()
+    @IsString({
+        message: "Category id must be a string"
+    })
+    categoryId!: string;
+
+    @IsOptional()
     @IsBoolean({
         message: "Is available must be a boolean"
     })
