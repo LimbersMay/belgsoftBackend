@@ -1,22 +1,21 @@
 import {v4 as uuidv4} from 'uuid';
-import {Auth} from "../interfaces";
 import {UserSchema} from "../models";
 import {UserResponse} from "../mappers";
 import {compareHash, encrypt, generateToken} from "../utils";
-import {AUTH_ERRORS, USER_ERRORS} from "../errors";
+import {AUTH_ERRORS, UserError} from "../errors";
 import {RoleSchema, UserTypeSchema, UserStateSchema} from "../models";
-export const registerUser = async (authProps: Auth) => {
-    const encryptedPassword = await encrypt(authProps.password);
+import {AuthRegisterDTO} from "../controllers/auth/validators/auth.register";
+export const registerUser = async (authRegisterDTO: AuthRegisterDTO, adminId: string | undefined) => {
+
+    const encryptedPassword = await encrypt(authRegisterDTO.password);
     const user = await UserSchema.create({
-        ...authProps,
+        ...authRegisterDTO,
+        createdByUserId: adminId,
         password: encryptedPassword,
         userId: uuidv4(),
     });
 
-    await user.save();
-
-    const newUser = await UserSchema.findOne({
-        where: {userId: user.userId},
+    await user.reload({
         include: [
             { model: RoleSchema, as: 'role' },
             { model: UserTypeSchema, as: 'userType' },
@@ -24,9 +23,7 @@ export const registerUser = async (authProps: Auth) => {
         ]
     });
 
-    if (!newUser) return AUTH_ERRORS.AUTH_ERROR_CANNOT_REGISTER_USER;
-
-    return UserResponse.fromUser(newUser);
+    return UserResponse.fromUser(user);
 }
 
 export const loginUser = async ({ email, password }: { email: string, password: string }) => {
@@ -40,7 +37,7 @@ export const loginUser = async ({ email, password }: { email: string, password: 
         ]
     });
 
-    if (!user) return USER_ERRORS.USER_NOT_FOUND;
+    if (!user) return UserError.USER_NOT_FOUND;
 
     const isPasswordValid = await compareHash(password, user.password);
     if (!isPasswordValid) return AUTH_ERRORS.AUTH_ERROR_INCORRECT_PASSWORD;
