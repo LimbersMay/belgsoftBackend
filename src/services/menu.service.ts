@@ -4,8 +4,11 @@ import {MenuResponse} from "../mappers";
 import {CreateMenuDTO} from "../controllers/menu/validations/menu.create";
 import {UpdateMenuDTO} from "../controllers/menu/validations/menu.update";
 
-export const findAllMenu = async (): Promise<MenuResponse[]> => {
+export const findAllMenu = async (branchId: string): Promise<MenuResponse[]> => {
     const menu = await MenuSchema.findAll({
+        where: {
+          branchId
+        },
         include: [
             {model: CategorySchema, as: 'category'}
         ]
@@ -34,12 +37,13 @@ export const createMenu = async (menuDTO: CreateMenuDTO, branchId: string) => {
     return MenuResponse.fromMenu(newMenu);
 }
 
-export const updateMenu = async (menuId: string, menuDTO: UpdateMenuDTO) => {
+export const updateMenu = async (menuId: string, branchId: string, menuDTO: UpdateMenuDTO) => {
     const [ affectedFields ] = await MenuSchema.update(
         {...menuDTO},
         {
             where: {
-                menuId
+                menuId,
+                branchId
             }
         }
     );
@@ -47,7 +51,7 @@ export const updateMenu = async (menuId: string, menuDTO: UpdateMenuDTO) => {
     return affectedFields;
 }
 
-export const deleteMenu = async (menuId: string) => {
+export const deleteMenu = async (menuId: string, branchId: string) => {
     return await MenuSchema.destroy({
         where: {
             menuId
