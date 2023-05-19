@@ -53,6 +53,14 @@ const userAttributes = {
         allowNull: false,
         unique: true
     },
+    createdByUserId: {
+        type: DataType.STRING,
+        allowNull: true,
+        references: {
+            model: UserSchema,
+            key: 'userId'
+        }
+    },
     branchId: {
         type: DataType.STRING,
         allowNull: false,
