@@ -15,12 +15,7 @@ export class AuthController {
         @Body({validate: true}) authRegisterDTO: AuthRegisterDTO
     ) {
         try {
-            const responseUser = await registerUser(authRegisterDTO);
-
-            // Error handling - if registeredUser is a string, then it's an error
-            if (typeof responseUser === "string") return handleHttp(res, responseUser);
-
-            return responseUser;
+            return await registerUser(authRegisterDTO, undefined);
         } catch (e) {
             return handleHttp(res, AUTH_ERRORS.AUTH_ERROR_CANNOT_REGISTER_USER, e)
         }
