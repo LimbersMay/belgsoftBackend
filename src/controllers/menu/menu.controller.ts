@@ -25,9 +25,12 @@ import {UserResponse} from "../../mappers";
 export class MenuController {
 
     @Get('/')
-    public async getAll(@Res() res: Response) {
+    public async getAll(
+        @Res() res: Response,
+        @CurrentUser() { branchId }: UserResponse
+    ) {
         try {
-            return await findAllMenu();
+            return await findAllMenu(branchId);
         } catch (e) {
             handleHttp(res, MenuError.MENU_ERROR_CANNOT_GET_MENUS, e);
         }
@@ -38,10 +41,10 @@ export class MenuController {
     public async create(
         @Res() res: Response,
         @Body({validate: true}) createMenuDTO: CreateMenuDTO,
-        @CurrentUser() user: UserResponse
+        @CurrentUser() { branchId }: UserResponse
     ) {
         try {
-            return await createMenu(createMenuDTO, user.branchId);
+            return await createMenu(createMenuDTO, branchId);
         } catch (e) {
             handleHttp(res, MenuError.MENU_ERROR_CANNOT_CREATE_MENU, e);
         }
@@ -52,10 +55,11 @@ export class MenuController {
     public async update(
         @Res() res: Response,
         @Params({validate: true}) { id }: MenuIdDTO,
-        @Body({validate: true}) updateMenuDTO: UpdateMenuDTO
+        @Body({validate: true}) updateMenuDTO: UpdateMenuDTO,
+        @CurrentUser() { branchId }: UserResponse
     ) {
         try {
-            const affectedFields = await updateMenu(id, updateMenuDTO);
+            const affectedFields = await updateMenu(id, branchId, updateMenuDTO);
             
             return {
                 affectedFields
@@ -69,10 +73,11 @@ export class MenuController {
     @Authorized('ADMIN')
     public async delete(
         @Res() res: Response,
-        @Params({validate: true}) { id }: MenuIdDTO
+        @Params({validate: true}) { id }: MenuIdDTO,
+        @CurrentUser() { branchId }: UserResponse
     ) {
         try {
-            const affectedFields = await deleteMenu(id);
+            const affectedFields = await deleteMenu(id, branchId);
 
             return {
                 affectedFields
