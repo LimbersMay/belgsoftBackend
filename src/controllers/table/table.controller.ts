@@ -16,7 +16,7 @@ import {Response} from "express";
 import {createTable, deleteTable, findAllTables, updateTable} from "../../services";
 import {handleHttp} from "../../utils";
 import {CreateTableDTO} from "./validators/table.create";
-import {TABLE_ERRORS} from "../../errors/table.errors";
+import {TableErrors} from "../../errors";
 import {UpdateTableDTO, UpdateTableIdDTO} from "./validators/table.update";
 import {UserResponse} from "../../mappers";
 
@@ -25,11 +25,14 @@ import {UserResponse} from "../../mappers";
 export class TableController {
 
     @Get('/')
-    public async getAll(@Res() res: Response) {
+    public async getAll(
+        @Res() res: Response,
+        @CurrentUser() { branchId }: UserResponse
+    ) {
         try {
-            return await findAllTables();
+            return await findAllTables(branchId);
         } catch (e) {
-            return handleHttp(res, TABLE_ERRORS.TABLE_ERROR_CANNOT_GET_TABLES, e);
+            return handleHttp(res, TableErrors.TABLE_ERROR_CANNOT_GET_TABLES, e);
         }
     }
 
@@ -43,7 +46,7 @@ export class TableController {
         try {
             return await createTable(createTableDTO, user.branchId);
         } catch (e) {
-            return handleHttp(res, TABLE_ERRORS.TABLE_ERROR_CANNOT_CREATE_TABLE, e);
+            return handleHttp(res, TableErrors.TABLE_ERROR_CANNOT_CREATE_TABLE, e);
         }
     }
 
@@ -52,17 +55,18 @@ export class TableController {
     public async updateTable(
         @Res() res: Response,
         @Params({validate: true}) { id }: UpdateTableIdDTO,
-        @Body({validate: true}) updateTableDTO: UpdateTableDTO
+        @Body({validate: true}) updateTableDTO: UpdateTableDTO,
+        @CurrentUser() { branchId }: UserResponse
     ) {
 
         try {
-            const responseTable = await updateTable(id, updateTableDTO);
+            const responseTable = await updateTable(id, branchId, updateTableDTO);
 
             return {
                 affectedFields: responseTable
             };
         } catch (e) {
-            return handleHttp(res, TABLE_ERRORS.TABLE_ERROR_CANNOT_UPDATE_TABLE, e);
+            return handleHttp(res, TableErrors.TABLE_ERROR_CANNOT_UPDATE_TABLE, e);
         }
     }
 
@@ -70,16 +74,17 @@ export class TableController {
     @Delete('/:id')
     public async deleteTable(
         @Res() res: Response,
-        @Params({validate: true}) { id }: UpdateTableIdDTO
+        @Params({validate: true}) { id }: UpdateTableIdDTO,
+        @CurrentUser() { branchId }: UserResponse
     ) {
         try {
-            const deleteResponse = await deleteTable(id);
+            const deleteResponse = await deleteTable(id, branchId);
 
             return {
                 affectedFields: deleteResponse
             };
         } catch (e) {
-            return handleHttp(res, TABLE_ERRORS.TABLE_ERROR_CANNOT_DELETE_TABLE, e);
+            return handleHttp(res, TableErrors.TABLE_ERROR_CANNOT_DELETE_TABLE, e);
         }
     }
 }
