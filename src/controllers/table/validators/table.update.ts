@@ -1,6 +1,6 @@
 import {IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf} from "class-validator";
 import {IsTableExist} from "./table-existance";
-import {TABLE_ERRORS} from "../../../errors/table.errors";
+import {TableErrors} from "../../../errors";
 
 export class UpdateTableIdDTO {
     @IsString({
@@ -10,7 +10,7 @@ export class UpdateTableIdDTO {
         message: 'Id is required'
     })
     @IsTableExist({
-        message: TABLE_ERRORS.TABLE_ERROR_TABLE_NOT_FOUND
+        message: TableErrors.TABLE_ERROR_TABLE_NOT_FOUND
     })
     id!: string;
 }
