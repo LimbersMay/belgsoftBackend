@@ -8,7 +8,8 @@ import {AuthController, MenuController, OrderController, TableController, UserCo
 import {COOKIE_SECRET, SERVER_PORT, verifyToken} from "./utils";
 import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
-import {findUserById} from "./services";
+import {findUser} from "./services";
+import {UserIdSpecification} from "./specifications";
 
 export class AppServer {
     public app: Application;
@@ -66,7 +67,7 @@ export class AppServer {
                 const token = action.request.headers["x-token"];
                 const payload = await verifyToken(`${token}`);
 
-                const user = await findUserById(payload.userId);
+                const user = await findUser(new UserIdSpecification(payload.userId));
 
                 if (!user) return false;
 
@@ -76,7 +77,7 @@ export class AppServer {
                 const token = action.request.headers["x-token"];
                 const userToken = await verifyToken(`${token}`);
 
-                return await findUserById(userToken.userId);
+                return await findUser(new UserIdSpecification(userToken.userId));
             }
         });
     }
