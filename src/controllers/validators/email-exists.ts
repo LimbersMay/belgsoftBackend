@@ -5,12 +5,13 @@ import {
     ValidatorConstraintInterface,
     ValidationArguments,
 } from 'class-validator';
-import {findUserByEmail} from "../../services";
+import {findUser} from "../../services";
+import {UserEmailSpecification} from "../../specifications";
 
 @ValidatorConstraint({ async: true })
 export class IsUserAlreadyExistConstraint implements ValidatorConstraintInterface {
     async validate(email: string, args: ValidationArguments) {
-        const user = await findUserByEmail(email);
+        const user = await findUser(new UserEmailSpecification(email));
         return !user;
     }
 }
