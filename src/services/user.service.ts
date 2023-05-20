@@ -73,17 +73,7 @@ const buildWhereClauseFromSpecifications = (specifications: UserSpecification) =
     return where;
 }
 
-const buildWhereClauseFromSpecification = (specification: Specification<User>): WhereOptions<User> => {
-    // build the where clause for the specification
-
-    if (specification instanceof UserIdSpecification) {
-        return {userId: specification.userId};
-    } else if (specification instanceof UserEmailSpecification) {
-        return {email: specification.email};
-    } else if (specification instanceof CreatedByAdminIdSpecification) {
-        return {createdByUserId: specification.adminId};
-    }
-
+const buildComplexSpecification = <T>(specification: Specification<T>): WhereOptions<T> => {
     // If you have complex specifications, you can use the following
     if (specification instanceof AndSpecification) {
         const oneClause = buildWhereClauseFromSpecification(specification.one);
@@ -100,4 +90,19 @@ const buildWhereClauseFromSpecification = (specification: Specification<User>): 
 
     // if specification is not recognized, return empty where clause
     return {};
+}
+
+const buildWhereClauseFromSpecification = (specification: Specification<User>): WhereOptions<User> => {
+    // build the where clause for the specification
+
+    if (specification instanceof UserIdSpecification) {
+        return {userId: specification.userId};
+    } else if (specification instanceof UserEmailSpecification) {
+        return {email: specification.email};
+    } else if (specification instanceof CreatedByAdminIdSpecification) {
+        return {createdByUserId: specification.adminId};
+    }
+
+    // If you have complex specifications, you can use the following
+    return buildComplexSpecification<User>(specification);
 }
