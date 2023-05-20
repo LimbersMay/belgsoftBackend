@@ -13,7 +13,7 @@ import {
 } from "routing-controllers";
 import {handleHttp} from "../../utils";
 import {
-    findUser, findUsers,
+    findUser, findAllUsers,
     registerUser,
     updateUser
 } from "../../services";
@@ -32,7 +32,7 @@ export class UserController {
     @Get('/')
     async getAll(@Res() res: Response, @CurrentUser() user: UserResponse) {
         try {
-            return await findUsers(new CreatedByAdminIdSpecification(user.userId));
+            return await findAllUsers(new CreatedByAdminIdSpecification(user.userId));
         } catch (e) {
             return handleHttp(res, UserError.USER_ERROR_CANNOT_GET_USERS, e);
         }
