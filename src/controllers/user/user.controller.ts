@@ -5,7 +5,6 @@ import {
     CurrentUser,
     Get,
     JsonController,
-    Param,
     Params,
     Post,
     Put,
@@ -13,44 +12,33 @@ import {
     UseBefore
 } from "routing-controllers";
 import {handleHttp} from "../../utils";
-import {findUserByAdminId, getAllUsersByAdminId, getUserById, registerUser, updateUser} from "../../services";
+import {
+    findUser, findUsers,
+    registerUser,
+    updateUser
+} from "../../services";
 import {UserError} from "../../errors";
 import {IsAuthenticated} from "../../middlewares";
 import {UpdateUserDTO, UpdateUserIdDTO} from "./validators/user.update";
 import {UserResponse} from "../../mappers";
 import {AuthRegisterDTO} from "../auth/validators/auth.register";
+import {CreatedByAdminIdSpecification, UserIdSpecification} from "../../specifications";
 
 @JsonController('/users')
+@UseBefore(IsAuthenticated)
 export class UserController {
 
-    @UseBefore(IsAuthenticated)
     @Authorized('ADMIN')
     @Get('/')
     async getAll(@Res() res: Response, @CurrentUser() user: UserResponse) {
         try {
-            return await getAllUsersByAdminId(user.userId);
+            return await findUsers(new CreatedByAdminIdSpecification(user.userId));
         } catch (e) {
             return handleHttp(res, UserError.USER_ERROR_CANNOT_GET_USERS, e);
         }
     }
 
-    @UseBefore(IsAuthenticated)
-    @Authorized('ADMIN')
-    @Get('/:id')
-    async getOne(
-        @Res() res: Response,
-        @Param('id') id: string
-    ) {
-
-        try {
-            return await getUserById(id);
-        } catch (e) {
-            return handleHttp(res, UserError.USER_ERROR_CANNOT_GET_USER, e);
-        }
-    }
-
-    @UseBefore(IsAuthenticated)
-    @Authorized('ADMIN')
+    @Authorized(['ADMIN', 'WAITER'])
     @Put('/:id')
     async updateUser(
         @Res() res: Response,
@@ -60,18 +48,29 @@ export class UserController {
     ) {
         try {
 
-            if (user.userId !== id) {
-                const userToUpdate = await findUserByAdminId(id, user.userId);
-                if (!userToUpdate) return handleHttp(res, UserError.USER_NOT_FOUND, 'User not found');
+            if (id !== user.userId) {
+                // Check if the user exists and if it was created by the admin who is updating it
+                const userToUpdate = await findUser([
+                    new UserIdSpecification(id),
+                    new CreatedByAdminIdSpecification(user.userId)
+                ]);
+
+                if (!userToUpdate) return handleHttp(res, UserError.USER_NOT_FOUND, 'User not found')
+
+                // If an admin is updating a user, the user must be updated by the admin who created it
+                return await updateUser(updateUserDTO, [
+                    new UserIdSpecification(id),
+                    new CreatedByAdminIdSpecification(user.userId)
+                ]);
             }
 
-            return await updateUser(id, user.createdByUserId, updateUserDTO)
+            // If the user wants to update his own data, he can do it without any restrictions
+            return await updateUser(updateUserDTO, new UserIdSpecification(id));
         } catch (e) {
             return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, e);
         }
     }
 
-    @UseBefore(IsAuthenticated)
     @Authorized('ADMIN')
     @Post('/')
     async createUser(
