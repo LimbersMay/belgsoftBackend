@@ -1,7 +1,6 @@
 import {AbstractSpecification} from "./generic-specification";
-import {Branch} from "../interfaces/branch.interface";
 
-export class BranchIdSpecification extends AbstractSpecification<Branch> {
+export class BranchIdSpecification extends AbstractSpecification<string> {
     public readonly branchId: string;
 
     public constructor(branchId: string) {
@@ -9,7 +8,7 @@ export class BranchIdSpecification extends AbstractSpecification<Branch> {
         this.branchId = branchId;
     }
 
-    public isSatisfiedBy(candidate: Branch): boolean {
-        return candidate.branchId === this.branchId;
+    public isSatisfiedBy(candidate: string): boolean {
+        return candidate === this.branchId;
     }
 }
