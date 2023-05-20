@@ -1,7 +1,7 @@
 import {AbstractSpecification} from "./generic-specification";
 import {User} from "../interfaces";
 
-export class UserIdSpecification extends AbstractSpecification<User> {
+export class UserIdSpecification extends AbstractSpecification<string> {
     public readonly userId: string;
 
     public constructor(userId: string) {
@@ -9,12 +9,12 @@ export class UserIdSpecification extends AbstractSpecification<User> {
         this.userId = userId;
     }
 
-    public isSatisfiedBy(candidate: User): boolean {
-        return candidate.userId === this.userId;
+    public isSatisfiedBy(candidate: string): boolean {
+        return candidate === this.userId;
     }
 }
 
-export class UserEmailSpecification extends AbstractSpecification<User> {
+export class UserEmailSpecification extends AbstractSpecification<string> {
     public readonly email: string;
 
     public constructor(email: string) {
@@ -22,12 +22,12 @@ export class UserEmailSpecification extends AbstractSpecification<User> {
         this.email = email;
     }
 
-    public isSatisfiedBy(candidate: User): boolean {
-        return candidate.email === this.email;
+    public isSatisfiedBy(candidate: string): boolean {
+        return candidate === this.email;
     }
 }
 
-export class CreatedByAdminIdSpecification extends AbstractSpecification<User> {
+export class CreatedByAdminIdSpecification extends AbstractSpecification<string> {
     public readonly adminId: string;
 
     public constructor(adminId: string) {
@@ -35,7 +35,7 @@ export class CreatedByAdminIdSpecification extends AbstractSpecification<User> {
         this.adminId = adminId;
     }
 
-    public isSatisfiedBy(candidate: User): boolean {
-        return candidate.createdByUserId === this.adminId;
+    public isSatisfiedBy(candidate: string): boolean {
+        return candidate === this.adminId;
     }
 }
