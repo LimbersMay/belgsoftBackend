@@ -45,7 +45,7 @@ export const findUser = async (specification: UserSpecification) => {
     });
 }
 
-export const findUsers = async (specification: UserSpecification) => {
+export const findAllUsers = async (specification: UserSpecification) => {
     const where = buildWhereClauseFromSpecifications(specification);
     const users = await UserSchema.findAll({
         where,
