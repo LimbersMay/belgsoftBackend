@@ -2,13 +2,12 @@ import {UserResponse} from "../mappers";
 import {UserSchema, RoleSchema, UserTypeSchema, UserStateSchema} from "../models";
 import {UpdateUserDTO} from "../controllers/user/validators/user.update";
 import {encrypt} from "../utils";
-import {User} from "../interfaces";
 import {
     Specification
 } from "../specifications";
-import {UserSpecificationBuilder} from "../specifications/sequelize/user-specifications.builder";
+import {UserSpecificationBuilder} from "../specifications/sequelize";
 
-type UserSpecification = Specification<User> | Specification<User>[];
+type UserSpecification = Specification<string> | Specification<string>[];
 
 // User specification validator
 const userSpecificationBuilder = new UserSpecificationBuilder();
