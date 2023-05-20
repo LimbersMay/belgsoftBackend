@@ -1,6 +1,6 @@
 import {Get, JsonController, Res, UseBefore} from "routing-controllers";
 import {IsAuthenticated} from "../middlewares";
-import {getAllOrders} from "../services/order.service";
+import {getAllOrders} from "../services";
 import {handleHttp} from "../utils";
 import {Response} from "express";
 
