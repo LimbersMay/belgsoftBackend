@@ -1,5 +1,4 @@
 import {AbstractSpecification} from "./generic-specification";
-import {User} from "../interfaces";
 
 export class UserIdSpecification extends AbstractSpecification<string> {
     public readonly userId: string;
