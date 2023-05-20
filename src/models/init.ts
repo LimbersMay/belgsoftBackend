@@ -123,6 +123,14 @@ const areaAttributes = {
         allowNull: false,
         unique: true
     },
+    branchId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: BranchSchema,
+            key: 'branchId'
+        }
+    },
     name: {
         type: DataType.STRING,
         allowNull: false
