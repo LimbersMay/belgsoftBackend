@@ -2,7 +2,6 @@
 export interface Order {
     orderId: string;
     branchId: string;
-    menuId: string;
     customerName?: string;
     areaId: string;
     tableId: string;

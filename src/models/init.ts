@@ -247,14 +247,6 @@ const orderAttributes = {
         allowNull: true,
         defaultValue: null
     },
-    menuId: {
-        type: DataType.STRING,
-        allowNull: false,
-        references: {
-            model: MenuSchema,
-            key: 'menuId'
-        }
-    },
     tableId: {
         type: DataType.STRING,
         allowNull: false,
@@ -541,5 +533,11 @@ MenuSchema.belongsTo(CategorySchema, { foreignKey: 'categoryId', as: 'category' 
 // An order can have many menus associated with it
 OrderSchema.belongsToMany(MenuSchema, { through: OrderMenuSchema, foreignKey: 'orderId', as: 'menus' });
 MenuSchema.belongsToMany(OrderSchema, { through: OrderMenuSchema, foreignKey: 'menuId', as: 'orders' });
+
+OrderSchema.hasMany(OrderMenuSchema, { foreignKey: 'orderId', as: 'orderMenus' });
+OrderMenuSchema.belongsTo(OrderSchema, { foreignKey: 'orderId', as: 'order' });
+
+MenuSchema.hasMany(OrderMenuSchema, { foreignKey: 'menuId', as: 'orderMenus' });
+OrderMenuSchema.belongsTo(MenuSchema, { foreignKey: 'menuId', as: 'menu' });
 
 export default sequelize;
