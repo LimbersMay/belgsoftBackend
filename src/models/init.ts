@@ -4,7 +4,7 @@ import {
     UserSchema, CategorySchema, ProfileSchema,
     RoleSchema, UserTypeSchema, UserStateSchema,
     AreaSchema, TableSchema, MenuSchema, OrderSchema,
-    OrderStatusSchema, BranchSchema
+    OrderStatusSchema, BranchSchema, OrderMenuSchema
 } from "./";
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
@@ -450,16 +450,62 @@ const profileAttributes = {
     }
 }
 
-sequelize.addModels([BranchSchema, TableSchema, AreaSchema, UserSchema, CategorySchema, MenuSchema, OrderSchema, OrderStatusSchema, RoleSchema, UserTypeSchema, UserStateSchema, ProfileSchema])
+const orderMenuAttributes = {
+    orderMenuId: {
+        type: DataType.STRING,
+        primaryKey: true,
+        allowNull: false
+    },
+    orderId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: OrderSchema,
+            key: 'orderId'
+        }
+    },
+    menuId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: MenuSchema,
+            key: 'menuId'
+        }
+    },
+    quantity: {
+        type: DataType.NUMBER,
+        allowNull: false,
+    },
+    createdAt: {
+        type: DataType.DATE,
+        allowNull: false
+    },
+    updatedAt: {
+        type: DataType.DATE,
+        allowNull: false
+    }
+}
+
+sequelize.addModels([
+    BranchSchema, TableSchema, AreaSchema,
+    UserSchema, CategorySchema, MenuSchema,
+    OrderSchema, OrderStatusSchema, RoleSchema,
+    UserTypeSchema, UserStateSchema, ProfileSchema,
+    OrderMenuSchema
+])
 
 BranchSchema.init(branchAttributes, { sequelize, tableName: 'Branch' });
 UserSchema.init(userAttributes, { sequelize, tableName: 'User' });
 AreaSchema.init(areaAttributes, { sequelize, tableName: 'Area' });
 TableSchema.init(tableAttributes, { sequelize, tableName: 'Table' });
+
 OrderSchema.init(orderAttributes, { sequelize, tableName: 'Order' });
+MenuSchema.init(menuAttributes, { sequelize, tableName: 'Menu' });
+
+OrderMenuSchema.init(orderMenuAttributes, { sequelize, tableName: 'OrderMenu' });
+
 OrderStatusSchema.init(orderStatusAttributes, { sequelize, tableName: 'OrderStatus' });
 CategorySchema.init(categoryAttributes, { sequelize, tableName: 'Category' });
-MenuSchema.init(menuAttributes, { sequelize, tableName: 'Menu' });
 
 RoleSchema.init(roleAttributes, { sequelize, tableName: 'Role' });
 UserTypeSchema.init(userTypeAttributes, { sequelize, tableName: 'UserType' });
@@ -482,5 +528,10 @@ UserTypeSchema.hasOne(UserSchema, { foreignKey: 'userTypeId' });
 // A category can have many menus associated with it
 CategorySchema.hasMany(MenuSchema, { foreignKey: 'categoryId', as: 'menus' });
 MenuSchema.belongsTo(CategorySchema, { foreignKey: 'categoryId', as: 'category' });
+
+// Relation Order - Menu : N - N
+// An order can have many menus associated with it
+OrderSchema.belongsToMany(MenuSchema, { through: OrderMenuSchema, foreignKey: 'orderId', as: 'menus' });
+MenuSchema.belongsToMany(OrderSchema, { through: OrderMenuSchema, foreignKey: 'menuId', as: 'orders' });
 
 export default sequelize;
