@@ -27,8 +27,8 @@ export class AreaController {
     constructor() {
     }
 
-    @Get('/')
     @Authorized(['ADMIN', 'USER', 'SUPER_USER'])
+    @Get('/')
     public async getAll(@Res() res: Response, @CurrentUser() {branchId}: UserResponse) {
         try {
             return await findAllAreas(new BranchIdSpecification(branchId));
@@ -37,8 +37,8 @@ export class AreaController {
         }
     }
 
-    @Post('/')
     @Authorized(['ADMIN', 'SUPER_USER'])
+    @Post('/')
     public async create(
         @Res() res: Response,
         @Body({validate: true}) createAreaDTO: CreateAreaDTO,
