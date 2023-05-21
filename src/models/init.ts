@@ -476,6 +476,10 @@ const orderMenuAttributes = {
         type: DataType.NUMBER,
         allowNull: false,
     },
+    price: {
+        type: DataType.FLOAT,
+        allowNull: false,
+    },
     createdAt: {
         type: DataType.DATE,
         allowNull: false
