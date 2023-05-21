@@ -5,17 +5,17 @@ import {
     Specification
 } from "../specifications";
 import {AreaSpecificationsBuilder} from "../specifications/sequelize";
+import {AreaResponse} from "../mappers/area.response";
 
 type AreaSpecification = Specification<string> | Specification<string>[];
 
 const areaSpecificationsBuilder = new AreaSpecificationsBuilder();
 
-export const findAllArea = async (specifications: AreaSpecification) => {
+export const findAllAreas = async (specifications: AreaSpecification) => {
     const whereQuery = areaSpecificationsBuilder.buildWhereClauseFromSpecifications(specifications);
 
-    return await AreaSchema.findAll({
-        where: whereQuery
-    });
+    const areas = await AreaSchema.findAll({where: whereQuery});
+    return areas.map(area => AreaResponse.fromSchema(area))
 }
 
 export const createArea = async (createAreaDTO: CreateAreaDTO, branchId: string) => {
