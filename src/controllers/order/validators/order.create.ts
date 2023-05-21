@@ -1,14 +1,6 @@
 import {IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateIf} from "class-validator";
 
-export class OrderCreateDTO {
-    @IsUUID(4, {
-        message: 'orderId is not a valid uuid'
-    })
-    @IsNotEmpty({
-        message: 'orderId is required'
-    })
-    orderId!: string;
-
+export class CreateOrderDTO {
     @IsUUID(4, {
         message: 'menuId is not a valid uuid'
     })
