@@ -3,6 +3,7 @@ export interface OrderMenu {
     menuId: string;
     orderId: string;
     quantity: number;
-    createdAt: Date;
-    updatedAt: Date;
+    price: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
