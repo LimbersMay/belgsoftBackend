@@ -17,4 +17,12 @@ export class MenuItemDTO {
         message: 'quantity is required'
     })
     quantity!: number;
+
+    @IsNumber({}, {
+        message: 'price must be a number'
+    })
+    @IsNotEmpty({
+        message: 'price is required'
+    })
+    price!: number;
 }
