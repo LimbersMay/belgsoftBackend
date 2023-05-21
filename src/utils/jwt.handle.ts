@@ -1,13 +1,33 @@
-import {sign} from "jsonwebtoken";
+import {sign, verify} from "jsonwebtoken";
 import {JWT_SECRET} from "./secrets";
+import {UserResponse} from "../mappers";
 
-export const generateToken = (userId: string) => {
-    return sign({userId}, JWT_SECRET, {
+interface MyJwtPayload {
+    user: UserResponse;
+    iat: number;
+    exp: number;
+}
+
+export const generateToken = (user: UserResponse): string => {
+    return sign({ user }, JWT_SECRET, {
         expiresIn: '2d'
     });
-
 }
 
-export const verifyToken = async (token: string) => {
+export const verifyToken = (token: string): Promise<UserResponse> => {
+    return new Promise((resolve, reject) => {
+        verify(token, JWT_SECRET, (err, payload) => {
+            if (err) {
+                return reject(err);
+            }
 
+            if (!payload) {
+                return reject(new Error('No payload'));
+            }
+
+            const myPayload = payload as MyJwtPayload;
+            return resolve(myPayload.user);
+        });
+    });
 }
+

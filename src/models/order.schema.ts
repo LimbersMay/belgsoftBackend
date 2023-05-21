@@ -1,20 +1,22 @@
-import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import {CustomerSchema} from "./customer.schema";
-import TableSchema from "./table.schema";
-import UserSchema from "./user.schema";
-import {OrderStatusSchema} from "./orderStatus.schema";
+import {AllowNull, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {AreaSchema, TableSchema, UserSchema, OrderStatusSchema} from "./";
+import {Order} from "../interfaces";
 
 @Table
-export class OrderSchema extends Model {
+export class OrderSchema extends Model<Order> {
 
     @PrimaryKey
     @Unique
     @Column
     orderId!: string;
 
+    @AllowNull
     @Column
-    @ForeignKey(() => CustomerSchema)
-    customerId!: string;
+    customerName?: string;
+
+    @Column
+    @ForeignKey(() => AreaSchema)
+    areaId!: string;
 
     @Column
     @ForeignKey(() => TableSchema)
@@ -29,8 +31,14 @@ export class OrderSchema extends Model {
     orderStatusId!: string;
 
     @Column
-    createdAt!: string;
+    price!: number;
 
     @Column
-    updatedAt!: string;
+    quantity!: number;
+
+    @Column
+    createdAt!: Date;
+
+    @Column
+    updatedAt!: Date;
 }

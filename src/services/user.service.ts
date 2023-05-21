@@ -1,24 +1,55 @@
-import {UserSchema} from "../models";
 import {UserResponse} from "../mappers";
-import {USER_ERRORS} from "../errors/user.errors";
+import {UserSchema, RoleSchema, UserTypeSchema, UserStateSchema} from "../models";
+import {UpdateUserDTO} from "../controllers/user/validators/user.update";
+import {encrypt} from "../utils";
+import {
+    Specification
+} from "../specifications";
+import {UserSpecificationBuilder} from "../specifications/sequelize";
 
-export const getUserById = async (userId: number) => {
-    const user = await UserSchema.findOne({where: {userId}});
+type UserSpecification = Specification<string> | Specification<string>[];
 
-    if (!user) {
-        return USER_ERRORS.USER_NOT_FOUND;
+// User specification validator
+const userSpecificationBuilder = new UserSpecificationBuilder();
+
+export const updateUser = async (updateUserDTO: UpdateUserDTO, specifications: UserSpecification) => {
+
+    // If the password is updated, encrypt it
+    if (updateUserDTO.password) {
+        updateUserDTO.password = await encrypt(updateUserDTO.password);
     }
 
-    return UserResponse.fromUser(user);
-}
+    const whereQuery = userSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
-export const getAllUsers = async () => {
-    const users = await UserSchema.findAll({});
-    return users.map(user => UserResponse.fromUser(user));
-}
-
-export const updateUser = async (userId: string, updatedFields: any) => {
     return await UserSchema.update({
-        ...updatedFields
-    }, {where: {userId}});
+        ...updateUserDTO
+    }, {
+        where: {
+            ...whereQuery
+        }
+    });
+}
+
+export const findUser = async (specification: UserSpecification) => {
+    const whereQuery = userSpecificationBuilder.buildWhereClauseFromSpecifications(specification);
+    return await UserSchema.findOne({
+        where: whereQuery,
+        include: [
+            {model: RoleSchema, as: 'role'}
+        ]
+    });
+}
+
+export const findAllUsers = async (specification: UserSpecification) => {
+    const where = userSpecificationBuilder.buildWhereClauseFromSpecifications(specification);
+    const users = await UserSchema.findAll({
+        where,
+        include: [
+            {model: RoleSchema, as: 'role'},
+            {model: UserTypeSchema, as: 'userType'},
+            {model: UserStateSchema, as: 'userState'}
+        ]
+    });
+
+    return users.map(user => UserResponse.fromUser(user));
 }
