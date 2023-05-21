@@ -234,6 +234,14 @@ const orderAttributes = {
         allowNull: false,
         unique: true
     },
+    branchId: {
+        type: DataType.STRING,
+        allowNull: false,
+        references: {
+            model: BranchSchema,
+            key: 'branchId'
+        }
+    },
     customerName: {
         type: DataType.STRING,
         allowNull: true,
