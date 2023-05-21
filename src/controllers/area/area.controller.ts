@@ -3,7 +3,7 @@ import {IsAuthenticated} from "../../middlewares";
 import {handleHttp} from "../../utils";
 import {Response} from "express";
 import {AreaErrors} from "../../errors/area.errors";
-import {createArea, findAllArea} from "../../services/area.service";
+import {createArea, findAllAreas} from "../../services/area.service";
 import {UserResponse} from "../../mappers";
 import {BranchIdSpecification} from "../../specifications";
 import {CreateAreaDTO} from "./validations/area.create";
@@ -17,7 +17,7 @@ export class AreaController {
     @Authorized(['ADMIN', 'USER', 'SUPER_USER'])
     public async getAll(@Res() res: Response, @CurrentUser() { branchId }: UserResponse) {
         try {
-            return await findAllArea(new BranchIdSpecification(branchId));
+            return await findAllAreas(new BranchIdSpecification(branchId));
         } catch (e) {
             return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_GET_AREAS, e);
         }
