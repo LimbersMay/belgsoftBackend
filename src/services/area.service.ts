@@ -12,19 +12,19 @@ type AreaSpecification = Specification<string> | Specification<string>[];
 
 const areaSpecificationsBuilder = new AreaSpecificationsBuilder();
 
-export const findAllAreas = async (specifications: AreaSpecification) => {
+export const findAllAreas = async (specifications: AreaSpecification): Promise<AreaResponse[]> => {
     const whereQuery = areaSpecificationsBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const areas = await AreaSchema.findAll({where: whereQuery});
     return areas.map(area => AreaResponse.fromSchema(area))
 }
 
-export const findArea = async (specifications: AreaSpecification) => {
+export const findArea = async (specifications: AreaSpecification): Promise<AreaResponse | null> => {
     const whereQuery = areaSpecificationsBuilder.buildWhereClauseFromSpecifications(specifications);
     return await AreaSchema.findOne({where: whereQuery});
 }
 
-export const createArea = async (createAreaDTO: CreateAreaDTO, branchId: string) => {
+export const createArea = async (createAreaDTO: CreateAreaDTO, branchId: string): Promise<AreaResponse> => {
     const newArea = await AreaSchema.create({
         areaId: uuidv4(),
         branchId,
@@ -35,7 +35,7 @@ export const createArea = async (createAreaDTO: CreateAreaDTO, branchId: string)
     return AreaResponse.fromSchema(newArea);
 }
 
-export const updateArea = async (updateAreaDTO: UpdateAreaDTO,specifications: AreaSpecification) => {
+export const updateArea = async (updateAreaDTO: UpdateAreaDTO,specifications: AreaSpecification): Promise<number> => {
     const whereQuery = areaSpecificationsBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const [ affectedFields ] = await AreaSchema.update(updateAreaDTO, { where: whereQuery });
@@ -43,7 +43,7 @@ export const updateArea = async (updateAreaDTO: UpdateAreaDTO,specifications: Ar
     return affectedFields;
 }
 
-export const deleteArea = async (specifications: AreaSpecification) => {
+export const deleteArea = async (specifications: AreaSpecification): Promise<number> => {
     const whereQuery = areaSpecificationsBuilder.buildWhereClauseFromSpecifications(specifications);
 
     return await AreaSchema.destroy({where: whereQuery});
