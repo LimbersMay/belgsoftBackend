@@ -30,10 +30,10 @@ export class OrderController {
     public async create(
         @Res() res: Response,
         @Body({validate: true}) orderDTO: CreateOrderDTO,
-        @CurrentUser() { branchId }: UserResponse
+        @CurrentUser() { branchId, userId }: UserResponse
     ) {
         try {
-            return await createOrder(orderDTO, branchId);
+            return await createOrder(orderDTO, branchId, userId);
         } catch (e) {
             return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_CREATE_ORDER, e);
         }
