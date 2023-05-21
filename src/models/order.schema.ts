@@ -1,8 +1,9 @@
 import {AllowNull, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 import {AreaSchema, TableSchema, UserSchema, OrderStatusSchema} from "./";
+import {Order} from "../interfaces";
 
 @Table
-export class OrderSchema extends Model {
+export class OrderSchema extends Model<Order> {
 
     @PrimaryKey
     @Unique
