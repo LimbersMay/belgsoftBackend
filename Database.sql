@@ -153,12 +153,13 @@ CREATE TABLE `Order`
     updatedAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Order_Menu
+CREATE TABLE OrderMenu
 (
     orderMenuId varchar(110) PRIMARY KEY NOT NULL,
     orderId     varchar(110)             NOT NULL,
     menuId      varchar(110)             NOT NULL,
-    quantity    int                      NOT NULL,
+    quantity    float                      NOT NULL,
+    price       float                      NOT NULL,
     FOREIGN KEY (orderId) REFERENCES `Order` (orderId),
     FOREIGN KEY (menuId) REFERENCES Menu (menuId),
     createdAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -173,12 +174,18 @@ INSERT INTO UserState (userStateId, name, state)
 VALUES ('3', 'ACTIVE', 'Active');
 
 INSERT INTO Branch (branchId, name, address, city, state, phone)
-VALUES ('1', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
+VALUES ('32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
 
 INSERT INTO Category (categoryId, branchId, name, description)
-VALUES ('1', '1', 'Soda', 'Soda of the house');
+VALUES ('c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Soda', 'Soda of the house');
+
+INSERT INTO Menu (menuId, categoryId, branchId, name, price, isAvailable, description, image)
+VALUES ('5aced550-a1e8-4643-a7c6-ab98954db2d2', 'c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Coca Cola', 20, 1, 'Coca Cola', 'https:-historia-de-la-coca-cola.jpg');
+
+INSERT INTO Area (areaId, branchId, name, description)
+VALUES ('95552220-6beb-464a-ba18-c2a4963a174a', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Area 1', 'Area 1');
+
+INSERT INTO `Table` (tableId, branchId, number, customers)
+VALUES ('b6307076-c2f8-42d3-b906-338a65bdc6f7', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', '5', 5);
 
 INSERT INTO OrderStatus (orderStatusId, name, description) VALUES ('8c65c0c9-0244-4ba6-8e6b-498c089e0a49', 'PENDING', 'Pending');
-
-INSERT INTO Branch (branchId, name, address, city, state, phone)
-VALUES ('ad186eeb-ee7c-4a0a-b4d5-a22f8ed7d8e5', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
