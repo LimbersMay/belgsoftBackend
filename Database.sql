@@ -136,7 +136,6 @@ CREATE TABLE OrderStatus
 CREATE TABLE `Order`
 (
     orderId       varchar(110) PRIMARY KEY NOT NULL,
-    menuId        varchar(110)             NOT NULL,
     areaId        varchar(110)             NOT NULL,
     tableId       varchar(110)             NOT NULL,
     userId        varchar(110)             NOT NULL,
@@ -149,7 +148,6 @@ CREATE TABLE `Order`
     FOREIGN KEY (orderStatusId) REFERENCES OrderStatus (orderStatusId),
     FOREIGN KEY (tableId) REFERENCES `Table` (tableId),
     FOREIGN KEY (userId) REFERENCES User (userId),
-    FOREIGN KEY (menuId) REFERENCES Menu (menuId),
     FOREIGN KEY (areaId) REFERENCES Area (areaId),
     createdAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -181,3 +179,6 @@ INSERT INTO Category (categoryId, branchId, name, description)
 VALUES ('1', '1', 'Soda', 'Soda of the house');
 
 INSERT INTO OrderStatus (orderStatusId, name, description) VALUES ('8c65c0c9-0244-4ba6-8e6b-498c089e0a49', 'PENDING', 'Pending');
+
+INSERT INTO Branch (branchId, name, address, city, state, phone)
+VALUES ('ad186eeb-ee7c-4a0a-b4d5-a22f8ed7d8e5', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
