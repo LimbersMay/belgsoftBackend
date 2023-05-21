@@ -3,3 +3,4 @@ export * from "./auth";
 export * from "./order.controller";
 export * from "./table";
 export * from "./menu";
+export * from './area'
