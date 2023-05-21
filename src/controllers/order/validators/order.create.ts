@@ -1,11 +1,8 @@
 import {
-    IsArray,
     IsNotEmpty,
-    IsNumber,
     IsOptional,
     IsString,
     IsUUID,
-    MinLength,
     ValidateIf,
     ValidateNested
 } from "class-validator";
@@ -19,12 +16,6 @@ export class CreateOrderDTO {
     })
     @IsNotEmpty({
         message: 'menuItems is required'
-    })
-    @IsArray({
-        message: 'menuItems must be an array'
-    })
-    @MinLength(1, {
-        message: 'menuItems must contain at least one item'
     })
     @Type(() => MenuItemDTO)
     menuItems!: MenuItemDTO[];
@@ -53,17 +44,4 @@ export class CreateOrderDTO {
         message: 'orderStatusId is not a valid uuid'
     })
     orderStatusId!: string;
-
-    @IsNotEmpty({
-        message: 'price is required'
-    })
-    @IsNumber({}, {
-        message: 'price must be a number'
-    })
-    price!: number;
-
-    @IsNotEmpty({
-        message: 'quantity is required'
-    })
-    quantity!: number;
 }
