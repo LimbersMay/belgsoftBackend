@@ -10,3 +10,4 @@ export * from "./role.schema";
 export * from "./userState.schema";
 export * from "./profile.schema";
 export * from "./branch.schema";
+export * from "./order-menu.schema";
