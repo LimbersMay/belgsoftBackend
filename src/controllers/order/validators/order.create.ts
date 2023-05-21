@@ -1,10 +1,33 @@
-import {IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateIf} from "class-validator";
+import {
+    IsArray,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    IsString,
+    IsUUID,
+    MinLength,
+    ValidateIf,
+    ValidateNested
+} from "class-validator";
+import {MenuItemDTO} from "../../menu/validations/menu.item";
+import {Type} from "class-transformer";
 
 export class CreateOrderDTO {
-    @IsUUID(4, {
-        message: 'menuId is not a valid uuid'
+
+    @ValidateNested({
+        each: true
     })
-    menuId!: string;
+    @IsNotEmpty({
+        message: 'menuItems is required'
+    })
+    @IsArray({
+        message: 'menuItems must be an array'
+    })
+    @MinLength(1, {
+        message: 'menuItems must contain at least one item'
+    })
+    @Type(() => MenuItemDTO)
+    menuItems!: MenuItemDTO[];
 
     @IsOptional()
     @ValidateIf(o => o.customerName !== undefined)
@@ -25,11 +48,6 @@ export class CreateOrderDTO {
         message: 'tableId is not a valid uuid'
     })
     tableId!: string;
-
-    @IsUUID(4, {
-        message: 'userId is not a valid uuid'
-    })
-    userId!: string;
 
     @IsUUID(4, {
         message: 'orderStatusId is not a valid uuid'
