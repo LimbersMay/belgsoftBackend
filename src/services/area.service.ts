@@ -5,7 +5,8 @@ import {
     Specification
 } from "../specifications";
 import {AreaSpecificationsBuilder} from "../specifications/sequelize";
-import {AreaResponse} from "../mappers/area.response";
+import {AreaResponse} from "../mappers";
+import {UpdateAreaDTO} from "../controllers/area/validations/area.update";
 
 type AreaSpecification = Specification<string> | Specification<string>[];
 
@@ -18,6 +19,11 @@ export const findAllAreas = async (specifications: AreaSpecification) => {
     return areas.map(area => AreaResponse.fromSchema(area))
 }
 
+export const findArea = async (specifications: AreaSpecification) => {
+    const whereQuery = areaSpecificationsBuilder.buildWhereClauseFromSpecifications(specifications);
+    return await AreaSchema.findOne({where: whereQuery});
+}
+
 export const createArea = async (createAreaDTO: CreateAreaDTO, branchId: string) => {
     const newArea = await AreaSchema.create({
         areaId: uuidv4(),
@@ -26,7 +32,19 @@ export const createArea = async (createAreaDTO: CreateAreaDTO, branchId: string)
         description: createAreaDTO.description,
     });
 
-    await newArea.reload();
+    return AreaResponse.fromSchema(newArea);
+}
 
-    return newArea;
+export const updateArea = async (updateAreaDTO: UpdateAreaDTO,specifications: AreaSpecification) => {
+    const whereQuery = areaSpecificationsBuilder.buildWhereClauseFromSpecifications(specifications);
+
+    const [ affectedFields ] = await AreaSchema.update(updateAreaDTO, { where: whereQuery });
+
+    return affectedFields;
+}
+
+export const deleteArea = async (specifications: AreaSpecification) => {
+    const whereQuery = areaSpecificationsBuilder.buildWhereClauseFromSpecifications(specifications);
+
+    return await AreaSchema.destroy({where: whereQuery});
 }
