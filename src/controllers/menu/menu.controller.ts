@@ -25,6 +25,7 @@ import {UserResponse} from "../../mappers";
 export class MenuController {
 
     @Get('/')
+    @Authorized('ADMIN')
     public async getAll(
         @Res() res: Response,
         @CurrentUser() { branchId }: UserResponse
