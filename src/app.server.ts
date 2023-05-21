@@ -10,6 +10,7 @@ import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
 import {findUser} from "./services";
 import {UserIdSpecification} from "./specifications";
+import {AreaController} from "./controllers/area/area.controller";
 
 export class AppServer {
     public app: Application;
@@ -54,7 +55,7 @@ export class AppServer {
 
         useExpressServer(this.app, {
             routePrefix: "/api",
-            controllers: [UserController, AuthController, OrderController, TableController, MenuController],
+            controllers: [UserController, AuthController, OrderController, TableController, MenuController, AreaController],
             middlewares: [ErrorMiddleware],
             cors: {
                 origin: ["http://localhost:5173"],
