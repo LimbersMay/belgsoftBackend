@@ -179,3 +179,5 @@ VALUES ('1', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
 
 INSERT INTO Category (categoryId, branchId, name, description)
 VALUES ('1', '1', 'Soda', 'Soda of the house');
+
+INSERT INTO OrderStatus (orderStatusId, name, description) VALUES ('8c65c0c9-0244-4ba6-8e6b-498c089e0a49', 'PENDING', 'Pending');
