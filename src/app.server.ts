@@ -3,14 +3,13 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 
 import {useExpressServer} from "routing-controllers";
-import {AuthController, MenuController, OrderController, TableController, UserController} from "./controllers";
+import {AuthController, MenuController, OrderController, TableController, UserController, AreaController} from "./controllers";
 
 import {COOKIE_SECRET, SERVER_PORT, verifyToken} from "./utils";
 import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
 import {findUser} from "./services";
 import {UserIdSpecification} from "./specifications";
-import {AreaController} from "./controllers/area/area.controller";
 
 export class AppServer {
     public app: Application;
