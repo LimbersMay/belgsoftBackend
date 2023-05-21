@@ -23,6 +23,9 @@ export class OrderMenuSchema extends Model<OrderMenu> {
     quantity!: number;
 
     @Column
+    price!: number;
+
+    @Column
     createdAt!: Date;
 
     @Column
