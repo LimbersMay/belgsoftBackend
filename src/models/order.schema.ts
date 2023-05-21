@@ -10,6 +10,12 @@ export class OrderSchema extends Model<Order> {
     @Column
     orderId!: string;
 
+    @Column
+    branchId!: string;
+
+    @Column
+    menuId!: string;
+
     @AllowNull
     @Column
     customerName?: string;
