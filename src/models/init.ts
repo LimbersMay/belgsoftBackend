@@ -544,4 +544,24 @@ OrderMenuSchema.belongsTo(OrderSchema, { foreignKey: 'orderId', as: 'order' });
 MenuSchema.hasMany(OrderMenuSchema, { foreignKey: 'menuId', as: 'orderMenus' });
 OrderMenuSchema.belongsTo(MenuSchema, { foreignKey: 'menuId', as: 'menu' });
 
+// Relation OrderStatus - Order : 1 - N
+// An orderStatus can have many orders associated with it
+OrderStatusSchema.hasMany(OrderSchema, { foreignKey: 'orderStatusId', as: 'orders' });
+OrderSchema.belongsTo(OrderStatusSchema, { foreignKey: 'orderStatusId', as: 'orderStatus' });
+
+// Relation Area - Order : 1 - N
+// An area can have many orders associated with it
+AreaSchema.hasMany(OrderSchema, { foreignKey: 'areaId', as: 'orders' });
+OrderSchema.belongsTo(AreaSchema, { foreignKey: 'areaId', as: 'area' });
+
+// Relation Table - Order : 1 - N
+// A table can have many orders associated with it
+TableSchema.hasMany(OrderSchema, { foreignKey: 'tableId', as: 'orders' });
+OrderSchema.belongsTo(TableSchema, { foreignKey: 'tableId', as: 'table' });
+
+// Relation User - Order : 1 - N
+// A user can have many orders associated with it
+UserSchema.hasMany(OrderSchema, { foreignKey: 'userId', as: 'orders' });
+OrderSchema.belongsTo(UserSchema, { foreignKey: 'userId', as: 'user' });
+
 export default sequelize;
