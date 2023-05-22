@@ -188,4 +188,6 @@ VALUES ('95552220-6beb-464a-ba18-c2a4963a174a', '32c629ca-a1ab-40be-8a29-b1c007b
 INSERT INTO `Table` (tableId, branchId, number, customers)
 VALUES ('b6307076-c2f8-42d3-b906-338a65bdc6f7', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', '5', 5);
 
-INSERT INTO OrderStatus (orderStatusId, name, description) VALUES ('8c65c0c9-0244-4ba6-8e6b-498c089e0a49', 'PENDING', 'Pending');
+INSERT INTO OrderStatus (orderStatusId, name, description) VALUES ('8c65c0c9-0244-4ba6-8e6b-498c089e0a49', 'PENDING', 'The order has been placed');
+
+INSERT INTO OrderStatus (orderStatusId, name, description) VALUES ('d7de7cac-fb2a-468b-a760-c6089f35c453', 'PAID', 'The order has been paid');
