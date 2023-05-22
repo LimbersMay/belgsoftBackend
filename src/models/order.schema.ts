@@ -1,11 +1,9 @@
-import {Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import {CustomerSchema} from "./customer.schema";
-import TableSchema from "./table.schema";
-import UserSchema from "./user.schema";
-import {OrderStatusSchema} from "./orderStatus.schema";
+import {AllowNull, BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {AreaSchema, TableSchema, UserSchema, OrderStatusSchema} from "./";
+import {Order} from "../interfaces";
 
 @Table
-export class OrderSchema extends Model {
+export class OrderSchema extends Model<Order> {
 
     @PrimaryKey
     @Unique
@@ -13,24 +11,49 @@ export class OrderSchema extends Model {
     orderId!: string;
 
     @Column
-    @ForeignKey(() => CustomerSchema)
-    customerId!: string;
+    branchId!: string;
+
+    @AllowNull
+    @Column
+    customerName?: string;
+
+    @Column
+    @ForeignKey(() => AreaSchema)
+    areaId!: string;
+
+    @BelongsTo(() => AreaSchema)
+    area!: AreaSchema;
 
     @Column
     @ForeignKey(() => TableSchema)
     tableId!: string;
 
+    @BelongsTo(() => TableSchema)
+    table!: TableSchema;
+
     @Column
     @ForeignKey( () => UserSchema)
     userId!: string;
+
+    @BelongsTo(() => UserSchema)
+    user!: UserSchema;
 
     @Column
     @ForeignKey( () => OrderStatusSchema)
     orderStatusId!: string;
 
-    @Column
-    createdAt!: string;
+    @BelongsTo(() => OrderStatusSchema)
+    orderStatus!: OrderStatusSchema;
 
     @Column
-    updatedAt!: string;
+    price!: number;
+
+    @Column
+    quantity!: number;
+
+    @Column
+    createdAt!: Date;
+
+    @Column
+    updatedAt!: Date;
 }

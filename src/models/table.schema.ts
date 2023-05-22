@@ -1,12 +1,17 @@
+import {Table as TableInterface} from "../interfaces";
 import {Column, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 
 @Table
-export class TableSchema extends Model{
+export class TableSchema extends Model<TableInterface>{
     @PrimaryKey
     @Unique
     @Column
     tableId!: string;
 
+    @Column
+    branchId!: string;
+
+    @Unique
     @Column
     number!: string;
 
@@ -19,5 +24,3 @@ export class TableSchema extends Model{
     @Column
     updatedAt!: Date;
 }
-
-export default TableSchema;
