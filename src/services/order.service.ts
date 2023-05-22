@@ -4,6 +4,7 @@ import {OrderResponse} from "../mappers";
 import {Specification} from "../specifications";
 import {OrderSpecificationBuilder} from "../specifications/sequelize";
 import {CreateOrderDTO} from "../controllers/order/validators/order.create";
+import {UpdateOrderDTO} from "../controllers/order/validators/order.update";
 
 type OrderSpecification = Specification<string> | Specification<string>[];
 
@@ -61,4 +62,15 @@ export const createOrder = async (order: CreateOrderDTO, branchId: string, userI
     await Promise.all(orderMenuRegistries);
 
     return OrderResponse.fromOrder(orderInstance);
+}
+
+export const updateOrder = async (orderDTO: UpdateOrderDTO, specifications: OrderSpecification) => {
+
+    const whereQuery = orderSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
+    const [ affectedCount ] = await OrderSchema.update(orderDTO, {
+        where: whereQuery
+    });
+
+    return affectedCount;
 }
