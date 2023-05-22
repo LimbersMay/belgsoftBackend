@@ -1,4 +1,4 @@
-import {AllowNull, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {AllowNull, BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 import {AreaSchema, TableSchema, UserSchema, OrderStatusSchema} from "./";
 import {Order} from "../interfaces";
 
@@ -21,17 +21,29 @@ export class OrderSchema extends Model<Order> {
     @ForeignKey(() => AreaSchema)
     areaId!: string;
 
+    @BelongsTo(() => AreaSchema)
+    area!: AreaSchema;
+
     @Column
     @ForeignKey(() => TableSchema)
     tableId!: string;
+
+    @BelongsTo(() => TableSchema)
+    table!: TableSchema;
 
     @Column
     @ForeignKey( () => UserSchema)
     userId!: string;
 
+    @BelongsTo(() => UserSchema)
+    user!: UserSchema;
+
     @Column
     @ForeignKey( () => OrderStatusSchema)
     orderStatusId!: string;
+
+    @BelongsTo(() => OrderStatusSchema)
+    orderStatus!: OrderStatusSchema;
 
     @Column
     price!: number;
