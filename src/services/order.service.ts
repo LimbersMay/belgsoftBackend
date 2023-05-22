@@ -1,5 +1,5 @@
 import {v4 as uuidv4} from 'uuid';
-import {OrderMenuSchema, OrderSchema} from "../models";
+import {AreaSchema, OrderMenuSchema, OrderSchema, OrderStatusSchema, TableSchema, UserSchema} from "../models";
 import {OrderResponse} from "../mappers";
 import {Specification} from "../specifications";
 import {OrderSpecificationBuilder} from "../specifications/sequelize";
@@ -14,7 +14,13 @@ export const findAllOrders = async (specifications: OrderSpecification) => {
     const whereQuery = orderSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const orders = await OrderSchema.findAll({
-        where: whereQuery
+        where: whereQuery,
+        include: [
+            {model: AreaSchema, as: 'area'},
+            {model: TableSchema, as: 'table'},
+            {model: UserSchema, as: 'user'},
+            {model: OrderStatusSchema, as: 'orderStatus'},
+        ]
     });
 
     return orders.map(order => OrderResponse.fromOrder(order));
