@@ -3,12 +3,18 @@ import {CategorySchema, MenuSchema} from "../models";
 import {MenuResponse} from "../mappers";
 import {CreateMenuDTO} from "../controllers/menu/validations/menu.create";
 import {UpdateMenuDTO} from "../controllers/menu/validations/menu.update";
+import {MenuSpecificationBuilder} from "../specifications/sequelize/menu-specification.builder";
+import {Specification} from "../specifications";
 
-export const findAllMenu = async (branchId: string): Promise<MenuResponse[]> => {
+type MenuSpecificationType = Specification<string> | Specification<string>[];
+const menuSpecificationBuilder = new MenuSpecificationBuilder();
+
+export const findAllMenu = async (specifications: MenuSpecificationType): Promise<MenuResponse[]> => {
+
+    const whereClause = menuSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
     const menu = await MenuSchema.findAll({
-        where: {
-          branchId
-        },
+        where: whereClause,
         include: [
             {model: CategorySchema, as: 'category'}
         ]
