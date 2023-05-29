@@ -27,7 +27,6 @@
     "routing-controllers": "^0.10.4",
     "sequelize": "^6.31.1",
     "sequelize-typescript": "^2.1.5",
-    "socket-controllers": "^0.2.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
