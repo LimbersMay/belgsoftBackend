@@ -168,6 +168,8 @@ CREATE TABLE OrderMenu
 
 INSERT INTO Role (roleId, name, value)
 VALUES ('1', 'ADMIN', 'admin');
+INSERT INTO Role (roleId, name, value)
+VALUES ('2', 'WAITER', 'waiter');
 INSERT INTO UserType (userTypeId, name, type)
 VALUES ('2', 'FREE', 'Free');
 INSERT INTO UserState (userStateId, name, state)
