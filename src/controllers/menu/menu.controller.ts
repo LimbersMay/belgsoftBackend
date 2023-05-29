@@ -5,8 +5,7 @@ import {
     CurrentUser,
     Delete,
     Get,
-    JsonController,
-    Params,
+    JsonController, Params,
     Post,
     Put,
     Res,
@@ -19,19 +18,36 @@ import {MenuErrors} from "../../errors";
 import {CreateMenuDTO} from "./validations/menu.create";
 import {UpdateMenuDTO, MenuIdDTO} from "./validations/menu.update";
 import {UserResponse} from "../../mappers";
+import {BranchIdSpecification, CategoryIdSpecification} from "../../specifications";
 
 @JsonController('/menu')
 @UseBefore(IsAuthenticated)
 export class MenuController {
 
     @Get('/')
-    @Authorized('ADMIN')
+    @Authorized(['ADMIN', 'WAITER'])
     public async getAll(
         @Res() res: Response,
         @CurrentUser() { branchId }: UserResponse
     ) {
         try {
-            return await findAllMenu(branchId);
+            return await findAllMenu(new BranchIdSpecification(branchId));
+        } catch (e) {
+            handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_GET_MENUS, e);
+        }
+    }
+
+    @Get('/foods')
+    @Authorized(['ADMIN', 'WAITER'])
+    public async getAllFoods(
+        @Res() res: Response,
+        @CurrentUser() { branchId }: UserResponse,
+    ) {
+        try {
+            return await findAllMenu([
+                new BranchIdSpecification(branchId),
+                new CategoryIdSpecification('32c629ca-a1ab-40be-8a29-b1c007bd61f1')
+            ]);
         } catch (e) {
             handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_GET_MENUS, e);
         }
