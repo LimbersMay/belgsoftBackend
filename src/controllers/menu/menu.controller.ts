@@ -46,7 +46,7 @@ export class MenuController {
         try {
             return await findAllMenu([
                 new BranchIdSpecification(branchId),
-                new CategoryIdSpecification('32c629ca-a1ab-40be-8a29-b1c007bd61f1')
+                new CategoryIdSpecification('218a7694-bff8-42c7-aa75-e7068d92f938')
             ]);
         } catch (e) {
             handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_GET_MENUS, e);
