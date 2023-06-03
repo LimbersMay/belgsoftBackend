@@ -69,6 +69,22 @@ export class MenuController {
         }
     }
 
+    @Get('/desserts')
+    @Authorized(['ADMIN', 'WAITER'])
+    public async getAllDesserts(
+        @Res() res: Response,
+        @CurrentUser() { branchId }: UserResponse,
+    ) {
+        try {
+            return await findAllMenu([
+                new BranchIdSpecification(branchId),
+                new CategoryIdSpecification('c1b6913e-78a1-407a-9e4b-49bb007b81c1')
+            ]);
+        } catch (e) {
+            handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_GET_MENUS, e);
+        }
+    }
+
     @Post('/')
     @Authorized('ADMIN')
     public async create(
