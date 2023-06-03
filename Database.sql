@@ -181,8 +181,11 @@ VALUES ('32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Tia de Kaua', 'Kaua 11 Centro',
 INSERT INTO Category (categoryId, branchId, name, description)
 VALUES ('c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Soda', 'Soda of the house');
 
+INSERT INTO Category (categoryId, branchId, name, description)
+VALUES ('c1b6913e-78a1-407a-9e4b-49bb007b81c1', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Dessert', 'Desserts of the house');
+
 INSERT INTO Menu (menuId, categoryId, branchId, name, price, isAvailable, description, image)
-VALUES ('5aced550-a1e8-4643-a7c6-ab98954db2d2', 'c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Coca Cola', 20, 1, 'Coca Cola', 'https:-historia-de-la-coca-cola.jpg');
+VALUES ('bab910cf-bb45-41b0-89a1-45db90635e03', 'c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Coca Cola', 20, 1, 'Coca Cola', 'https:-historia-de-la-coca-cola.jpg');
 
 INSERT INTO Area (areaId, branchId, name, description)
 VALUES ('95552220-6beb-464a-ba18-c2a4963a174a', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Area 1', 'Area 1');
