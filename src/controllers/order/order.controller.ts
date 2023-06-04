@@ -37,7 +37,7 @@ export class OrderController {
     }
 
     @Post('/')
-    @Authorized(['ADMIN', 'SUPER_USER'])
+    @Authorized(['ADMIN', 'SUPER_USER', 'WAITER'])
     public async create(
         @Res() res: Response,
         @Body({validate: true}) orderDTO: CreateOrderDTO,
