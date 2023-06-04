@@ -5,6 +5,7 @@ import {CreateMenuDTO} from "../controllers/menu/validations/menu.create";
 import {UpdateMenuDTO} from "../controllers/menu/validations/menu.update";
 import {MenuSpecificationBuilder} from "../specifications/sequelize/menu-specification.builder";
 import {Specification} from "../specifications";
+import {MenuErrors} from "../errors";
 
 type MenuSpecificationType = Specification<string> | Specification<string>[];
 const menuSpecificationBuilder = new MenuSpecificationBuilder();
@@ -20,6 +21,23 @@ export const findAllMenu = async (specifications: MenuSpecificationType): Promis
         ]
     });
     return menu.map(item => MenuResponse.fromMenu(item));
+}
+
+export const findOneMenu = async (specifications: MenuSpecificationType) => {
+    const whereClause = menuSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
+    const menu = await MenuSchema.findOne({
+        where: whereClause,
+        include: [
+            {model: CategorySchema, as: 'category'}
+        ]
+    });
+
+    if (!menu){
+        return MenuErrors.MENU_NOT_FOUND
+    }
+
+    return MenuResponse.fromMenu(menu);
 }
 
 export const createMenu = async (menuDTO: CreateMenuDTO, branchId: string) => {
