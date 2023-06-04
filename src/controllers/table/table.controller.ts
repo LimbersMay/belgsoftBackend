@@ -25,7 +25,7 @@ import {UserResponse} from "../../mappers";
 export class TableController {
 
     @Get('/')
-    @Authorized('ADMIN')
+    @Authorized(['ADMIN', 'WAITER'])
     public async getAll(
         @Res() res: Response,
         @CurrentUser() { branchId }: UserResponse
