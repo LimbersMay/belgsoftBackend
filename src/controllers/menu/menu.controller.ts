@@ -12,13 +12,13 @@ import {
     UseBefore
 } from "routing-controllers";
 import {IsAuthenticated} from "../../middlewares";
-import {createMenu, deleteMenu, findAllMenu, updateMenu} from "../../services/menu.service";
+import {createMenu, deleteMenu, findAllMenu, findOneMenu, updateMenu} from "../../services/menu.service";
 import {handleHttp} from "../../utils";
 import {MenuErrors} from "../../errors";
 import {CreateMenuDTO} from "./validations/menu.create";
 import {UpdateMenuDTO, MenuIdDTO} from "./validations/menu.update";
 import {UserResponse} from "../../mappers";
-import {BranchIdSpecification, CategoryIdSpecification} from "../../specifications";
+import {BranchIdSpecification, CategoryIdSpecification, MenuIdSpecification} from "../../specifications";
 
 @JsonController('/menu')
 @UseBefore(IsAuthenticated)
@@ -46,7 +46,7 @@ export class MenuController {
         try {
             return await findAllMenu([
                 new BranchIdSpecification(branchId),
-                new CategoryIdSpecification('218a7694-bff8-42c7-aa75-e7068d92f938')
+                new CategoryIdSpecification('da47c63f-196a-4240-bf58-846fd7f0931d')
             ]);
         } catch (e) {
             handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_GET_MENUS, e);
@@ -78,10 +78,33 @@ export class MenuController {
         try {
             return await findAllMenu([
                 new BranchIdSpecification(branchId),
-                new CategoryIdSpecification('c1b6913e-78a1-407a-9e4b-49bb007b81c1')
+                new CategoryIdSpecification('5ff6a9c3-bfb4-4269-b8d6-22f620414199')
             ]);
         } catch (e) {
             handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_GET_MENUS, e);
+        }
+    }
+
+    @Get('/:id')
+    @Authorized(['ADMIN', 'WAITER'])
+    public async getById(
+        @Res() res: Response,
+        @Params({validate: true}) { id }: MenuIdDTO,
+        @CurrentUser() { branchId }: UserResponse
+    ) {
+        try {
+            const menu = await findOneMenu([
+                new BranchIdSpecification(branchId),
+                new MenuIdSpecification(id)
+            ]);
+
+            if (typeof menu === "string") {
+                return handleHttp(res, MenuErrors.MENU_NOT_FOUND);
+            }
+
+            return menu;
+        } catch (e) {
+            return handleHttp(res, MenuErrors.MENU_ERROR_CANNOT_GET_MENUS, e);
         }
     }
 
