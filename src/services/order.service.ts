@@ -51,8 +51,18 @@ export const createOrder = async (order: CreateOrderDTO, branchId: string, userI
         price: totalPrice,
         quantity: totalQuantity,
         branchId,
+        orderStatusId: '8c65c0c9-0244-4ba6-8e6b-498c089e0a49',
         userId
     });
+
+    await orderInstance.reload({
+        include: [
+            {model: AreaSchema, as: 'area'},
+            {model: TableSchema, as: 'table'},
+            {model: UserSchema, as: 'user'},
+            {model: OrderStatusSchema, as: 'orderStatus'},
+        ]
+    })
 
     const orderMenuRegistries = order.menuItems.map(menuItem => (
         OrderMenuSchema.create({
