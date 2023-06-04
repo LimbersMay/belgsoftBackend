@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsNumber, IsUUID} from "class-validator";
+import {IsNotEmpty, IsUUID} from "class-validator";
 
 export class MenuItemDTO {
 
