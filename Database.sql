@@ -179,13 +179,22 @@ INSERT INTO Branch (branchId, name, address, city, state, phone)
 VALUES ('32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
 
 INSERT INTO Category (categoryId, branchId, name, description)
-VALUES ('c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Soda', 'Soda of the house');
+VALUES ('c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Drink', 'Drink of the house');
 
 INSERT INTO Category (categoryId, branchId, name, description)
-VALUES ('c1b6913e-78a1-407a-9e4b-49bb007b81c1', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Dessert', 'Desserts of the house');
+VALUES ('da47c63f-196a-4240-bf58-846fd7f0931d', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Food', 'Food of the house');
+
+INSERT INTO Category (categoryId, branchId, name, description)
+VALUES ('5ff6a9c3-bfb4-4269-b8d6-22f620414199', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Dessert', 'Desserts of the house');
 
 INSERT INTO Menu (menuId, categoryId, branchId, name, price, isAvailable, description, image)
 VALUES ('bab910cf-bb45-41b0-89a1-45db90635e03', 'c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Coca Cola', 20, 1, 'Coca Cola', 'https:-historia-de-la-coca-cola.jpg');
+
+INSERT INTO Menu (menuId, categoryId, branchId, name, price, isAvailable, description, image)
+VALUES ('2f1780e9-a7a3-4601-800b-6e845669faef', 'da47c63f-196a-4240-bf58-846fd7f0931d', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Frijol colado', 80, 1, 'Frijol colado especial', 'https://jameaperu.com/wp-content/uploads/2019/04/frejol-colado_700x465.jpg');
+
+INSERT INTO Menu (menuId, categoryId, branchId, name, price, isAvailable, description, image)
+VALUES ('d47249e4-26d1-474c-b853-070f95910eda', '5ff6a9c3-bfb4-4269-b8d6-22f620414199', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Flan', 43, 1, 'Flan regional', 'https://www.nicepng.com/png/detail/237-2378918_dile-a-tus-amigos-rebanada-de-flan-napolitano.png');
 
 INSERT INTO Area (areaId, branchId, name, description)
 VALUES ('95552220-6beb-464a-ba18-c2a4963a174a', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Area 1', 'Area 1');
