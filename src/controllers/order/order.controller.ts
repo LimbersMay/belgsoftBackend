@@ -71,4 +71,11 @@ export class OrderController {
             return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_UPDATE_ORDER, e);
         }
     }
+
+    @Get('/print')
+    public async print() {
+
+
+
+    }
 }
