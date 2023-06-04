@@ -39,9 +39,4 @@ export class CreateOrderDTO {
         message: 'tableId is not a valid uuid'
     })
     tableId!: string;
-
-    @IsUUID(4, {
-        message: 'orderStatusId is not a valid uuid'
-    })
-    orderStatusId!: string;
 }
