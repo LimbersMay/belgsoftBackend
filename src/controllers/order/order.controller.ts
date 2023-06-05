@@ -11,13 +11,14 @@ import {
     UseBefore
 } from "routing-controllers";
 import {IsAuthenticated} from "../../middlewares";
-import {createOrder, findAllOrders, updateOrder} from "../../services";
+import {createOrder, findAllOrders, updateOrder, printOrder} from "../../services";
 import {handleHttp} from "../../utils";
 import {UserResponse} from "../../mappers";
 import {BranchIdSpecification, OrderIdSpecification} from "../../specifications";
 import {OrderErrors} from "../../errors";
 import {CreateOrderDTO} from "./validators/order.create";
 import {OrderIdDTO, UpdateOrderDTO} from "./validators/order.update";
+import {PrintOrderDTO} from "./validators/order.print";
 
 @JsonController('/orders')
 @UseBefore(IsAuthenticated)
@@ -72,10 +73,15 @@ export class OrderController {
         }
     }
 
-    @Get('/print')
-    public async print() {
+    @Post('/print')
+    public async print(
+        @Body({ validate: true }) printOrderDTO: PrintOrderDTO
+    ) {
 
+        printOrder(printOrderDTO);
 
-
+        return {
+            ok: true
+        }
     }
 }
