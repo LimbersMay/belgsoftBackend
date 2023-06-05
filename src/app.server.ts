@@ -10,6 +10,7 @@ import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
 import {findUser} from "./services";
 import {UserIdSpecification} from "./specifications";
+import {PrinterService} from "./services/printer.service";
 
 export class AppServer {
     public app: Application;
@@ -80,6 +81,9 @@ export class AppServer {
                 return await findUser(new UserIdSpecification(userToken.userId));
             }
         });
+
+        // CONNECT TO THERMAL PRINTER
+        PrinterService.connect('192.168.0.52', 9100);
     }
 
     public listen() {
