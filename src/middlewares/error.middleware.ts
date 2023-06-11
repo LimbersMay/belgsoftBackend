@@ -9,6 +9,13 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
 
             if (error.errors) {
 
+                if (!Array.isArray(error.errors)) {
+                    console.log(error.errors);
+                    return {
+                        errors: error.errors
+                    };
+                }
+
                 // class-validator error
                 const errors = error.errors.map((err: ValidationError) => {
                     return {
