@@ -14,11 +14,12 @@ import {IsAuthenticated} from "../../middlewares";
 import {createOrder, findAllOrders, updateOrder, printOrder} from "../../services";
 import {handleHttp} from "../../utils";
 import {UserResponse} from "../../mappers";
-import {BranchIdSpecification, OrderIdSpecification} from "../../specifications";
+import {BranchIdSpecification, OrderIdSpecification, UserIdSpecification, TableIdSpecification, AreaIdSpecification} from "../../specifications";
 import {OrderErrors} from "../../errors";
 import {CreateOrderDTO} from "./validators/order.create";
 import {OrderIdDTO, UpdateOrderDTO} from "./validators/order.update";
 import {PrintOrderDTO} from "./validators/order.print";
+import {TableIdDTO} from "../table/validators/table.update";
 
 @JsonController('/orders')
 @UseBefore(IsAuthenticated)
@@ -32,6 +33,54 @@ export class OrderController {
     ) {
         try {
             return await findAllOrders(new BranchIdSpecification(branchId));
+        } catch (e) {
+            return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_GET_ORDERS, e);
+        }
+    }
+
+    @Get('/user')
+    @Authorized(['ADMIN', 'WAITER', 'SUPER_USER'])
+    public async getAllOrdersByUser(
+        @CurrentUser() { userId }: UserResponse,
+        @Res() res: Response
+    ) {
+        try {
+            return await findAllOrders(new UserIdSpecification(userId));
+        } catch (e) {
+            return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_GET_ORDERS, e);
+        }
+    }
+
+    @Get('/table/:id')
+    @Authorized(['ADMIN', 'SUPER_USER', 'WAITER'])
+    public async getAllOrdersByTable(
+        @Res() res: Response,
+        @CurrentUser() {branchId}: UserResponse,
+        @Params({ validate: true}) { id }: TableIdDTO,
+    ) {
+        try {
+            // Filter all orders from a specific table
+            const orders = await findAllOrders([
+                new BranchIdSpecification(branchId),
+                new TableIdSpecification(id)
+            ]);
+
+            // Get all menus from the ordersId
+            return orders.map(order => order.menus);
+        } catch (e) {
+            return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_GET_ORDERS, e);
+        }
+    }
+
+    @Get('/area')
+    @Authorized(['ADMIN', 'SUPER_USER'])
+    public async getAllOrdersByArea(
+        @Res() res: Response,
+        @CurrentUser() {branchId}: UserResponse,
+        @Params({ validate: true}) { id }: TableIdDTO,
+    ) {
+        try {
+            return await findAllOrders(new AreaIdSpecification(id));
         } catch (e) {
             return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_GET_ORDERS, e);
         }
