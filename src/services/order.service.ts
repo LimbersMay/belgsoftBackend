@@ -10,7 +10,7 @@ import {
 } from "../models";
 import {OrderResponse} from "../mappers";
 import {Specification} from "../specifications";
-import {OrderSpecificationBuilder} from "../specifications/sequelize";
+import {OrderSpecificationBuilder} from "../specifications";
 import {CreateOrderDTO} from "../controllers/order/validators/order.create";
 import {UpdateOrderDTO} from "../controllers/order/validators/order.update";
 
