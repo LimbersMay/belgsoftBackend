@@ -1,9 +1,12 @@
 import {OrderSchema} from "../models";
+import {MenuResponse} from "./menu.response";
 
 interface OrderResponseProps {
     orderId: string;
     customerName?: string;
+    tableId: string;
     tableNumber: string;
+    menus: MenuResponse[];
     userName: string;
     orderStatus: string;
     area: string;
@@ -16,6 +19,8 @@ export class OrderResponse {
     private orderId: string;
     private customerName?: string;
     private tableNumber: string;
+    menus: MenuResponse[];
+    private tableId: string;
     private userName: string;
     private orderStatus: string;
     private area: string;
@@ -23,10 +28,12 @@ export class OrderResponse {
     private quantity: number;
     private createdAt: Date;
 
-    constructor({ orderId, customerName, tableNumber, userName, orderStatus, area, price, quantity, createdAt }: OrderResponseProps) {
+    constructor({ orderId, customerName, tableId, menus, tableNumber, userName, orderStatus, area, price, quantity, createdAt }: OrderResponseProps) {
         this.orderId = orderId;
         this.customerName = customerName;
         this.tableNumber = tableNumber;
+        this.menus = menus;
+        this.tableId = tableId;
         this.userName = userName;
         this.orderStatus = orderStatus;
         this.area = area;
@@ -39,6 +46,8 @@ export class OrderResponse {
         return new OrderResponse({
             orderId: orderModel.orderId,
             customerName: orderModel.customerName,
+            tableId: orderModel.tableId,
+            menus: orderModel.menus.map(menuSchema => MenuResponse.fromMenu(menuSchema)),
             tableNumber: orderModel.table.number,
             userName: orderModel.user.name,
             orderStatus: orderModel.orderStatus.name,
