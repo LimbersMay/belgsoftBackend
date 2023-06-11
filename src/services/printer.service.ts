@@ -44,6 +44,10 @@ export const printOrder = (printOrderDTO: PrintOrderDTO) => {
 
     const encoder = new EscPosEncoder();
 
+    const products = printOrderDTO.productsInOrder.map(product => (
+        [product[0], `${product[1]}`]
+    ))
+
     let ticket = encoder
         .align("center")
         .line("*".repeat(10) + " LA TIA DE KAUA " + "*".repeat(10))
@@ -57,7 +61,7 @@ export const printOrder = (printOrderDTO: PrintOrderDTO) => {
             ],
             [
                 [(encoder: EscPosEncoder) => encoder.bold().text('Producto').bold(), (encoder: EscPosEncoder) => encoder.bold().text('Cantidad').bold()],
-                ...printOrderDTO.productsInOrder,
+                ...products,
                 ['      ', '='.repeat(10)],
                 [(encoder: EscPosEncoder) => encoder.bold().text('Area').bold(), printOrderDTO.areaTitle],
                 [(encoder: EscPosEncoder) => encoder.bold().text('Mesa').bold(), printOrderDTO.tableTitle]
