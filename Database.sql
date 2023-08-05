@@ -168,6 +168,8 @@ CREATE TABLE OrderMenu
 
 INSERT INTO Role (roleId, name, value)
 VALUES ('1', 'ADMIN', 'admin');
+INSERT INTO Role (roleId, name, value)
+VALUES ('2', 'WAITER', 'waiter');
 INSERT INTO UserType (userTypeId, name, type)
 VALUES ('2', 'FREE', 'Free');
 INSERT INTO UserState (userStateId, name, state)
@@ -177,16 +179,38 @@ INSERT INTO Branch (branchId, name, address, city, state, phone)
 VALUES ('32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
 
 INSERT INTO Category (categoryId, branchId, name, description)
-VALUES ('c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Soda', 'Soda of the house');
+VALUES ('c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Drink', 'Drink of the house');
+
+INSERT INTO Category (categoryId, branchId, name, description)
+VALUES ('da47c63f-196a-4240-bf58-846fd7f0931d', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Food', 'Food of the house');
+
+INSERT INTO Category (categoryId, branchId, name, description)
+VALUES ('5ff6a9c3-bfb4-4269-b8d6-22f620414199', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Dessert', 'Desserts of the house');
 
 INSERT INTO Menu (menuId, categoryId, branchId, name, price, isAvailable, description, image)
-VALUES ('5aced550-a1e8-4643-a7c6-ab98954db2d2', 'c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Coca Cola', 20, 1, 'Coca Cola', 'https:-historia-de-la-coca-cola.jpg');
+VALUES ('bab910cf-bb45-41b0-89a1-45db90635e03', 'c1b6913e-78a1-407a-9e4b-49bb007b81c0', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Coca Cola', 20, 1, 'Coca Cola', 'https:-historia-de-la-coca-cola.jpg');
 
+INSERT INTO Menu (menuId, categoryId, branchId, name, price, isAvailable, description, image)
+VALUES ('2f1780e9-a7a3-4601-800b-6e845669faef', 'da47c63f-196a-4240-bf58-846fd7f0931d', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Frijol colado', 80, 1, 'Frijol colado especial', 'https://jameaperu.com/wp-content/uploads/2019/04/frejol-colado_700x465.jpg');
+
+INSERT INTO Menu (menuId, categoryId, branchId, name, price, isAvailable, description, image)
+VALUES ('d47249e4-26d1-474c-b853-070f95910eda', '5ff6a9c3-bfb4-4269-b8d6-22f620414199', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Flan', 43, 1, 'Flan regional', 'https://www.nicepng.com/png/detail/237-2378918_dile-a-tus-amigos-rebanada-de-flan-napolitano.png');
+
+# Area: Area 1
 INSERT INTO Area (areaId, branchId, name, description)
 VALUES ('95552220-6beb-464a-ba18-c2a4963a174a', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Area 1', 'Area 1');
 
+# Area: Palapa
+INSERT INTO Area (areaId, branchId, name, description)
+VALUES ('54ee6953-a784-4667-8e9a-5a6efb23e7dd', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Palapa', 'Area trasera de la palapa');
+
+# Mesa: 5
 INSERT INTO `Table` (tableId, branchId, number, customers)
 VALUES ('b6307076-c2f8-42d3-b906-338a65bdc6f7', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', '5', 5);
+
+# Mesa: 2
+INSERT INTO `Table` (tableId, branchId, number, customers)
+VALUES ('5df02537-5c0d-459c-adaf-0d0c645735ea', '32c629ca-a1ab-40be-8a29-b1c007bd61f1', '2', 3);
 
 INSERT INTO OrderStatus (orderStatusId, name, description) VALUES ('8c65c0c9-0244-4ba6-8e6b-498c089e0a49', 'PENDING', 'The order has been placed');
 

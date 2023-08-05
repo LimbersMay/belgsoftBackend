@@ -1,7 +1,7 @@
 import {AbstractSpecificationBuilder} from "./specifications.builder";
 import {Specification} from "../generic-specification";
 import {WhereOptions} from "sequelize";
-import {Area} from "../../interfaces/area.interface";
+import {Area} from "../../interfaces";
 import {BranchIdSpecification} from "../";
 import {AreaIdSpecification} from "../area.specification";
 
@@ -11,9 +11,7 @@ export class AreaSpecificationsBuilder extends AbstractSpecificationBuilder {
 
         if (specification instanceof BranchIdSpecification) {
             return { branchId: specification.branchId };
-        }
-
-        if (specification instanceof AreaIdSpecification) {
+        } else if (specification instanceof AreaIdSpecification) {
             return { areaId: specification.areaId};
         }
 

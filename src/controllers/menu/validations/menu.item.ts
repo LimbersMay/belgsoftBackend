@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsNumber, IsUUID} from "class-validator";
+import {IsNotEmpty, IsUUID} from "class-validator";
 
 export class MenuItemDTO {
 
@@ -10,17 +10,11 @@ export class MenuItemDTO {
     })
     menuId!: string;
 
-    @IsNumber({}, {
-        message: 'quantity must be a number'
-    })
     @IsNotEmpty({
         message: 'quantity is required'
     })
     quantity!: number;
 
-    @IsNumber({}, {
-        message: 'price must be a number'
-    })
     @IsNotEmpty({
         message: 'price is required'
     })

@@ -10,6 +10,7 @@ import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
 import {findUser} from "./services";
 import {UserIdSpecification} from "./specifications";
+import {PrinterService} from "./services/printer.service";
 
 export class AppServer {
     public app: Application;
@@ -57,7 +58,7 @@ export class AppServer {
             controllers: [UserController, AuthController, OrderController, TableController, MenuController, AreaController],
             middlewares: [ErrorMiddleware],
             cors: {
-                origin: ["http://localhost:5173"],
+                origin: ["http://localhost:63342"],
                 methods: ["GET", "POST", "PUT", "DELETE"],
                 credentials: true
             },
@@ -80,6 +81,9 @@ export class AppServer {
                 return await findUser(new UserIdSpecification(userToken.userId));
             }
         });
+
+        // CONNECT TO THERMAL PRINTER
+        PrinterService.connect('192.168.0.52', 9100);
     }
 
     public listen() {

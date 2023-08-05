@@ -27,7 +27,7 @@ export class AreaController {
     constructor() {
     }
 
-    @Authorized(['ADMIN', 'USER', 'SUPER_USER'])
+    @Authorized(['ADMIN', 'USER', 'SUPER_USER', 'WAITER'])
     @Get('/')
     public async getAll(@Res() res: Response, @CurrentUser() {branchId}: UserResponse) {
         try {

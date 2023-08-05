@@ -1,8 +1,16 @@
 import {v4 as uuidv4} from 'uuid';
-import {AreaSchema, OrderMenuSchema, OrderSchema, OrderStatusSchema, TableSchema, UserSchema} from "../models";
+import {
+    AreaSchema, CategorySchema,
+    MenuSchema,
+    OrderMenuSchema,
+    OrderSchema,
+    OrderStatusSchema,
+    TableSchema,
+    UserSchema
+} from "../models";
 import {OrderResponse} from "../mappers";
 import {Specification} from "../specifications";
-import {OrderSpecificationBuilder} from "../specifications/sequelize";
+import {OrderSpecificationBuilder} from "../specifications";
 import {CreateOrderDTO} from "../controllers/order/validators/order.create";
 import {UpdateOrderDTO} from "../controllers/order/validators/order.update";
 
@@ -20,6 +28,12 @@ export const findAllOrders = async (specifications: OrderSpecification) => {
             {model: TableSchema, as: 'table'},
             {model: UserSchema, as: 'user'},
             {model: OrderStatusSchema, as: 'orderStatus'},
+            {model: MenuSchema, as: 'menus', include: [
+                    {model: CategorySchema, as: 'category'}
+                ]}
+        ],
+        order: [
+            ['updatedAt', 'ASC']
         ]
     });
 
@@ -51,8 +65,19 @@ export const createOrder = async (order: CreateOrderDTO, branchId: string, userI
         price: totalPrice,
         quantity: totalQuantity,
         branchId,
+        orderStatusId: '8c65c0c9-0244-4ba6-8e6b-498c089e0a49',
         userId
     });
+
+    await orderInstance.reload({
+        include: [
+            {model: AreaSchema, as: 'area'},
+            {model: TableSchema, as: 'table'},
+            {model: UserSchema, as: 'user'},
+            {model: OrderStatusSchema, as: 'orderStatus'},
+            {model: MenuSchema, as: 'menus'}
+        ]
+    })
 
     const orderMenuRegistries = order.menuItems.map(menuItem => (
         OrderMenuSchema.create({

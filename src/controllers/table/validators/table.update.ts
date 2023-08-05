@@ -2,7 +2,7 @@ import {IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf} from "class-vali
 import {IsTableExist} from "./table-existance";
 import {TableErrors} from "../../../errors";
 
-export class UpdateTableIdDTO {
+export class TableIdDTO {
     @IsString({
         message: 'Id must be a string'
     })

@@ -1,5 +1,15 @@
-import {AllowNull, BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
-import {AreaSchema, TableSchema, UserSchema, OrderStatusSchema} from "./";
+import {
+    AllowNull,
+    BelongsTo,
+    Column,
+    ForeignKey,
+    HasMany,
+    Model,
+    PrimaryKey,
+    Table,
+    Unique
+} from "sequelize-typescript";
+import {AreaSchema, TableSchema, UserSchema, OrderStatusSchema, MenuSchema} from "./";
 import {Order} from "../interfaces";
 
 @Table
@@ -20,6 +30,9 @@ export class OrderSchema extends Model<Order> {
     @Column
     @ForeignKey(() => AreaSchema)
     areaId!: string;
+
+    @HasMany(() => MenuSchema, 'menuId')
+    menus!: MenuSchema[];
 
     @BelongsTo(() => AreaSchema)
     area!: AreaSchema;

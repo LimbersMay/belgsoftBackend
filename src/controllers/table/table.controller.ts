@@ -4,8 +4,7 @@ import {
     CurrentUser,
     Delete,
     Get,
-    JsonController,
-    Params,
+    JsonController, Params,
     Post,
     Put,
     Res,
@@ -17,7 +16,7 @@ import {createTable, deleteTable, findAllTables, updateTable} from "../../servic
 import {handleHttp} from "../../utils";
 import {CreateTableDTO} from "./validators/table.create";
 import {TableErrors} from "../../errors";
-import {UpdateTableDTO, UpdateTableIdDTO} from "./validators/table.update";
+import {UpdateTableDTO, TableIdDTO} from "./validators/table.update";
 import {UserResponse} from "../../mappers";
 
 @JsonController('/tables')
@@ -25,7 +24,7 @@ import {UserResponse} from "../../mappers";
 export class TableController {
 
     @Get('/')
-    @Authorized('ADMIN')
+    @Authorized(['ADMIN', 'WAITER'])
     public async getAll(
         @Res() res: Response,
         @CurrentUser() { branchId }: UserResponse
@@ -55,7 +54,7 @@ export class TableController {
     @Put('/:id')
     public async updateTable(
         @Res() res: Response,
-        @Params({validate: true}) { id }: UpdateTableIdDTO,
+        @Params({validate: true}) { id }: TableIdDTO,
         @Body({validate: true}) updateTableDTO: UpdateTableDTO,
         @CurrentUser() { branchId }: UserResponse
     ) {
@@ -75,7 +74,7 @@ export class TableController {
     @Delete('/:id')
     public async deleteTable(
         @Res() res: Response,
-        @Params({validate: true}) { id }: UpdateTableIdDTO,
+        @Params({validate: true}) { id }: TableIdDTO,
         @CurrentUser() { branchId }: UserResponse
     ) {
         try {
