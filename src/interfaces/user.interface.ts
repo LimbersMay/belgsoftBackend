@@ -1,5 +1,7 @@
 export interface User {
     userId: string;
+    createdByUserId?: string;
+    branchId: string;
     name: string;
     email: string;
     roleId: string;

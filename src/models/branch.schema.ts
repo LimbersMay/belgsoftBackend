@@ -1,18 +1,25 @@
 import {Column, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
+import {Branch} from "../interfaces/branch.interface";
 
 @Table
-export class CustomerSchema extends Model {
+export class BranchSchema extends Model<Branch> {
 
     @PrimaryKey
     @Unique
     @Column
-    customerId!: string;
+    branchId!: string;
 
     @Column
     name!: string;
 
     @Column
-    surname!: string;
+    address!: string;
+
+    @Column
+    city!: string;
+
+    @Column
+    state!: string;
 
     @Column
     phone!: string;
