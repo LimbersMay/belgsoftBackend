@@ -3,23 +3,20 @@ import {UserSchema, RoleSchema, UserTypeSchema, UserStateSchema} from "../models
 import {UpdateUserDTO} from "../controllers/user/validators/user.update";
 import {encrypt} from "../utils";
 import {
-    Specification
+    Criteria, SequelizeSpecificationBuilder,
 } from "../specifications";
-import {UserSpecificationBuilder} from "../specifications/sequelize";
-
-type UserSpecification = Specification<string> | Specification<string>[];
 
 // User specification validator
-const userSpecificationBuilder = new UserSpecificationBuilder();
+const specificationBuilder = new SequelizeSpecificationBuilder();
 
-export const updateUser = async (updateUserDTO: UpdateUserDTO, specifications: UserSpecification) => {
+export const updateUser = async (updateUserDTO: UpdateUserDTO, specifications: Criteria) => {
 
     // If the password is updated, encrypt it
     if (updateUserDTO.password) {
         updateUserDTO.password = await encrypt(updateUserDTO.password);
     }
 
-    const whereQuery = userSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
+    const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     return await UserSchema.update({
         ...updateUserDTO
@@ -30,8 +27,8 @@ export const updateUser = async (updateUserDTO: UpdateUserDTO, specifications: U
     });
 }
 
-export const findUser = async (specification: UserSpecification) => {
-    const whereQuery = userSpecificationBuilder.buildWhereClauseFromSpecifications(specification);
+export const findUser = async (specification: Criteria) => {
+    const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specification);
     return await UserSchema.findOne({
         where: whereQuery,
         include: [
@@ -40,8 +37,8 @@ export const findUser = async (specification: UserSpecification) => {
     });
 }
 
-export const findAllUsers = async (specification: UserSpecification) => {
-    const where = userSpecificationBuilder.buildWhereClauseFromSpecifications(specification);
+export const findAllUsers = async (specification: Criteria) => {
+    const where = specificationBuilder.buildWhereClauseFromSpecifications(specification);
     const users = await UserSchema.findAll({
         where,
         include: [

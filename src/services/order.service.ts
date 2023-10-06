@@ -9,17 +9,14 @@ import {
     UserSchema
 } from "../models";
 import {OrderResponse} from "../mappers";
-import {Specification} from "../specifications";
-import {OrderSpecificationBuilder} from "../specifications";
+import {Criteria, SequelizeSpecificationBuilder} from "../specifications";
 import {CreateOrderDTO} from "../controllers/order/validators/order.create";
 import {UpdateOrderDTO} from "../controllers/order/validators/order.update";
 
-type OrderSpecification = Specification<string> | Specification<string>[];
+const specificationBuilder = new SequelizeSpecificationBuilder();
 
-const orderSpecificationBuilder = new OrderSpecificationBuilder();
-
-export const findAllOrders = async (specifications: OrderSpecification) => {
-    const whereQuery = orderSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
+export const findAllOrders = async (specifications: Criteria) => {
+    const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const orders = await OrderSchema.findAll({
         where: whereQuery,
@@ -95,9 +92,9 @@ export const createOrder = async (order: CreateOrderDTO, branchId: string, userI
     return OrderResponse.fromOrder(orderInstance);
 }
 
-export const updateOrder = async (orderDTO: UpdateOrderDTO, specifications: OrderSpecification) => {
+export const updateOrder = async (orderDTO: UpdateOrderDTO, specifications: Criteria) => {
 
-    const whereQuery = orderSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
+    const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const [ affectedCount ] = await OrderSchema.update(orderDTO, {
         where: whereQuery
