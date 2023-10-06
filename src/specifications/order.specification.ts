@@ -1,6 +1,7 @@
-import {AbstractSpecification} from "./generic-specification";
+import {AbstractSpecification, Expression} from "./generic-specification";
+import {Order} from "../interfaces";
 
-export class OrderIdSpecification extends AbstractSpecification<string> {
+export class OrderIdSpecification extends AbstractSpecification<Order> {
 
     public readonly orderId: string;
 
@@ -9,7 +10,11 @@ export class OrderIdSpecification extends AbstractSpecification<string> {
         this.orderId = orderId;
     }
 
-    isSatisfiedBy(candidate: string): boolean {
-        return candidate === this.orderId;
+    isSatisfiedBy(candidate: Order): boolean {
+        return candidate.orderId === this.orderId;
+    }
+
+    convertToExpression(): Expression<Order> {
+        return { orderId: this.orderId };
     }
 }

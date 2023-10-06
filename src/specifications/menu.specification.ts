@@ -1,6 +1,7 @@
-import {AbstractSpecification} from "./generic-specification";
+import {AbstractSpecification, Expression} from "./generic-specification";
+import {Menu} from "../interfaces";
 
-export class MenuIdSpecification extends AbstractSpecification<string> {
+export class MenuIdSpecification extends AbstractSpecification<Menu> {
 
     public readonly menuId: string;
 
@@ -9,7 +10,11 @@ export class MenuIdSpecification extends AbstractSpecification<string> {
         this.menuId = menuId;
     }
 
-    isSatisfiedBy(candidate: string): boolean {
-        return candidate === this.menuId;
+    isSatisfiedBy(candidate: Menu): boolean {
+        return candidate.menuId === this.menuId;
+    }
+
+    convertToExpression(): Expression<Menu> {
+        return { menuId: this.menuId };
     }
 }
