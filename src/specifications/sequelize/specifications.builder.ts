@@ -1,9 +1,10 @@
 import {Op, WhereOptions} from "sequelize";
-import {AndSpecification, NotSpecification, OrSpecification, Specification} from "../generic-specification";
+import {SpecificationBuilder} from "../specification-builder";
+import {AbstractSpecification, AndSpecification, NotSpecification, OrSpecification} from "../generic-specification";
 
-export abstract class AbstractSpecificationBuilder {
+export class SequelizeSpecificationBuilder<T> implements SpecificationBuilder<T, WhereOptions>{
 
-    public buildWhereClauseFromSpecifications<T>(specifications: T) {
+    public buildWhereClauseFromSpecifications<T>(specifications: T): WhereOptions<T> {
         const where: WhereOptions = {};
 
         // if we get a single specification, convert it to an array
@@ -17,7 +18,7 @@ export abstract class AbstractSpecificationBuilder {
         return where;
     }
 
-    public buildComplexSpecification <T>(specification: Specification<T>): WhereOptions<T> {
+    public buildComplexSpecification <T>(specification: AbstractSpecification<T>): WhereOptions<T> {
         // If you have complex specifications, you can use the following
         if (specification instanceof AndSpecification) {
             const oneClause = this.buildWhereClauseFromSpecification(specification.one);
@@ -36,5 +37,12 @@ export abstract class AbstractSpecificationBuilder {
         return {};
     }
 
-    public abstract buildWhereClauseFromSpecification <T>(specification: Specification<T>): WhereOptions<T>;
+    public buildWhereClauseFromSpecification<T>(specification: AbstractSpecification<T>): WhereOptions<T> {
+
+        if (!(specification instanceof AndSpecification || specification instanceof OrSpecification || specification instanceof NotSpecification)) {
+            return specification.convertToExpression() as WhereOptions<T>;
+        }
+
+        return this.buildComplexSpecification(specification);
+    };
 }
