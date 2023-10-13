@@ -1,13 +1,18 @@
-import {AbstractSpecification} from "./generic-specification";
+import {AbstractSpecification, Expression} from "./generic-specification";
+import {Area} from "../interfaces";
 
-export class AreaIdSpecification extends AbstractSpecification<string> {
+export class AreaIdSpecification extends AbstractSpecification<Area> {
     public readonly areaId: string;
     constructor(areaId: string) {
         super();
         this.areaId = areaId;
     }
 
-    isSatisfiedBy(candidate: string): boolean {
-        return candidate === this.areaId;
+    isSatisfiedBy(candidate: Area): boolean {
+        return candidate.areaId === this.areaId;
+    }
+
+    convertToExpression(): Expression<Area> {
+        return {areaId: this.areaId};
     }
 }

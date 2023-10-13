@@ -31,7 +31,7 @@ export class PrinterService {
         }
     }
 
-    public static print(message: Buffer) {
+    public static print(message: Uint8Array) {
         if (PrinterService.socket && PrinterService.socket.writable) {
             PrinterService.socket.write(message);
         } else {
@@ -45,7 +45,7 @@ export const printOrder = (printOrderDTO: PrintOrderDTO) => {
     const encoder = new EscPosEncoder();
 
     const products = printOrderDTO.productsInOrder.map(product => (
-        [product[0], `${product[1]}`]
+        [product[0].productName, product[1].quantity]
     ))
 
     let ticket = encoder
@@ -53,7 +53,6 @@ export const printOrder = (printOrderDTO: PrintOrderDTO) => {
         .line("*".repeat(10) + " LA TIA DE KAUA " + "*".repeat(10))
         .newline()
         .newline()
-        // @ts-ignore
         .table(
             [
                 {width: 36, marginRight: 2, align: 'left'},

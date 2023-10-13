@@ -1,6 +1,7 @@
-import {AbstractSpecification} from "./generic-specification";
+import {AbstractSpecification, Expression} from "./generic-specification";
+import {Table} from "../interfaces";
 
-export class TableIdSpecification extends AbstractSpecification<string> {
+export class TableIdSpecification extends AbstractSpecification<Table> {
 
     public readonly tableId: string;
 
@@ -9,7 +10,11 @@ export class TableIdSpecification extends AbstractSpecification<string> {
         this.tableId = tableId;
     }
 
-    isSatisfiedBy(candidate: string): boolean {
-        return candidate === this.tableId;
+    isSatisfiedBy(candidate: Table): boolean {
+        return candidate.tableId === this.tableId;
+    }
+
+    convertToExpression(): Expression<Table> {
+        return { tableId: this.tableId };
     }
 }
