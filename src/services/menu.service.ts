@@ -8,6 +8,7 @@ import {Criteria, SequelizeSpecificationBuilder} from "../specifications";
 
 const specificationBuilder = new SequelizeSpecificationBuilder();
 
+
 export const findAllMenu = async (specifications: Criteria): Promise<MenuResponse[]> => {
 
     const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
@@ -59,25 +60,25 @@ export const createMenu = async (menuDTO: CreateMenuDTO, branchId: string) => {
     return MenuResponse.fromMenu(newMenu);
 }
 
-export const updateMenu = async (menuId: string, branchId: string, menuDTO: UpdateMenuDTO) => {
+export const updateMenu = async (menuDTO: UpdateMenuDTO, specifications: Criteria) => {
+
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
     const [ affectedFields ] = await MenuSchema.update(
         {...menuDTO},
         {
-            where: {
-                menuId,
-                branchId
-            }
+            where: whereClause
         }
     );
 
     return affectedFields;
 }
 
-export const deleteMenu = async (menuId: string, branchId: string) => {
+export const deleteMenu = async (specifications: Criteria) => {
+
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
     return await MenuSchema.destroy({
-        where: {
-            menuId,
-            branchId
-        }
+        where: whereClause
     });
 }
