@@ -89,13 +89,13 @@ export class MenuController {
     @Authorized(['ADMIN', 'WAITER'])
     public async getById(
         @Res() res: Response,
-        @Params({validate: true}) { id }: MenuIdDTO,
+        @Params({validate: true}) { id: menuId }: MenuIdDTO,
         @CurrentUser() { branchId }: UserResponse
     ) {
         try {
             const menu = await findOneMenu([
                 new BranchIdSpecification(branchId),
-                new MenuIdSpecification(id)
+                new MenuIdSpecification(menuId)
             ]);
 
             if (typeof menu === "string") {
@@ -126,12 +126,15 @@ export class MenuController {
     @Authorized('ADMIN')
     public async update(
         @Res() res: Response,
-        @Params({validate: true}) { id }: MenuIdDTO,
+        @Params({validate: true}) { id: menuId }: MenuIdDTO,
         @Body({validate: true}) updateMenuDTO: UpdateMenuDTO,
         @CurrentUser() { branchId }: UserResponse
     ) {
         try {
-            const affectedFields = await updateMenu(id, branchId, updateMenuDTO);
+            const affectedFields = await updateMenu(updateMenuDTO, [
+                new BranchIdSpecification(branchId),
+                new MenuIdSpecification(menuId)
+            ]);
             
             return {
                 affectedFields
@@ -145,11 +148,14 @@ export class MenuController {
     @Authorized('ADMIN')
     public async delete(
         @Res() res: Response,
-        @Params({validate: true}) { id }: MenuIdDTO,
+        @Params({validate: true}) { id: menuId }: MenuIdDTO,
         @CurrentUser() { branchId }: UserResponse
     ) {
         try {
-            const affectedFields = await deleteMenu(id, branchId);
+            const affectedFields = await deleteMenu([
+                new BranchIdSpecification(branchId),
+                new MenuIdSpecification(menuId)
+            ]);
 
             return {
                 affectedFields
