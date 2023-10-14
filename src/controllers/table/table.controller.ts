@@ -18,6 +18,7 @@ import {CreateTableDTO} from "./validators/table.create";
 import {TableErrors} from "../../errors";
 import {UpdateTableDTO, TableIdDTO} from "./validators/table.update";
 import {UserResponse} from "../../mappers";
+import {BranchIdSpecification, TableIdSpecification} from "../../specifications";
 
 @JsonController('/tables')
 @UseBefore(IsAuthenticated)
@@ -30,7 +31,9 @@ export class TableController {
         @CurrentUser() { branchId }: UserResponse
     ) {
         try {
-            return await findAllTables(branchId);
+            return await findAllTables([
+                new BranchIdSpecification(branchId)
+            ]);
         } catch (e) {
             return handleHttp(res, TableErrors.TABLE_ERROR_CANNOT_GET_TABLES, e);
         }
@@ -54,13 +57,16 @@ export class TableController {
     @Put('/:id')
     public async updateTable(
         @Res() res: Response,
-        @Params({validate: true}) { id }: TableIdDTO,
+        @Params({validate: true}) { id: tableId }: TableIdDTO,
         @Body({validate: true}) updateTableDTO: UpdateTableDTO,
         @CurrentUser() { branchId }: UserResponse
     ) {
 
         try {
-            const responseTable = await updateTable(id, branchId, updateTableDTO);
+            const responseTable = await updateTable(updateTableDTO, [
+                new TableIdSpecification(tableId),
+                new BranchIdSpecification(branchId)
+            ]);
 
             return {
                 affectedFields: responseTable
@@ -74,11 +80,14 @@ export class TableController {
     @Delete('/:id')
     public async deleteTable(
         @Res() res: Response,
-        @Params({validate: true}) { id }: TableIdDTO,
+        @Params({validate: true}) { id: tableId }: TableIdDTO,
         @CurrentUser() { branchId }: UserResponse
     ) {
         try {
-            const deleteResponse = await deleteTable(id, branchId);
+            const deleteResponse = await deleteTable([
+                new TableIdSpecification(tableId),
+                new BranchIdSpecification(branchId)
+            ]);
 
             return {
                 affectedFields: deleteResponse

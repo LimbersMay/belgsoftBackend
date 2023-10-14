@@ -56,13 +56,13 @@ export class OrderController {
     public async getAllOrdersByTable(
         @Res() res: Response,
         @CurrentUser() {branchId}: UserResponse,
-        @Params({ validate: true}) { id }: TableIdDTO,
+        @Params({ validate: true}) { id: tableId }: TableIdDTO,
     ) {
         try {
             // Filter all orders from a specific table
             const orders = await findAllOrders([
                 new BranchIdSpecification(branchId),
-                new TableIdSpecification(id)
+                new TableIdSpecification(tableId)
             ]);
 
             // Get all menus from the ordersId
@@ -77,10 +77,10 @@ export class OrderController {
     public async getAllOrdersByArea(
         @Res() res: Response,
         @CurrentUser() {branchId}: UserResponse,
-        @Params({ validate: true}) { id }: TableIdDTO,
+        @Params({ validate: true}) { id: tableId }: TableIdDTO,
     ) {
         try {
-            return await findAllOrders(new AreaIdSpecification(id));
+            return await findAllOrders(new AreaIdSpecification(tableId));
         } catch (e) {
             return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_GET_ORDERS, e);
         }
