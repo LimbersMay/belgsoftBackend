@@ -1,6 +1,7 @@
 import {IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf} from "class-validator";
-import {IsTableExist} from "./table-existance";
+import {DoesTableWithQueryExist} from "./table-existance";
 import {TableErrors} from "../../../errors";
+import {TableIdSpecification} from "../../../specifications";
 
 export class TableIdDTO {
     @IsString({
@@ -9,9 +10,12 @@ export class TableIdDTO {
     @IsNotEmpty({
         message: 'Id is required'
     })
-    @IsTableExist({
-        message: TableErrors.TABLE_ERROR_TABLE_NOT_FOUND
-    })
+    @DoesTableWithQueryExist(
+        (value: string) => new TableIdSpecification(value),
+        {
+            message: TableErrors.TABLE_ERROR_TABLE_NOT_FOUND
+        }
+    )
     id!: string;
 }
 
