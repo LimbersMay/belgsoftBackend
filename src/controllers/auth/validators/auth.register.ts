@@ -1,6 +1,7 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import {IsUserAlreadyExist} from "../../validators/email-exists";
 import {AuthError} from "../../../errors";
+import {DoesUserWithQueryNotExist} from "../../user/validators/user-exists";
+import {UserEmailSpecification} from "../../../specifications";
 
 export class AuthRegisterDTO {
     @IsString({
@@ -25,9 +26,12 @@ export class AuthRegisterDTO {
     @IsNotEmpty({
         message: "Email is required"
     })
-    @IsUserAlreadyExist({
-        message: AuthError.AUTH_ERROR_EMAIL_ALREADY_EXISTS
-    })
+    @DoesUserWithQueryNotExist(
+        (email: string) => new UserEmailSpecification(email),
+        {
+            message: AuthError.AUTH_ERROR_EMAIL_ALREADY_EXISTS,
+        }
+    )
     email!: string;
 
     @IsString({
