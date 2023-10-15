@@ -18,7 +18,7 @@ export const findAllTables = async (specifications: Criteria) => {
     return tables.map(table => TableResponse.fromTable(table));
 }
 
-export const findTableByQuery = async (specifications: Criteria) => {
+export const findOneTable = async (specifications: Criteria) => {
 
     const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
