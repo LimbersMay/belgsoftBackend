@@ -1,6 +1,7 @@
 import {IsEmail, IsNotEmpty, IsOptional, IsString, ValidateIf} from "class-validator";
-import {IsUserExist} from "./user-exists";
-import {IsUserAlreadyExist} from "../../validators/email-exists";
+import {DoesUserWithQueryNotExist, DoesUserWithQueryExist} from "./user-exists";
+import {UserEmailSpecification, UserIdSpecification} from "../../../specifications";
+import {AuthError, UserError} from "../../../errors";
 
 export class UpdateUserIdDTO {
         @IsString({
@@ -9,9 +10,12 @@ export class UpdateUserIdDTO {
         @IsNotEmpty({
             message: 'Id is required'
         })
-        @IsUserExist({
-            message: 'User not found'
-        })
+        @DoesUserWithQueryExist(
+            (id: string) => new UserIdSpecification(id),
+            {
+                message: UserError.USER_NOT_FOUND
+            }
+        )
         id!: string;
 }
 
@@ -28,9 +32,12 @@ export class UpdateUserDTO {
     @IsEmail({},{
         message: 'Name must be a string'
     })
-    @IsUserAlreadyExist({
-        message: 'Email already registered'
-    })
+    @DoesUserWithQueryNotExist(
+        (email: string) => new UserEmailSpecification(email),
+        {
+            message: AuthError.AUTH_ERROR_EMAIL_ALREADY_EXISTS
+        }
+    )
     email?: string;
 
     @IsOptional()
