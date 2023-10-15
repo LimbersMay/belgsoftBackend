@@ -2,7 +2,7 @@ import {Response} from "express";
 import {Body, JsonController, Post, Res} from "routing-controllers";
 import {loginUser, registerUser} from "../../services";
 import {handleHttp} from "../../utils";
-import {AUTH_ERRORS} from "../../errors";
+import {AuthError, UserError} from "../../errors";
 import {AuthRegisterDTO} from "./validators/auth.register";
 import {AuthLoginDTO} from "./validators/auth.login";
 
@@ -17,7 +17,7 @@ export class AuthController {
         try {
             return await registerUser(authRegisterDTO, undefined);
         } catch (e) {
-            return handleHttp(res, AUTH_ERRORS.AUTH_ERROR_CANNOT_REGISTER_USER, e)
+            return handleHttp(res, AuthError.AUTH_ERROR_CANNOT_REGISTER_USER, e)
         }
     }
 
@@ -26,18 +26,28 @@ export class AuthController {
         @Res() res: Response,
         @Body({validate: true}) authLoginDTO: AuthLoginDTO
     ) {
-        try {
-            // Destructure email and password from body (authLoginDTO)
-            const {email, password} = authLoginDTO;
 
-            const responseUser = await loginUser({email, password});
+        // Destructure email and password from body (authLoginDTO)
+        const {email, password} = authLoginDTO;
 
-            // Error handling - if responseUser is a string, then it's an error
-            if (typeof responseUser === "string") return handleHttp(res, responseUser)
+        const responseUser = await loginUser({email, password});
 
-            return responseUser;
-        } catch (e) {
-            return handleHttp(res, AUTH_ERRORS.AUTH_ERROR_CANNOT_LOGIN_USER, e)
+        if (responseUser.isOk()) return responseUser.value;
+
+        const errValue = responseUser.error;
+
+        switch (errValue) {
+
+            case AuthError.AUTH_ERROR_INCORRECT_PASSWORD:
+                return handleHttp(res, errValue);
+
+            case UserError.USER_NOT_FOUND:
+                return handleHttp(res, errValue);
+
+            default:
+                const unhandledError: never = errValue;
+                return handleHttp(res, AuthError.AUTH_ERROR_CANNOT_LOGIN_USER, unhandledError);
         }
+
     }
 }
