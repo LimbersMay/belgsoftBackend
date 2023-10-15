@@ -6,25 +6,52 @@ import {
     ValidationArguments,
 } from 'class-validator';
 import {findUser} from "../../../services";
-import {UserIdSpecification} from "../../../specifications";
+import {Criteria} from "../../../specifications";
 
 @ValidatorConstraint({ async: true })
-export class IsUserExistConstraint implements ValidatorConstraintInterface {
-    async validate(userId: string, args: ValidationArguments) {
-        const user = await findUser(new UserIdSpecification(userId));
+export class DoesUserExistWithQueryExistConstraint implements ValidatorConstraintInterface {
+    async validate(field: string, args: ValidationArguments) {
+
+        const specification = args.constraints[0](field);
+
+        const user = await findUser(specification);
         return !!user;
     }
 }
 
-export function IsUserExist(validationOptions?: ValidationOptions) {
+export function DoesUserWithQueryExist(
+    specificationFactory: (propertyValue: string) => Criteria,
+    validationOptions?: ValidationOptions
+) {
 
     return function (object: Object, propertyName: string) {
         registerDecorator({
             target: object.constructor,
             propertyName: propertyName,
             options: validationOptions,
-            constraints: [],
-            validator: IsUserExistConstraint,
+            constraints: [specificationFactory],
+            validator: DoesUserExistWithQueryExistConstraint,
+        });
+    };
+}
+
+export function DoesUserWithQueryNotExist(
+    specificationFactory: (propertyValue: string) => Criteria,
+    validationOptions?: ValidationOptions
+) {
+
+    return function (object: Object, propertyName: string) {
+        registerDecorator({
+            target: object.constructor,
+            propertyName: propertyName,
+            options: validationOptions,
+            constraints: [specificationFactory],
+            validator: {
+                async validate(value: string, args: ValidationArguments) {
+                    const doesExist = await new DoesUserExistWithQueryExistConstraint().validate(value, args);
+                    return !doesExist;
+                }
+            }
         });
     };
 }
