@@ -31,6 +31,7 @@ export class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
                 });
 
             } else {
+                console.log(error)
                 // generic error handler
                 response.status(error.status || 500);
                 response.json({
