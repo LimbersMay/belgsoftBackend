@@ -18,3 +18,21 @@ export class TableIdSpecification extends AbstractSpecification<Table> {
         return { tableId: this.tableId };
     }
 }
+
+export class TableNumberSpecification extends AbstractSpecification<Table> {
+
+        public readonly number: string;
+
+        constructor(number: string) {
+            super();
+            this.number = number;
+        }
+
+        isSatisfiedBy(candidate: Table): boolean {
+            return candidate.number === this.number;
+        }
+
+        convertToExpression(): Expression<Table> {
+            return { number: this.number };
+        }
+}
