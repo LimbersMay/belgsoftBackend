@@ -13,7 +13,7 @@ import {
 } from "routing-controllers";
 import {handleHttp} from "../../utils";
 import {
-    findUser, findAllUsers,
+    findAllUsers,
     registerUser,
     updateUser
 } from "../../services";
@@ -42,30 +42,22 @@ export class UserController {
     @Put('/:id')
     async updateUser(
         @Res() res: Response,
-        @Params({validate: true}) {id}: UpdateUserIdDTO,
+        @Params({validate: true}) {id: UserToUpdateId}: UpdateUserIdDTO,
         @Body({validate: true}) updateUserDTO: UpdateUserDTO,
         @CurrentUser() user: UserResponse
     ) {
         try {
 
-            if (id !== user.userId) {
-                // Check if the user exists and if it was created by the admin who is updating it
-                const userToUpdate = await findUser([
-                    new UserIdSpecification(id),
-                    new CreatedByAdminIdSpecification(user.userId)
-                ]);
-
-                if (!userToUpdate) return handleHttp(res, UserError.USER_NOT_FOUND, 'User not found')
-
+            if (UserToUpdateId !== user.userId) {
                 // If an admin is updating a user, the user must be updated by the admin who created it
                 return await updateUser(updateUserDTO, [
-                    new UserIdSpecification(id),
+                    new UserIdSpecification(UserToUpdateId),
                     new CreatedByAdminIdSpecification(user.userId)
                 ]);
             }
 
             // If the user wants to update his own data, he can do it without any restrictions
-            return await updateUser(updateUserDTO, new UserIdSpecification(id));
+            return await updateUser(updateUserDTO, new UserIdSpecification(UserToUpdateId));
         } catch (e) {
             return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, e);
         }
