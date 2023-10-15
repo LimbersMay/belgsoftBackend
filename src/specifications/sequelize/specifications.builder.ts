@@ -1,10 +1,16 @@
 import {Op, WhereOptions} from "sequelize";
 import {SpecificationBuilder} from "../specification-builder";
-import {AbstractSpecification, AndSpecification, NotSpecification, OrSpecification} from "../generic-specification";
+import {
+    AbstractSpecification,
+    AndSpecification,
+    Criteria,
+    NotSpecification,
+    OrSpecification
+} from "../generic-specification";
 
-export class SequelizeSpecificationBuilder<T> implements SpecificationBuilder<T, WhereOptions>{
+export class SequelizeSpecificationBuilder implements SpecificationBuilder<WhereOptions>{
 
-    public buildWhereClauseFromSpecifications<T>(specifications: T): WhereOptions<T> {
+    public buildWhereClauseFromSpecifications(specifications: Criteria): WhereOptions<Criteria> {
         const where: WhereOptions = {};
 
         // if we get a single specification, convert it to an array
@@ -18,7 +24,7 @@ export class SequelizeSpecificationBuilder<T> implements SpecificationBuilder<T,
         return where;
     }
 
-    public buildComplexSpecification <T>(specification: AbstractSpecification<T>): WhereOptions<T> {
+    public buildComplexSpecification(specification: AbstractSpecification<unknown>): WhereOptions<Criteria> {
         // If you have complex specifications, you can use the following
         if (specification instanceof AndSpecification) {
             const oneClause = this.buildWhereClauseFromSpecification(specification.one);
@@ -37,10 +43,10 @@ export class SequelizeSpecificationBuilder<T> implements SpecificationBuilder<T,
         return {};
     }
 
-    public buildWhereClauseFromSpecification<T>(specification: AbstractSpecification<T>): WhereOptions<T> {
+    public buildWhereClauseFromSpecification(specification: AbstractSpecification<unknown>): WhereOptions<Criteria> {
 
         if (!(specification instanceof AndSpecification || specification instanceof OrSpecification || specification instanceof NotSpecification)) {
-            return specification.convertToExpression() as WhereOptions<T>;
+            return specification.convertToExpression() as WhereOptions<Criteria>;
         }
 
         return this.buildComplexSpecification(specification);
