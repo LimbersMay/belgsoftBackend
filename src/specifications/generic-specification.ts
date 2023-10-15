@@ -40,7 +40,10 @@ export class AndSpecification<T> extends AbstractSpecification<T> {
     convertToExpression(): Expression<any> {
         const oneExpression = this.one.convertToExpression();
         const otherExpression = this.other.convertToExpression();
-        return { and: [oneExpression, otherExpression] };
+        return [
+            oneExpression,
+            otherExpression,
+        ];
     }
 }
 
@@ -61,7 +64,10 @@ export class OrSpecification<T> extends AbstractSpecification<T> {
     convertToExpression(): Expression<any> {
         const oneExpression = this.one.convertToExpression();
         const otherExpression = this.other.convertToExpression();
-        return { or: [oneExpression, otherExpression] };
+        return [
+            oneExpression,
+            otherExpression,
+        ];
     }
 }
 
@@ -80,6 +86,6 @@ export class NotSpecification<T> extends AbstractSpecification<T> {
 
     public convertToExpression(): Expression<any> {
         const wrappedExpression = this.wrapped.convertToExpression();
-        return { not: wrappedExpression };
+        return [wrappedExpression];
     }
 }
