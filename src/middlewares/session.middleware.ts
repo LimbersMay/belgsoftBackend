@@ -1,6 +1,6 @@
 import {ExpressMiddlewareInterface} from "routing-controllers";
 import {NextFunction, Request, Response} from "express";
-import {AUTH_ERRORS} from "../errors";
+import {AuthError} from "../errors";
 import {verifyToken} from "../utils";
 
 export class IsAuthenticated implements ExpressMiddlewareInterface {
@@ -11,7 +11,7 @@ export class IsAuthenticated implements ExpressMiddlewareInterface {
             if (!jwtAuth) {
                 return next({
                     status: 401,
-                    message: AUTH_ERRORS.AUTH_ERROR_INVALID_SESSION
+                    message: AuthError.AUTH_ERROR_INVALID_SESSION
                 });
             }
 
@@ -21,7 +21,7 @@ export class IsAuthenticated implements ExpressMiddlewareInterface {
             } catch (e) {
                 return next({
                     status: 401,
-                    message: AUTH_ERRORS.AUTH_ERROR_INVALID_SESSION
+                    message: AuthError.AUTH_ERROR_INVALID_SESSION
                 });
             }
         }
