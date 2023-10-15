@@ -1,6 +1,7 @@
 import {IsNotEmpty, IsNumber, IsString} from "class-validator";
-import {IsTableDoesNotExist} from "./table-existance";
+import {DoesTableWithQueryDoesNotExist} from "./table-existance";
 import {TableErrors} from "../../../errors";
+import {TableNumberSpecification} from "../../../specifications";
 
 export class CreateTableDTO {
     @IsString({
@@ -9,9 +10,12 @@ export class CreateTableDTO {
     @IsNotEmpty({
         message: "Table number is required"
     })
-    @IsTableDoesNotExist({
-        message: TableErrors.TABLE_ERROR_TABLE_ALREADY_EXISTS
-    })
+    @DoesTableWithQueryDoesNotExist(
+        (value: string) => new TableNumberSpecification(value),
+        {
+            message: TableErrors.TABLE_ERROR_TABLE_ALREADY_EXISTS
+        }
+    )
     number!: string;
 
     @IsNumber({}, {
