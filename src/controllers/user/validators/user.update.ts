@@ -1,5 +1,5 @@
 import {IsEmail, IsNotEmpty, IsOptional, IsString, ValidateIf} from "class-validator";
-import {DoesUserWithQueryNotExist, DoesUserWithQueryExist} from "./user-exists";
+import {DoesUserWithQueryNotExist, DoesUserWithQueryExist} from "./user-existance";
 import {UserEmailSpecification, UserIdSpecification} from "../../../specifications";
 import {AuthError, UserError} from "../../../errors";
 

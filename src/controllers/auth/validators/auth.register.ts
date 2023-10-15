@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import {AuthError} from "../../../errors";
-import {DoesUserWithQueryNotExist} from "../../user/validators/user-exists";
+import {DoesUserWithQueryNotExist} from "../../user/validators/user-existance";
 import {UserEmailSpecification} from "../../../specifications";
 
 export class AuthRegisterDTO {
