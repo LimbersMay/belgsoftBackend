@@ -5,7 +5,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from 'class-validator';
-import {findArea} from "../../../services/area.service";
+import {findArea} from "../../../services";
 import {Criteria} from "../../../specifications";
 
 @ValidatorConstraint({async: true})

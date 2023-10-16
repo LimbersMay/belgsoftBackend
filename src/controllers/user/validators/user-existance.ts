@@ -7,7 +7,6 @@ import {
 } from 'class-validator';
 import {findUser} from "../../../services";
 import {Criteria} from "../../../specifications";
-import {promiseHandler} from "../../helpers/promiseHandler";
 
 @ValidatorConstraint({ async: true })
 export class DoesUserExistWithQueryExistConstraint implements ValidatorConstraintInterface {
@@ -15,9 +14,7 @@ export class DoesUserExistWithQueryExistConstraint implements ValidatorConstrain
 
         const specification = args.constraints[0](field);
 
-        const user = await promiseHandler(
-            findUser(specification)
-        );
+        const user = await findUser(specification)
 
         return !!user.isOk();
     }

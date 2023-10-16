@@ -22,17 +22,22 @@ export const updateUser = async (updateUserDTO: UpdateUserDTO, specifications: C
 
     const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
-    const result = await UserSchema.update({
-        ...updateUserDTO
-    }, {
-        where: {
-            ...whereQuery
-        }
-    });
+   try {
+       const result = await UserSchema.update({
+           ...updateUserDTO
+       }, {
+           where: {
+               ...whereQuery
+           }
+       });
 
-    if (result[0] === 0) return Err(UserError.USER_NOT_UPDATED);
+       if (result[0] === 0) return Err(UserError.USER_NOT_UPDATED);
 
-    return Ok(result);
+       return Ok(result);
+
+   } catch (e) {
+         return Err(UserError.USER_ERROR_CANNOT_UPDATE_USER);
+   }
 }
 
 type UserFinderErrors = UserError.USER_NOT_FOUND | UserError.USER_ERROR_CANNOT_GET_USER;
@@ -41,16 +46,20 @@ export const findUser = async (specification: Criteria): Promise<Result<UserSche
 
     const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specification);
 
-    const user = await UserSchema.findOne({
-        where: whereQuery,
-        include: [
-            {model: RoleSchema, as: 'role'}
-        ]
-    });
+    try {
+        const user = await UserSchema.findOne({
+            where: whereQuery,
+            include: [
+                {model: RoleSchema, as: 'role'}
+            ]
+        });
 
-    if (!user) return Err(UserError.USER_NOT_FOUND);
-    return Ok(user);
+        if (!user) return Err(UserError.USER_NOT_FOUND);
+        return Ok(user);
 
+    } catch (e) {
+        return Err(UserError.USER_ERROR_CANNOT_GET_USER);
+    }
 }
 
 export const findAllUsers = async (specification: Criteria) => {

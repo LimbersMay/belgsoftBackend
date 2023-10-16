@@ -23,7 +23,6 @@ import {UpdateUserDTO, UpdateUserIdDTO} from "./validators/user.update";
 import {UserResponse} from "../../mappers";
 import {AuthRegisterDTO} from "../auth/validators/auth.register";
 import {CreatedByAdminIdSpecification, UserIdSpecification} from "../../specifications";
-import {promiseHandler} from "../helpers/promiseHandler";
 
 @JsonController('/users')
 @UseBefore(IsAuthenticated)
@@ -51,12 +50,10 @@ export class UserController {
 
             if (UserToUpdateId !== user.userId) {
                 // If an admin is updating a user, the user must be updated by the admin who created it
-                const result = await promiseHandler(
-                    updateUser(updateUserDTO, [
-                        new UserIdSpecification(UserToUpdateId),
-                        new CreatedByAdminIdSpecification(user.userId)
-                    ])
-                );
+                const result = await updateUser(updateUserDTO, [
+                    new UserIdSpecification(UserToUpdateId),
+                    new CreatedByAdminIdSpecification(user.userId)
+                ]);
 
                 if (result.isOk()) return result.value;
 
