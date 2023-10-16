@@ -23,6 +23,7 @@ import {UpdateUserDTO, UpdateUserIdDTO} from "./validators/user.update";
 import {UserResponse} from "../../mappers";
 import {AuthRegisterDTO} from "../auth/validators/auth.register";
 import {CreatedByAdminIdSpecification, UserIdSpecification} from "../../specifications";
+import {promiseHandler} from "../helpers/promiseHandler";
 
 @JsonController('/users')
 @UseBefore(IsAuthenticated)
@@ -50,14 +51,32 @@ export class UserController {
 
             if (UserToUpdateId !== user.userId) {
                 // If an admin is updating a user, the user must be updated by the admin who created it
-                return await updateUser(updateUserDTO, [
-                    new UserIdSpecification(UserToUpdateId),
-                    new CreatedByAdminIdSpecification(user.userId)
-                ]);
+                const result = await promiseHandler(
+                    updateUser(updateUserDTO, [
+                        new UserIdSpecification(UserToUpdateId),
+                        new CreatedByAdminIdSpecification(user.userId)
+                    ])
+                );
+
+                if (result.isOk()) return result.value;
+
+                switch (result.error) {
+                    case UserError.USER_NOT_UPDATED:
+                        return handleHttp(res, UserError.USER_NOT_UPDATED);
+
+                    case UserError.USER_ERROR_CANNOT_UPDATE_USER:
+                        return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER);
+
+                    default:
+                        const _exhaustiveCheck: never = result.error;
+                        return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, _exhaustiveCheck)
+                }
             }
 
             // If the user wants to update his own data, he can do it without any restrictions
-            return await updateUser(updateUserDTO, new UserIdSpecification(UserToUpdateId));
+            const result = await updateUser(updateUserDTO, new UserIdSpecification(user.userId));
+            if (result.isOk()) return result.value;
+
         } catch (e) {
             return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, e);
         }
