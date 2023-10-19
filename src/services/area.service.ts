@@ -9,7 +9,7 @@ import {
 import {AreaResponse} from "../mappers";
 import {UpdateAreaDTO} from "../controllers/area/validations/area.update";
 import {AreaError} from "../errors/area.error";
-import {promiseHandler} from "../helpers/promiseHandler";
+import {promiseHandler} from "../helpers";
 
 const specificationBuilder = new SequelizeSpecificationBuilder();
 

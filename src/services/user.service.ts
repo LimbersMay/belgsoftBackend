@@ -7,7 +7,7 @@ import {
     Criteria, SequelizeSpecificationBuilder,
 } from "../specifications";
 import {UserError} from "../errors";
-import {promiseHandler} from "../helpers/promiseHandler";
+import {promiseHandler} from "../helpers";
 
 // User specification validator
 const specificationBuilder = new SequelizeSpecificationBuilder();
