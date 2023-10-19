@@ -1,14 +1,14 @@
 import {IsNotEmpty, IsString, IsUUID} from "class-validator";
 import {IsAreaExists} from "./area-existance";
-import {AreaIdSpecification} from "../../../specifications/area.specification";
-import {AreaErrors} from "../../../errors/area.errors";
+import {AreaIdSpecification} from "../../../specifications";
+import {AreaError} from "../../../errors/area.error";
 
 export class UpdateIdDTO {
     @IsUUID('4', {
         message: 'id must be a UUID'
     })
     @IsAreaExists((userId) => new AreaIdSpecification(userId), {
-        message: AreaErrors.AREA_NOT_FOUND
+        message: AreaError.AREA_NOT_FOUND
     })
     id!: string;
 }
