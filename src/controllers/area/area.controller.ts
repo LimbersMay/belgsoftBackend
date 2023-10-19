@@ -30,11 +30,14 @@ export class AreaController {
     @Authorized(['ADMIN', 'USER', 'SUPER_USER', 'WAITER'])
     @Get('/')
     public async getAll(@Res() res: Response, @CurrentUser() {branchId}: UserResponse) {
-        try {
-            return await findAllAreas(new BranchIdSpecification(branchId));
-        } catch (e) {
-            return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_GET_AREAS, e);
-        }
+
+        const result = await findAllAreas(
+            new BranchIdSpecification(branchId)
+        );
+
+        if (result.isOk()) return result.value;
+
+        return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_GET_AREAS, result.error);
     }
 
     @Authorized(['ADMIN', 'SUPER_USER'])
@@ -44,11 +47,11 @@ export class AreaController {
         @Body({validate: true}) createAreaDTO: CreateAreaDTO,
         @CurrentUser() {branchId}: UserResponse
     ) {
-        try {
-            return await createArea(createAreaDTO, branchId);
-        } catch (e) {
-            return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_CREATE_AREA, e);
-        }
+        const result = await createArea(createAreaDTO, branchId);
+
+        if (result.isOk()) return result.value;
+
+        return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_CREATE_AREA, result.error);
     }
 
     @Put('/:id')
@@ -60,19 +63,25 @@ export class AreaController {
         @CurrentUser() {branchId}: UserResponse
     ) {
 
-        try {
-            const affectedFields = await updateArea(updateAreaDTO, [
-                new BranchIdSpecification(branchId),
-                new AreaIdSpecification(id)
-            ]);
+        const affectedFieldsResult = await updateArea(updateAreaDTO, [
+            new BranchIdSpecification(branchId),
+            new AreaIdSpecification(id)
+        ]);
 
-            return {
-                affectedFields
-            }
+        if (affectedFieldsResult.isOk()) return {
+            affectedFields: affectedFieldsResult.value
+        };
 
-        } catch (e) {
-            return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_UPDATE_AREA, e);
+        switch (affectedFieldsResult.error) {
+
+            case AreaErrors.AREA_NOT_UPDATED:
+                return handleHttp(res, AreaErrors.AREA_NOT_FOUND, affectedFieldsResult.error);
+
+            default:
+                const _exhaustiveCheck: never = affectedFieldsResult.error;
+                return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_UPDATE_AREA, _exhaustiveCheck);
         }
+
     }
 
     @Delete('/:id')
@@ -82,18 +91,17 @@ export class AreaController {
         @Params({validate: true}) {id}: UpdateIdDTO,
         @CurrentUser() {branchId}: UserResponse
     ) {
-        try {
 
-            const affectedFields = await deleteArea([
-                new BranchIdSpecification(branchId),
-                new AreaIdSpecification(id)
-            ]);
+        const affectedFieldsResult = await deleteArea([
+            new BranchIdSpecification(branchId),
+            new AreaIdSpecification(id)
+        ])
 
-            return {
-                affectedFields
-            }
-        } catch (e) {
-            return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_DELETE_AREA, e);
+
+        if (affectedFieldsResult.isOk()) return {
+            affectedFields: affectedFieldsResult.value
         }
+
+        return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_DELETE_AREA, affectedFieldsResult.error);
     }
 }
