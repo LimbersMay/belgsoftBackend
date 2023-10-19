@@ -8,7 +8,7 @@ import {
 } from "../specifications";
 import {AreaResponse} from "../mappers";
 import {UpdateAreaDTO} from "../controllers/area/validations/area.update";
-import {AreaErrors} from "../errors/area.errors";
+import {AreaError} from "../errors/area.error";
 import {promiseHandler} from "../helpers/promiseHandler";
 
 const specificationBuilder = new SequelizeSpecificationBuilder();
@@ -28,9 +28,7 @@ export const findAllAreas = async (specifications: Criteria): Promise<Result<Are
     );
 }
 
-type FindAreaErrors = AreaErrors.AREA_NOT_FOUND | AreaErrors.AREA_CANNOT_BE_FOUND_ERROR;
-
-export const findArea = async (specifications: Criteria): Promise<Result<AreaSchema, FindAreaErrors>> => {
+export const findArea = async (specifications: Criteria): Promise<Result<AreaSchema, AreaError.AREA_NOT_FOUND>> => {
     const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const result = await promiseHandler(
@@ -40,12 +38,12 @@ export const findArea = async (specifications: Criteria): Promise<Result<AreaSch
     // Unhandled error occurred
     if (result.isErr()) return Err(result.error);
 
-    if (!result.value) return Err(AreaErrors.AREA_NOT_FOUND);
+    if (!result.value) return Err(AreaError.AREA_NOT_FOUND);
 
     return Ok(result.value);
 }
 
-export const createArea = async (createAreaDTO: CreateAreaDTO, branchId: string): Promise<Result<AreaResponse, AreaErrors.AREA_ERROR_CANNOT_CREATE_AREA>> => {
+export const createArea = async (createAreaDTO: CreateAreaDTO, branchId: string): Promise<Result<AreaResponse, unknown>> => {
 
     const result = await promiseHandler(
         AreaSchema.create({
@@ -64,7 +62,7 @@ export const createArea = async (createAreaDTO: CreateAreaDTO, branchId: string)
     );
 }
 
-export const updateArea = async (updateAreaDTO: UpdateAreaDTO, specifications: Criteria): Promise<Result<number, AreaErrors.AREA_NOT_UPDATED>> => {
+export const updateArea = async (updateAreaDTO: UpdateAreaDTO, specifications: Criteria): Promise<Result<number, AreaError.AREA_NOT_UPDATED>> => {
     const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const result = await promiseHandler(
@@ -75,12 +73,12 @@ export const updateArea = async (updateAreaDTO: UpdateAreaDTO, specifications: C
     if (result.isErr()) return Err(result.error);
 
     // Known error occurred (area not found)
-    if (result.value[0] === 0) return Err(AreaErrors.AREA_NOT_UPDATED);
+    if (result.value[0] === 0) return Err(AreaError.AREA_NOT_UPDATED);
 
     return Ok(result.value[0]);
 }
 
-export const deleteArea = async (specifications: Criteria): Promise<Result<number, AreaErrors.AREA_ERROR_CANNOT_DELETE_AREA>> => {
+export const deleteArea = async (specifications: Criteria): Promise<Result<number, AreaError.AREA_NOT_DELETED>> => {
     const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const result = await promiseHandler(
@@ -89,6 +87,9 @@ export const deleteArea = async (specifications: Criteria): Promise<Result<numbe
 
     // Unhandled error occurred
     if (result.isErr()) return Err(result.error);
+
+    // Known error occurred (area not found)
+    if (result.value === 0) return Err(AreaError.AREA_NOT_DELETED);
 
     return Ok(result.value);
 }
