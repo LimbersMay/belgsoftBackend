@@ -31,11 +31,12 @@ export class UserController {
     @Authorized('ADMIN')
     @Get('/')
     async getAll(@Res() res: Response, @CurrentUser() user: UserResponse) {
-        try {
-            return await findAllUsers(new CreatedByAdminIdSpecification(user.userId));
-        } catch (e) {
-            return handleHttp(res, UserError.USER_ERROR_CANNOT_GET_USERS, e);
-        }
+
+        const result = await findAllUsers(new CreatedByAdminIdSpecification(user.userId));
+
+        if (result.isOk()) return result.value;
+
+        return handleHttp(res, UserError.USER_ERROR_CANNOT_GET_USERS, result.error);
     }
 
     @Authorized(['ADMIN', 'WAITER'])
@@ -46,38 +47,33 @@ export class UserController {
         @Body({validate: true}) updateUserDTO: UpdateUserDTO,
         @CurrentUser() user: UserResponse
     ) {
-        try {
 
-            if (UserToUpdateId !== user.userId) {
-                // If an admin is updating a user, the user must be updated by the admin who created it
-                const affectedFieldsResult = await updateUser(updateUserDTO, [
-                    new UserIdSpecification(UserToUpdateId),
-                    new CreatedByAdminIdSpecification(user.userId)
-                ]);
+        if (UserToUpdateId !== user.userId) {
+            // If an admin is updating a user, the user must be updated by the admin who created it
+            const affectedFieldsResult = await updateUser(updateUserDTO, [
+                new UserIdSpecification(UserToUpdateId),
+                new CreatedByAdminIdSpecification(user.userId)
+            ]);
 
-                if (affectedFieldsResult.isOk()) return {
-                    affectedFields: affectedFieldsResult.value
-                };
-
-                switch (affectedFieldsResult.error) {
-                    case UserError.USER_NOT_UPDATED:
-                        return handleHttp(res, UserError.USER_NOT_UPDATED);
-
-                    default:
-                        const _exhaustiveCheck: never = affectedFieldsResult.error;
-                        return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, _exhaustiveCheck)
-                }
-            }
-
-            // If the user wants to update his own data, he can do it without any restrictions
-            const affectedFieldsResult = await updateUser(updateUserDTO, new UserIdSpecification(user.userId));
             if (affectedFieldsResult.isOk()) return {
                 affectedFields: affectedFieldsResult.value
             };
 
-        } catch (e) {
-            return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, e);
+            switch (affectedFieldsResult.error) {
+                case UserError.USER_NOT_UPDATED:
+                    return handleHttp(res, UserError.USER_NOT_UPDATED);
+
+                default:
+                    const _exhaustiveCheck: never = affectedFieldsResult.error;
+                    return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, _exhaustiveCheck)
+            }
         }
+
+        // If the user wants to update his own data, he can do it without any restrictions
+        const affectedFieldsResult = await updateUser(updateUserDTO, new UserIdSpecification(user.userId));
+        if (affectedFieldsResult.isOk()) return {
+            affectedFields: affectedFieldsResult.value
+        };
     }
 
     @Authorized('ADMIN')
