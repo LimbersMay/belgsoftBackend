@@ -13,7 +13,7 @@ import {
 } from "routing-controllers";
 import {IsAuthenticated} from "../../middlewares";
 import {handleHttp} from "../../utils";
-import {AreaErrors} from "../../errors/area.errors";
+import {AreaError} from "../../errors/area.error";
 import {createArea, deleteArea, findAllAreas, updateArea} from "../../services";
 import {UserResponse} from "../../mappers";
 import {BranchIdSpecification} from "../../specifications";
@@ -37,7 +37,7 @@ export class AreaController {
 
         if (result.isOk()) return result.value;
 
-        return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_GET_AREAS, result.error);
+        return handleHttp(res, AreaError.AREA_ERROR_CANNOT_GET_AREAS, result.error);
     }
 
     @Authorized(['ADMIN', 'SUPER_USER'])
@@ -51,7 +51,7 @@ export class AreaController {
 
         if (result.isOk()) return result.value;
 
-        return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_CREATE_AREA, result.error);
+        return handleHttp(res, AreaError.AREA_ERROR_CANNOT_CREATE_AREA, result.error);
     }
 
     @Put('/:id')
@@ -74,12 +74,12 @@ export class AreaController {
 
         switch (affectedFieldsResult.error) {
 
-            case AreaErrors.AREA_NOT_UPDATED:
-                return handleHttp(res, AreaErrors.AREA_NOT_FOUND, affectedFieldsResult.error);
+            case AreaError.AREA_NOT_UPDATED:
+                return handleHttp(res, affectedFieldsResult.error, affectedFieldsResult.error);
 
             default:
                 const _exhaustiveCheck: never = affectedFieldsResult.error;
-                return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_UPDATE_AREA, _exhaustiveCheck);
+                return handleHttp(res, AreaError.AREA_ERROR_CANNOT_UPDATE_AREA, _exhaustiveCheck);
         }
 
     }
@@ -102,6 +102,14 @@ export class AreaController {
             affectedFields: affectedFieldsResult.value
         }
 
-        return handleHttp(res, AreaErrors.AREA_ERROR_CANNOT_DELETE_AREA, affectedFieldsResult.error);
+        switch (affectedFieldsResult.error) {
+
+            case AreaError.AREA_NOT_DELETED:
+                return handleHttp(res, affectedFieldsResult.error, affectedFieldsResult.error);
+
+            default:
+                const _exhaustiveCheck: never = affectedFieldsResult.error;
+                return handleHttp(res, AreaError.AREA_CANNOT_BE_DELETED_ERROR, _exhaustiveCheck);
+        }
     }
 }
