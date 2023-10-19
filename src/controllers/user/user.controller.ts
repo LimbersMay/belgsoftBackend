@@ -40,7 +40,7 @@ export class UserController {
 
     @Authorized(['ADMIN', 'WAITER'])
     @Put('/:id')
-    async updateUser(
+    async update(
         @Res() res: Response,
         @Params({validate: true}) {id: UserToUpdateId}: UpdateUserIdDTO,
         @Body({validate: true}) updateUserDTO: UpdateUserDTO,
@@ -50,29 +50,30 @@ export class UserController {
 
             if (UserToUpdateId !== user.userId) {
                 // If an admin is updating a user, the user must be updated by the admin who created it
-                const result = await updateUser(updateUserDTO, [
+                const affectedFieldsResult = await updateUser(updateUserDTO, [
                     new UserIdSpecification(UserToUpdateId),
                     new CreatedByAdminIdSpecification(user.userId)
                 ]);
 
-                if (result.isOk()) return result.value;
+                if (affectedFieldsResult.isOk()) return {
+                    affectedFields: affectedFieldsResult.value
+                };
 
-                switch (result.error) {
+                switch (affectedFieldsResult.error) {
                     case UserError.USER_NOT_UPDATED:
                         return handleHttp(res, UserError.USER_NOT_UPDATED);
 
-                    case UserError.USER_ERROR_CANNOT_UPDATE_USER:
-                        return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER);
-
                     default:
-                        const _exhaustiveCheck: never = result.error;
+                        const _exhaustiveCheck: never = affectedFieldsResult.error;
                         return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, _exhaustiveCheck)
                 }
             }
 
             // If the user wants to update his own data, he can do it without any restrictions
-            const result = await updateUser(updateUserDTO, new UserIdSpecification(user.userId));
-            if (result.isOk()) return result.value;
+            const affectedFieldsResult = await updateUser(updateUserDTO, new UserIdSpecification(user.userId));
+            if (affectedFieldsResult.isOk()) return {
+                affectedFields: affectedFieldsResult.value
+            };
 
         } catch (e) {
             return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, e);
@@ -81,7 +82,7 @@ export class UserController {
 
     @Authorized('ADMIN')
     @Post('/')
-    async createUser(
+    async create(
         @Res() res: Response,
         @Body({validate: true}) userCreateDTO: AuthRegisterDTO,
         @CurrentUser() user: UserResponse
