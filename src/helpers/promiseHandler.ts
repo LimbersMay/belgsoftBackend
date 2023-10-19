@@ -1,5 +1,3 @@
-import {Err, Ok, Result} from "ts-results-es";
-
 /*
     This function is used to handle promises in a more elegant way.
     It returns a Result object, which can be either Ok or Err.
@@ -16,13 +14,12 @@ import {Err, Ok, Result} from "ts-results-es";
     In this case, T is [number] and K is UserUpdateErrors
  */
 
-export const promiseHandler = async <T, K>(prom: Promise<Result<T, K>>): Promise<Result<T, K>> => {
+import {Err, Ok, Result} from "ts-results-es";
+
+export const promiseHandler = async <T>(prom: Promise<T>): Promise<Result<T, any>> => {
     try {
         const result = await prom;
-
-        if (result.isOk()) return Ok(result.value);
-
-        return Err(result.error);
+        return Ok(result);
     } catch (e : any) {
         return Err(e);
     }
