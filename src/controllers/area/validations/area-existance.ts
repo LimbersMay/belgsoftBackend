@@ -6,13 +6,13 @@ import {
     ValidatorConstraintInterface,
 } from 'class-validator';
 import {findArea} from "../../../services/area.service";
-import {Specification} from "../../../specifications";
+import {Criteria} from "../../../specifications";
 
 @ValidatorConstraint({async: true})
 export class IsAreaExistConstraint implements ValidatorConstraintInterface {
     async validate(tableId: string, args: ValidationArguments) {
 
-        const specifications = args.constraints[0](tableId) as Specification<string> | Specification<string>[];
+        const specifications = args.constraints[0](tableId) as Criteria;
 
         const table = await findArea(specifications);
         return !!table;
@@ -20,7 +20,7 @@ export class IsAreaExistConstraint implements ValidatorConstraintInterface {
 }
 
 export function IsAreaExists(
-    specificationsFactory: (propertyValue: any) => Specification<string> | Specification<string>[],
+    specificationsFactory: (propertyValue: any) => Criteria,
     validationOptions?: ValidationOptions
 ) {
 
@@ -35,7 +35,7 @@ export function IsAreaExists(
     };
 }
 
-export function IsAreaDoesNotExist(specifications: Specification<string> | Specification<string>[], validationOptions?: ValidationOptions) {
+export function IsAreaDoesNotExist(specifications: Criteria, validationOptions?: ValidationOptions) {
     return function (object: Object, propertyName: string) {
         registerDecorator({
             target: object.constructor,

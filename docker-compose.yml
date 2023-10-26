@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  node-app:
+    container_name: node-app
+    build: .
+    networks:
+      - belgsoftNetwork
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      mysqlBelgsoft:
+        condition: service_healthy
+
+  mysqlBelgsoft:
+    container_name: mysqlDb
+    image: mysql:8
+    environment:
+      - MYSQL_ROOT_PASSWORD=14923
+    networks:
+      - belgsoftNetwork
+    volumes:
+      - ./Database.sql:/docker-entrypoint-initdb.d/Database.sql
+      - belgsoftDataDb:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 7s
+      timeout: 5s
+      retries: 3
+
+networks:
+  belgsoftNetwork:
+    driver: bridge
+
+volumes:
+  belgsoftDataDb:

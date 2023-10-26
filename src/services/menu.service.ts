@@ -3,16 +3,15 @@ import {CategorySchema, MenuSchema} from "../models";
 import {MenuResponse} from "../mappers";
 import {CreateMenuDTO} from "../controllers/menu/validations/menu.create";
 import {UpdateMenuDTO} from "../controllers/menu/validations/menu.update";
-import {MenuSpecificationBuilder} from "../specifications/sequelize/menu-specification.builder";
-import {Specification} from "../specifications";
 import {MenuErrors} from "../errors";
+import {Criteria, SequelizeSpecificationBuilder} from "../specifications";
 
-type MenuSpecificationType = Specification<string> | Specification<string>[];
-const menuSpecificationBuilder = new MenuSpecificationBuilder();
+const specificationBuilder = new SequelizeSpecificationBuilder();
 
-export const findAllMenu = async (specifications: MenuSpecificationType): Promise<MenuResponse[]> => {
 
-    const whereClause = menuSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
+export const findAllMenu = async (specifications: Criteria): Promise<MenuResponse[]> => {
+
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const menu = await MenuSchema.findAll({
         where: whereClause,
@@ -23,8 +22,8 @@ export const findAllMenu = async (specifications: MenuSpecificationType): Promis
     return menu.map(item => MenuResponse.fromMenu(item));
 }
 
-export const findOneMenu = async (specifications: MenuSpecificationType) => {
-    const whereClause = menuSpecificationBuilder.buildWhereClauseFromSpecifications(specifications);
+export const findOneMenu = async (specifications: Criteria) => {
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const menu = await MenuSchema.findOne({
         where: whereClause,
@@ -61,25 +60,25 @@ export const createMenu = async (menuDTO: CreateMenuDTO, branchId: string) => {
     return MenuResponse.fromMenu(newMenu);
 }
 
-export const updateMenu = async (menuId: string, branchId: string, menuDTO: UpdateMenuDTO) => {
+export const updateMenu = async (menuDTO: UpdateMenuDTO, specifications: Criteria) => {
+
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
     const [ affectedFields ] = await MenuSchema.update(
         {...menuDTO},
         {
-            where: {
-                menuId,
-                branchId
-            }
+            where: whereClause
         }
     );
 
     return affectedFields;
 }
 
-export const deleteMenu = async (menuId: string, branchId: string) => {
+export const deleteMenu = async (specifications: Criteria) => {
+
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
     return await MenuSchema.destroy({
-        where: {
-            menuId,
-            branchId
-        }
+        where: whereClause
     });
 }

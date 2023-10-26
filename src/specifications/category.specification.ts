@@ -1,6 +1,7 @@
-import {AbstractSpecification} from "./generic-specification";
+import {AbstractSpecification, Expression} from "./generic-specification";
+import {Category} from "../interfaces";
 
-export class CategoryIdSpecification extends AbstractSpecification<string> {
+export class CategoryIdSpecification extends AbstractSpecification<Category> {
     public readonly categoryId: string;
 
     public constructor(categoryId: string) {
@@ -8,7 +9,11 @@ export class CategoryIdSpecification extends AbstractSpecification<string> {
         this.categoryId = categoryId;
     }
 
-    public isSatisfiedBy(candidate: string): boolean {
-        return candidate === this.categoryId;
+    public isSatisfiedBy(candidate: Category): boolean {
+        return candidate.categoryId === this.categoryId;
+    }
+
+    public convertToExpression(): Expression<Category> {
+        return { categoryId: this.categoryId };
     }
 }

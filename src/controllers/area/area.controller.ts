@@ -1,3 +1,4 @@
+import {Response} from "express";
 import {
     Authorized,
     Body,
@@ -12,14 +13,13 @@ import {
 } from "routing-controllers";
 import {IsAuthenticated} from "../../middlewares";
 import {handleHttp} from "../../utils";
-import {Response} from "express";
 import {AreaErrors} from "../../errors/area.errors";
-import {createArea, deleteArea, findAllAreas, updateArea} from "../../services/area.service";
+import {createArea, deleteArea, findAllAreas, updateArea} from "../../services";
 import {UserResponse} from "../../mappers";
 import {BranchIdSpecification} from "../../specifications";
 import {CreateAreaDTO} from "./validations/area.create";
 import {UpdateAreaDTO, UpdateIdDTO} from "./validations/area.update";
-import {AreaIdSpecification} from "../../specifications/area.specification";
+import {AreaIdSpecification} from "../../specifications";
 
 @JsonController('/areas')
 @UseBefore(IsAuthenticated)

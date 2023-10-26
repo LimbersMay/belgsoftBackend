@@ -1,31 +1,33 @@
-export interface Specification<T> {
-    isSatisfiedBy(candidate: T): boolean;
-    and(other: Specification<T>): Specification<T>;
-    or(other: Specification<T>): Specification<T>;
-    not(): Specification<T>;
-}
+export type Expression<T> = {
+    [key in keyof T]?: T[key] | Expression<T> | Expression<T>[];
+};
 
-export abstract class AbstractSpecification<T> implements Specification<T> {
+export type Criteria = AbstractSpecification<unknown> | AbstractSpecification<unknown>[];
+
+export abstract class AbstractSpecification<T> {
+
     abstract isSatisfiedBy(candidate: T): boolean;
 
-    and(other: Specification<T>): Specification<T> {
+    public and(other: AbstractSpecification<T>): AbstractSpecification<T> {
         return new AndSpecification(this, other);
     }
 
-    or(other: Specification<T>): Specification<T> {
+    public or(other: AbstractSpecification<T>): AbstractSpecification<T> {
         return new OrSpecification(this, other);
     }
 
-    not(): Specification<T> {
+    public not(): AbstractSpecification<T> {
         return new NotSpecification(this);
     }
+
+    public abstract convertToExpression(): Expression<T>;
 }
 
 export class AndSpecification<T> extends AbstractSpecification<T> {
-    public one: Specification<T>;
-    public other: Specification<T>;
+    public one: AbstractSpecification<T>;
+    public other: AbstractSpecification<T>;
 
-    public constructor(one: Specification<T>, other: Specification<T>) {
+    public constructor(one: AbstractSpecification<T>, other: AbstractSpecification<T>) {
         super();
         this.one = one;
         this.other = other;
@@ -34,13 +36,19 @@ export class AndSpecification<T> extends AbstractSpecification<T> {
     public isSatisfiedBy(candidate: T): boolean {
         return this.one.isSatisfiedBy(candidate) && this.other.isSatisfiedBy(candidate);
     }
+
+    convertToExpression(): Expression<any> {
+        const oneExpression = this.one.convertToExpression();
+        const otherExpression = this.other.convertToExpression();
+        return { and: [oneExpression, otherExpression] };
+    }
 }
 
 export class OrSpecification<T> extends AbstractSpecification<T> {
-    public one: Specification<T>;
-    public other: Specification<T>;
+    public one: AbstractSpecification<T>;
+    public other: AbstractSpecification<T>;
 
-    public constructor(one: Specification<T>, other: Specification<T>) {
+    public constructor(one: AbstractSpecification<T>, other: AbstractSpecification<T>) {
         super();
         this.one = one;
         this.other = other;
@@ -49,17 +57,29 @@ export class OrSpecification<T> extends AbstractSpecification<T> {
     public isSatisfiedBy(candidate: T): boolean {
         return this.one.isSatisfiedBy(candidate) || this.other.isSatisfiedBy(candidate);
     }
+
+    convertToExpression(): Expression<any> {
+        const oneExpression = this.one.convertToExpression();
+        const otherExpression = this.other.convertToExpression();
+        return { or: [oneExpression, otherExpression] };
+    }
 }
 
 export class NotSpecification<T> extends AbstractSpecification<T> {
-    public wrapped: Specification<T>;
 
-    public constructor(wrapped: Specification<T>) {
+    public wrapped: AbstractSpecification<T>;
+
+    public constructor(wrapped: AbstractSpecification<T>) {
         super();
         this.wrapped = wrapped;
     }
 
     public isSatisfiedBy(candidate: T): boolean {
         return !this.wrapped.isSatisfiedBy(candidate);
+    }
+
+    public convertToExpression(): Expression<any> {
+        const wrappedExpression = this.wrapped.convertToExpression();
+        return { not: wrappedExpression };
     }
 }

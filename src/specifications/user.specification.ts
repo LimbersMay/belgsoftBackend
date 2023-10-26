@@ -1,6 +1,7 @@
-import {AbstractSpecification} from "./generic-specification";
+import {AbstractSpecification, Expression} from "./generic-specification";
+import {User} from "../interfaces";
 
-export class UserIdSpecification extends AbstractSpecification<string> {
+export class UserIdSpecification extends AbstractSpecification<User> {
     public readonly userId: string;
 
     public constructor(userId: string) {
@@ -8,12 +9,16 @@ export class UserIdSpecification extends AbstractSpecification<string> {
         this.userId = userId;
     }
 
-    public isSatisfiedBy(candidate: string): boolean {
-        return candidate === this.userId;
+    public isSatisfiedBy(candidate: User): boolean {
+        return candidate.userId === this.userId;
+    }
+
+    convertToExpression(): Expression<User> {
+        return { userId: this.userId };
     }
 }
 
-export class UserEmailSpecification extends AbstractSpecification<string> {
+export class UserEmailSpecification extends AbstractSpecification<User> {
     public readonly email: string;
 
     public constructor(email: string) {
@@ -21,12 +26,16 @@ export class UserEmailSpecification extends AbstractSpecification<string> {
         this.email = email;
     }
 
-    public isSatisfiedBy(candidate: string): boolean {
-        return candidate === this.email;
+    public isSatisfiedBy(candidate: User): boolean {
+        return candidate.email === this.email;
+    }
+
+    convertToExpression(): Expression<User> {
+        return { email: this.email };
     }
 }
 
-export class CreatedByAdminIdSpecification extends AbstractSpecification<string> {
+export class CreatedByAdminIdSpecification extends AbstractSpecification<User> {
     public readonly adminId: string;
 
     public constructor(adminId: string) {
@@ -34,7 +43,11 @@ export class CreatedByAdminIdSpecification extends AbstractSpecification<string>
         this.adminId = adminId;
     }
 
-    public isSatisfiedBy(candidate: string): boolean {
-        return candidate === this.adminId;
+    public isSatisfiedBy(candidate: User): boolean {
+        return candidate.createdByUserId === this.adminId;
+    }
+
+    convertToExpression(): Expression<User> {
+        return { createdByUserId: this.adminId };
     }
 }

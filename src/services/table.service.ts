@@ -3,21 +3,27 @@ import {TableSchema} from "../models";
 import {TableResponse} from "../mappers";
 import {CreateTableDTO} from "../controllers";
 import {UpdateTableDTO} from "../controllers/table/validators/table.update";
+import {Criteria, SequelizeSpecificationBuilder} from "../specifications";
 
-export const findAllTables = async (branchId: string) => {
+const specificationBuilder = new SequelizeSpecificationBuilder();
+
+export const findAllTables = async (specifications: Criteria) => {
+
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
     const tables = await TableSchema.findAll({
-        where: {
-            branchId
-        }
+        where: whereClause
     });
+
     return tables.map(table => TableResponse.fromTable(table));
 }
 
-export const findTableByQuery = async (query: Record<any, any>) => {
+export const findTableByQuery = async (specifications: Criteria) => {
+
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
     return await TableSchema.findOne({
-        where: {
-            ...query
-        }
+        where: whereClause
     });
 }
 
@@ -33,25 +39,25 @@ export const createTable = async (table: CreateTableDTO, branchId: string) => {
     return TableResponse.fromTable(newTable);
 }
 
-export const updateTable = async (id: string, branchId: string, table: UpdateTableDTO) => {
+export const updateTable = async (tableDTO: UpdateTableDTO, specifications: Criteria) => {
+
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
     const [affectedFields] = await TableSchema.update({
-        number: table.number,
-        customers: table.customers
+        number: tableDTO.number,
+        customers: tableDTO.customers
     }, {
-        where: {
-            tableId: id,
-            branchId
-        }
+        where: whereClause
     });
 
     return affectedFields;
 }
 
-export const deleteTable = async (tableId: string, branchId: string) => {
+export const deleteTable = async (specifications: Criteria) => {
+
+    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
+
     return await TableSchema.destroy({
-        where: {
-            tableId,
-            branchId
-        }
+        where: whereClause
     });
 }
