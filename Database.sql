@@ -166,6 +166,9 @@ CREATE TABLE OrderMenu
     updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+# Stored procedures
+
+
 INSERT INTO Role (roleId, name, value)
 VALUES ('1', 'ADMIN', 'admin');
 INSERT INTO Role (roleId, name, value)
@@ -174,6 +177,9 @@ INSERT INTO UserType (userTypeId, name, type)
 VALUES ('2', 'FREE', 'Free');
 INSERT INTO UserState (userStateId, name, state)
 VALUES ('3', 'ACTIVE', 'Active');
+
+INSERT INTO UserState (userStateId, name, state)
+VALUES ('4', 'INACTIVE', 'Inactive');
 
 INSERT INTO Branch (branchId, name, address, city, state, phone)
 VALUES ('32c629ca-a1ab-40be-8a29-b1c007bd61f1', 'Tia de Kaua', 'Kaua 11 Centro', 'Kaua', 'Yucatan', '9851092492');
