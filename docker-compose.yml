@@ -29,6 +29,8 @@ services:
       interval: 7s
       timeout: 5s
       retries: 3
+    ports:
+      - "3306:3306"
 
 networks:
   belgsoftNetwork:
