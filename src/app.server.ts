@@ -10,7 +10,7 @@ import db from "./models/init";
 import {ErrorMiddleware} from "./middlewares";
 import {findUser} from "./services";
 import {UserIdSpecification} from "./specifications";
-import {PrinterService} from "./services/printer.service";
+import {PrinterService} from "./services";
 
 export class AppServer {
     public app: Application;
