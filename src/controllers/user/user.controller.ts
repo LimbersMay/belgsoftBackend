@@ -2,7 +2,7 @@ import {Response} from "express";
 import {
     Authorized,
     Body,
-    CurrentUser,
+    CurrentUser, Delete,
     Get,
     JsonController,
     Params,
@@ -13,6 +13,7 @@ import {
 } from "routing-controllers";
 import {handleHttp} from "../../utils";
 import {
+    deleteUser,
     findAllUsers,
     registerUser,
     updateUser
@@ -37,6 +38,20 @@ export class UserController {
         if (result.isOk()) return result.value;
 
         return handleHttp(res, UserError.USER_ERROR_CANNOT_GET_USERS, result.error);
+    }
+
+    @Authorized('ADMIN')
+    @Post('/')
+    async create(
+        @Res() res: Response,
+        @Body({validate: true}) userCreateDTO: AuthRegisterDTO,
+        @CurrentUser() user: UserResponse
+    ) {
+        try {
+            return await registerUser(userCreateDTO, user.userId);
+        } catch (e) {
+            return handleHttp(res, UserError.USER_ERROR_CANNOT_CREATE_USER, e);
+        }
     }
 
     @Authorized(['ADMIN', 'WAITER'])
@@ -77,17 +92,21 @@ export class UserController {
     }
 
     @Authorized('ADMIN')
-    @Post('/')
-    async create(
+    @Delete('/:id')
+    async delete(
         @Res() res: Response,
-        @Body({validate: true}) userCreateDTO: AuthRegisterDTO,
+        @Params({validate: true}) {id: userId}: UpdateUserIdDTO,
         @CurrentUser() user: UserResponse
     ) {
         try {
-            return await registerUser(userCreateDTO, user.userId);
-        } catch (e) {
-            return handleHttp(res, UserError.USER_ERROR_CANNOT_CREATE_USER, e);
-        }
 
+            return await deleteUser([
+                new UserIdSpecification(userId),
+                new CreatedByAdminIdSpecification(user.userId)
+            ]);
+
+        } catch (e) {
+            return handleHttp(res, UserError.USER_ERROR_CANNOT_DELETE_USER, e);
+        }
     }
 }
