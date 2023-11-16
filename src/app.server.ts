@@ -70,15 +70,20 @@ export class AppServer {
 
                 const user = await findUser(new UserIdSpecification(payload.userId));
 
-                if (!user) return false;
+                if (user.isErr()) return false;
 
-                return roles.includes(user.role.name);
+                return roles.includes(user.value.role.name);
             },
             currentUserChecker: async (action) => {
                 const token = action.request.headers["x-token"];
                 const userToken = await verifyToken(`${token}`);
 
-                return await findUser(new UserIdSpecification(userToken.userId));
+                const result = await findUser(new UserIdSpecification(userToken.userId))
+
+                // If the user is not found, return null
+                if (result.isErr()) return null;
+
+                return result.value;
             }
         });
 
