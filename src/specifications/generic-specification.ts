@@ -1,5 +1,5 @@
 export type Expression<T> = {
-    [key in keyof T]?: T[key] | Expression<T> | Expression<T>[];
+    [key in keyof T]?: T[key];
 };
 
 export type Criteria = AbstractSpecification<unknown> | AbstractSpecification<unknown>[];
