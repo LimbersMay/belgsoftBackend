@@ -38,7 +38,10 @@ export const registerUser = async (authRegisterDTO: AuthRegisterDTO, adminId: st
 export const loginUser = async ({ email, password }: { email: string, password: string }): Promise<Result<LoginUserResponse, LoginUserErrors>> => {
 
     const user = await UserSchema.findOne({
-        where: { email },
+        where: {
+            email,
+            userStateId: '3'
+        },
         include: [
             { model: RoleSchema, as: 'role' },
             { model: UserTypeSchema, as: 'userType' },
