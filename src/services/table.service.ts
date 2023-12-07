@@ -4,6 +4,7 @@ import {TableResponse} from "../mappers";
 import {CreateTableDTO} from "../controllers";
 import {UpdateTableDTO} from "../controllers/table/validators/table.update";
 import {Criteria, SequelizeSpecificationBuilder} from "../specifications";
+import sequelize from "../models/init";
 
 const specificationBuilder = new SequelizeSpecificationBuilder();
 
@@ -29,28 +30,35 @@ export const findOneTable = async (specifications: Criteria) => {
 
 export const createTable = async (table: CreateTableDTO, branchId: string) => {
 
-    const newTable = await TableSchema.create({
-        tableId: uuidv4(),
-        branchId,
-        number: table.number,
-        customers: table.customers
+    // Call the stored procedure
+    const response = await sequelize.query(`CALL spCreateTable(:tableIdParam, :branchIdParam, :numberParam, :customersParam);`, {
+        replacements: {
+            tableIdParam: uuidv4(),
+            branchIdParam: branchId,
+            numberParam: table.number,
+            customersParam: table.customers
+        }
     });
 
-    return TableResponse.fromTable(newTable);
+    // Structure the response
+    const result = response[0] as any;
+    return result.tableId;
 }
 
-export const updateTable = async (tableDTO: UpdateTableDTO, specifications: Criteria) => {
+export const updateTable = async (tableDTO: UpdateTableDTO, tableId: string, branchId: string) => {
 
-    const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
-
-    const [affectedFields] = await TableSchema.update({
-        number: tableDTO.number,
-        customers: tableDTO.customers
-    }, {
-        where: whereClause
+    await sequelize.query(`CALL spUpdateTable(:tableIdParam, :branchIdParam, :numberParam, :customersParam);`, {
+        replacements: {
+            tableIdParam: tableId,
+            branchIdParam: branchId,
+            numberParam: tableDTO.number,
+            customersParam: tableDTO.customers
+        }
     });
 
-    return affectedFields;
+    return {
+        updated: true
+    }
 }
 
 export const deleteTable = async (specifications: Criteria) => {
