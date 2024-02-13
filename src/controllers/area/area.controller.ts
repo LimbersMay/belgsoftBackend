@@ -37,7 +37,7 @@ export class AreaController {
 
         if (result.isOk()) return result.value;
 
-        return handleHttp(res, AreaError.AREA_ERROR_CANNOT_GET_AREAS, result.error);
+        return handleHttp(res, AreaError.AREA_ERROR_CANNOT_GET_AREAS, result.error, 500);
     }
 
     @Authorized(['ADMIN', 'SUPER_USER'])
@@ -51,7 +51,7 @@ export class AreaController {
 
         if (result.isOk()) return result.value;
 
-        return handleHttp(res, AreaError.AREA_ERROR_CANNOT_CREATE_AREA, result.error);
+        return handleHttp(res, AreaError.AREA_ERROR_CANNOT_CREATE_AREA, result.error, 500);
     }
 
     @Put('/:id')
@@ -79,7 +79,7 @@ export class AreaController {
 
             default:
                 const _exhaustiveCheck: never = affectedFieldsResult.error;
-                return handleHttp(res, AreaError.AREA_ERROR_CANNOT_UPDATE_AREA, _exhaustiveCheck);
+                return handleHttp(res, AreaError.AREA_ERROR_CANNOT_UPDATE_AREA, _exhaustiveCheck, 500);
         }
 
     }
@@ -109,7 +109,7 @@ export class AreaController {
 
             default:
                 const _exhaustiveCheck: never = affectedFieldsResult.error;
-                return handleHttp(res, AreaError.AREA_CANNOT_BE_DELETED_ERROR, _exhaustiveCheck);
+                return handleHttp(res, AreaError.AREA_CANNOT_BE_DELETED_ERROR, _exhaustiveCheck, 500);
         }
     }
 }
