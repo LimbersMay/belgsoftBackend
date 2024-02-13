@@ -12,14 +12,6 @@ export class AuthRegisterDTO {
     })
     name!: string;
 
-    @IsString({
-        message: "BranchId must be a string"
-    })
-    @IsNotEmpty({
-        message: "BranchId is required"
-    })
-    branchId!: string;
-
     @IsEmail({}, {
         message: "Invalid email"
     })
@@ -41,28 +33,4 @@ export class AuthRegisterDTO {
         message: "Password is required"
     })
     password!: string;
-
-    @IsString({
-        message: "RoleId must be a string"
-    })
-    @IsNotEmpty({
-        message: "RoleId is required"
-    })
-    roleId!: string;
-
-    @IsString({
-        message: "UserTypeId must be a string"
-    })
-    @IsNotEmpty({
-        message: "UserTypeId is required"
-    })
-    userTypeId!: string;
-
-    @IsString({
-        message: "UserStateId must be a string"
-    })
-    @IsNotEmpty({
-        message: "UserStateId is required"
-    })
-    userStateId!: string;
 }
