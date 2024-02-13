@@ -1,6 +1,6 @@
 import {BelongsTo, Column, ForeignKey, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 import {BranchSchema, CategorySchema} from "./";
-import {Menu} from "../interfaces/menu.interface";
+import {Menu} from "../interfaces";
 
 @Table
 export class MenuSchema extends Model<Menu>{
