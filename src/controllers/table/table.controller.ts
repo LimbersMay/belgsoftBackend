@@ -39,7 +39,7 @@ export class TableController {
         }
     }
 
-    @Authorized('ADMIN')
+    @Authorized(['ADMIN', 'WAITER'])
     @Post('/')
     public async createTable(
         @Res() res: Response,
@@ -53,7 +53,7 @@ export class TableController {
         }
     }
 
-    @Authorized('ADMIN')
+    @Authorized(['ADMIN', 'WAITER'])
     @Put('/:id')
     public async updateTable(
         @Res() res: Response,
@@ -63,10 +63,7 @@ export class TableController {
     ) {
 
         try {
-            const responseTable = await updateTable(updateTableDTO, [
-                new TableIdSpecification(tableId),
-                new BranchIdSpecification(branchId)
-            ]);
+            const responseTable = await updateTable(updateTableDTO, tableId, branchId);
 
             return {
                 affectedFields: responseTable
@@ -76,7 +73,7 @@ export class TableController {
         }
     }
 
-    @Authorized('ADMIN')
+    @Authorized(['ADMIN', 'WAITER'])
     @Delete('/:id')
     public async deleteTable(
         @Res() res: Response,
