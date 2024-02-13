@@ -22,9 +22,6 @@ export class CreateOrderDTO {
 
     @IsOptional()
     @ValidateIf(o => o.customerName !== undefined)
-    @IsNotEmpty({
-        message: 'customerName is required'
-    })
     @IsString({
         message: 'customerName must be a string'
     })
