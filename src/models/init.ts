@@ -530,12 +530,12 @@ UserTypeSchema.hasOne(UserSchema, { foreignKey: 'userTypeId' });
 
 // relation Category - Menu : 1 - N
 // A category can have many menus associated with it
-CategorySchema.hasMany(MenuSchema, { foreignKey: 'categoryId', as: 'menus' });
+CategorySchema.hasMany(MenuSchema, { foreignKey: 'categoryId', as: 'menuItems' });
 MenuSchema.belongsTo(CategorySchema, { foreignKey: 'categoryId', as: 'category' });
 
 // Relation Order - Menu : N - N
 // An order can have many menus associated with it
-OrderSchema.belongsToMany(MenuSchema, { through: OrderMenuSchema, foreignKey: 'orderId', as: 'menus' });
+OrderSchema.belongsToMany(MenuSchema, { through: OrderMenuSchema, foreignKey: 'orderId', as: 'menuItems' });
 MenuSchema.belongsToMany(OrderSchema, { through: OrderMenuSchema, foreignKey: 'menuId', as: 'orders' });
 
 OrderSchema.hasMany(OrderMenuSchema, { foreignKey: 'orderId', as: 'orderMenus' });
