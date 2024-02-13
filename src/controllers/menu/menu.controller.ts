@@ -34,7 +34,7 @@ export class MenuController {
 
         if (menusResult.isOk()) return menusResult.value;
 
-        return handleHttp(res, MenuError.MENUS_CANNOT_BE_FOUND_ERROR, menusResult.error);
+        return handleHttp(res, MenuError.MENUS_CANNOT_BE_FOUND_ERROR, menusResult.error, 500);
     }
 
     @Get('/foods')
@@ -51,7 +51,7 @@ export class MenuController {
 
         if (findAllResult.isOk()) return findAllResult.value;
 
-        return handleHttp(res, MenuError.MENUS_CANNOT_BE_FOUND_ERROR, findAllResult.error);
+        return handleHttp(res, MenuError.MENUS_CANNOT_BE_FOUND_ERROR, findAllResult.error, 500);
     }
 
     @Get('/drinks')
@@ -68,7 +68,7 @@ export class MenuController {
 
         if (drinksResult.isOk()) return drinksResult.value;
 
-        return handleHttp(res, MenuError.MENUS_CANNOT_BE_FOUND_ERROR, drinksResult.error);
+        return handleHttp(res, MenuError.MENUS_CANNOT_BE_FOUND_ERROR, drinksResult.error, 500);
     }
 
     @Get('/desserts')
@@ -85,7 +85,7 @@ export class MenuController {
 
         if (desertsResult.isOk()) return desertsResult.value;
 
-        return handleHttp(res, MenuError.MENUS_CANNOT_BE_FOUND_ERROR, desertsResult.error);
+        return handleHttp(res, MenuError.MENUS_CANNOT_BE_FOUND_ERROR, desertsResult.error, 500);
     }
 
     @Get('/:id')
@@ -110,7 +110,7 @@ export class MenuController {
 
             default:
                 const _exhaustiveCheck: never = findMenuResult.error;
-                return handleHttp(res, findMenuResult.error, _exhaustiveCheck);
+                return handleHttp(res, findMenuResult.error, _exhaustiveCheck, 500);
         }
     }
 
@@ -126,7 +126,7 @@ export class MenuController {
 
         if (result.isOk()) return result.value;
 
-        return handleHttp(res, MenuError.MENU_ERROR_CANNOT_CREATE_MENU, result.error);
+        return handleHttp(res, MenuError.MENU_ERROR_CANNOT_CREATE_MENU, result.error, 500);
     }
 
     @Put('/:id')
@@ -143,18 +143,19 @@ export class MenuController {
             new MenuIdSpecification(menuId)
         ]);
 
-        if (updateResult.isOk()) return {
-            affectedFields: updateResult
-        }
+        if (updateResult.isOk()) return updateResult.value;
 
         switch (updateResult.error) {
 
             case MenuError.MENU_NOT_UPDATED:
                 return handleHttp(res, updateResult.error, updateResult.error);
 
+            case MenuError.MENU_NOT_FOUND:
+                return handleHttp(res, updateResult.error, updateResult.error);
+
             default:
                 const _exhaustiveCheck: never = updateResult.error;
-                return handleHttp(res, MenuError.MENU_ERROR_CANNOT_UPDATE_MENU, _exhaustiveCheck);
+                return handleHttp(res, MenuError.MENU_ERROR_CANNOT_UPDATE_MENU, _exhaustiveCheck, 500);
         }
     }
 
@@ -182,7 +183,7 @@ export class MenuController {
 
             default:
                 const _exhaustiveCheck: never = deleteResult.error;
-                return handleHttp(res, MenuError.MENU_ERROR_CANNOT_DELETE_MENU, _exhaustiveCheck);
+                return handleHttp(res, MenuError.MENU_ERROR_CANNOT_DELETE_MENU, _exhaustiveCheck, 500);
         }
 
     }
