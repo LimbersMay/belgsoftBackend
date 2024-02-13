@@ -5,6 +5,7 @@ import {CreateTableDTO} from "../controllers";
 import {UpdateTableDTO} from "../controllers/table/validators/table.update";
 import {Criteria, SequelizeSpecificationBuilder} from "../specifications";
 import sequelize from "../models/init";
+import {promiseHandler} from "../helpers";
 
 const specificationBuilder = new SequelizeSpecificationBuilder();
 
@@ -47,18 +48,21 @@ export const createTable = async (table: CreateTableDTO, branchId: string) => {
 
 export const updateTable = async (tableDTO: UpdateTableDTO, tableId: string, branchId: string) => {
 
-    await sequelize.query(`CALL spUpdateTable(:tableIdParam, :branchIdParam, :numberParam, :customersParam);`, {
-        replacements: {
-            tableIdParam: tableId,
-            branchIdParam: branchId,
-            numberParam: tableDTO.number,
-            customersParam: tableDTO.customers
-        }
-    });
+    const result = await promiseHandler(
+        TableSchema.update({
+            number: tableDTO.number,
+            customers: tableDTO.customers
+        }, {
+            where: {
+                tableId,
+                branchId
+            }
+        })
+    );
 
-    return {
-        updated: true
-    }
+    if (result.isErr()) return result.error;
+
+    return result.value;
 }
 
 export const deleteTable = async (specifications: Criteria) => {

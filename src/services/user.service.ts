@@ -8,6 +8,7 @@ import {
 } from "../specifications";
 import {UserError} from "../errors";
 import {promiseHandler} from "../helpers";
+import sequelize from "../models/init";
 
 // User specification validator
 const specificationBuilder = new SequelizeSpecificationBuilder();
@@ -22,7 +23,9 @@ export const findUser = async (specification: Criteria): Promise<Result<UserSche
         UserSchema.findOne({
             where: whereQuery,
             include: [
-                {model: RoleSchema, as: 'role'}
+                {model: RoleSchema, as: 'role'},
+                {model: UserTypeSchema, as: 'userType'},
+                {model: UserStateSchema, as: 'userState'}
             ]
         })
     );
@@ -34,28 +37,16 @@ export const findUser = async (specification: Criteria): Promise<Result<UserSche
     return Ok(user.value);
 }
 
-export const findAllUsers = async (specification: Criteria): Promise<Result<UserResponse[], Error>> => {
-    const where = specificationBuilder.buildWhereClauseFromSpecifications(specification);
+export const findAllUsers = async (): Promise<Result<any[], Error>> => {
 
-    const users = await promiseHandler(
-        UserSchema.findAll({
-            where,
-            include: [
-                {model: RoleSchema, as: 'role'},
-                {model: UserTypeSchema, as: 'userType'},
-                {model: UserStateSchema, as: 'userState'}
-            ]
-        })
-    );
+    const response = await sequelize.query("CALL spGetAllUsers()");
 
-    if (users.isErr()) return Err(users.error);
+    if (!response) return Err(new Error('No users found'));
 
-    return Ok(
-        users.value.map(user => UserResponse.fromUser(user))
-    );
+    return Ok(response);
 }
 
-export const updateUser = async (updateUserDTO: UpdateUserDTO, specifications: Criteria): Promise<Result<number, UserError.USER_NOT_UPDATED>> => {
+export const updateUser = async (updateUserDTO: UpdateUserDTO, specifications: Criteria): Promise<Result<UserResponse, UserError.USER_NOT_UPDATED>> => {
 
     // If the password is updated, encrypt it
     if (updateUserDTO.password) {
@@ -74,11 +65,14 @@ export const updateUser = async (updateUserDTO: UpdateUserDTO, specifications: C
         })
     );
 
+    const updatedUser = await findUser(specifications)
+
+    if (updatedUser.isErr()) return Err(UserError.USER_NOT_UPDATED);
     if (result.isErr()) return Err(result.error);
 
     if (result.value[0] === 0) return Err(UserError.USER_NOT_UPDATED);
 
-    return Ok(result.value[0]);
+    return Ok(UserResponse.fromUser(updatedUser.value));
 }
 
 export const deleteUser = async (specifications: Criteria): Promise<Result<number, UserError.USER_ERROR_CANNOT_DELETE_USER>> => {
@@ -86,16 +80,16 @@ export const deleteUser = async (specifications: Criteria): Promise<Result<numbe
     const whereQuery = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
     const result = await promiseHandler(
-        UserSchema.update({
-            userStateId: '4'
-        }, {
-            where: whereQuery
+        UserSchema.destroy({
+            where: {
+                ...whereQuery
+            }
         })
     );
 
     if (result.isErr()) return Err(result.error);
 
-    if (result.value[0] === 0) return Err(UserError.USER_ERROR_CANNOT_DELETE_USER);
+    if (result.value === 0) return Err(UserError.USER_ERROR_CANNOT_DELETE_USER);
 
-    return Ok(result.value[0]);
+    return Ok(result.value);
 }

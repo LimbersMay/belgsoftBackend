@@ -76,7 +76,7 @@ export const createMenu = async (menuDTO: CreateMenuDTO, branchId: string): Prom
     return Ok(MenuResponse.fromMenu(newMenu.value));
 }
 
-export const updateMenu = async (menuDTO: UpdateMenuDTO, specifications: Criteria): Promise<Result<number, MenuError.MENU_NOT_UPDATED>> => {
+export const updateMenu = async (menuDTO: UpdateMenuDTO, specifications: Criteria): Promise<Result<MenuResponse, MenuError.MENU_NOT_UPDATED | MenuError.MENU_NOT_FOUND>> => {
 
     const whereClause = specificationBuilder.buildWhereClauseFromSpecifications(specifications);
 
@@ -93,9 +93,20 @@ export const updateMenu = async (menuDTO: UpdateMenuDTO, specifications: Criteri
 
     if (updateResult.value[0] === 0) return Err(MenuError.MENU_NOT_UPDATED);
 
-    return Ok(
-        updateResult.value[0]
+    const updatedMenu = await promiseHandler(
+        MenuSchema.findOne({
+            where: whereClause,
+            include: [
+                {model: CategorySchema, as: 'category'}
+            ]
+        })
     );
+
+    if (updatedMenu.isErr()) return updatedMenu.error;
+
+    if (!updatedMenu.value) return Err(MenuError.MENU_NOT_FOUND);
+
+    return Ok(MenuResponse.fromMenu(updatedMenu.value));
 }
 
 export const deleteMenu = async (specifications: Criteria): Promise<Result<number, MenuError.MENU_NOT_DELETED>> => {

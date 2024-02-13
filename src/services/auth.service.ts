@@ -20,6 +20,10 @@ export const registerUser = async (authRegisterDTO: AuthRegisterDTO, adminId: st
     const user = await UserSchema.create({
         ...authRegisterDTO,
         createdByUserId: adminId,
+        userStateId: '4',
+        roleId: '2',
+        userTypeId: '1',
+        branchId: '32c629ca-a1ab-40be-8a29-b1c007bd61f1',
         password: encryptedPassword,
         userId: uuidv4(),
     });

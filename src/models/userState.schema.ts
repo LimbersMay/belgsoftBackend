@@ -7,7 +7,7 @@ export class UserStateSchema extends Model{
     @PrimaryKey
     @Unique
     @Column
-    userId!: string;
+    userStateId!: string;
 
     @HasOne(() => UserSchema, 'userId')
     user!: UserSchema;

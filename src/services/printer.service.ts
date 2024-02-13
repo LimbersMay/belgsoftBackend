@@ -16,6 +16,8 @@ export class PrinterService {
 
         PrinterService.socket.on("end", () => {
             console.log("Disconnected from the thermal printer")
+
+            PrinterService.connect('192.168.0.52', 9100);
         })
 
         PrinterService.socket.on("error", (error) => {
@@ -45,7 +47,7 @@ export const printOrder = (printOrderDTO: PrintOrderDTO) => {
     const encoder = new EscPosEncoder();
 
     const products = printOrderDTO.productsInOrder.map(product => (
-        [product[0].productName, product[1].quantity]
+        [product.productName, `x ${product.quantity}`]
     ))
 
     let ticket = encoder
@@ -59,6 +61,7 @@ export const printOrder = (printOrderDTO: PrintOrderDTO) => {
                 {width: 10, align: 'right', marginRight: 2},
             ],
             [
+                [(encoder: EscPosEncoder) => encoder.bold().text('Cliente').bold(), printOrderDTO.customerName || 'N/A'],
                 [(encoder: EscPosEncoder) => encoder.bold().text('Producto').bold(), (encoder: EscPosEncoder) => encoder.bold().text('Cantidad').bold()],
                 ...products,
                 ['      ', '='.repeat(10)],

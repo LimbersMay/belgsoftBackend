@@ -6,4 +6,5 @@ export * from './category.specification';
 export * from './menu.specification';
 export * from './table.specification';
 export * from './area.specification';
+export * from './role.specification';
 export * from './sequelize';
