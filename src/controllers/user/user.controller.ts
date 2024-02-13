@@ -23,7 +23,7 @@ import {IsAuthenticated} from "../../middlewares";
 import {UpdateUserDTO, UpdateUserIdDTO} from "./validators/user.update";
 import {UserResponse} from "../../mappers";
 import {AuthRegisterDTO} from "../auth/validators/auth.register";
-import {CreatedByAdminIdSpecification, UserIdSpecification} from "../../specifications";
+import {UserIdSpecification} from "../../specifications";
 
 @JsonController('/users')
 @UseBefore(IsAuthenticated)
@@ -33,11 +33,11 @@ export class UserController {
     @Get('/')
     async getAll(@Res() res: Response, @CurrentUser() user: UserResponse) {
 
-        const result = await findAllUsers(new CreatedByAdminIdSpecification(user.userId));
+        const result = await findAllUsers();
 
         if (result.isOk()) return result.value;
 
-        return handleHttp(res, UserError.USER_ERROR_CANNOT_GET_USERS, result.error);
+        return handleHttp(res, UserError.USER_ERROR_CANNOT_GET_USERS, result.error, 500);
     }
 
     @Authorized('ADMIN')
@@ -50,7 +50,7 @@ export class UserController {
         try {
             return await registerUser(userCreateDTO, user.userId);
         } catch (e) {
-            return handleHttp(res, UserError.USER_ERROR_CANNOT_CREATE_USER, e);
+            return handleHttp(res, UserError.USER_ERROR_CANNOT_CREATE_USER, e, 500);
         }
     }
 
@@ -65,22 +65,19 @@ export class UserController {
 
         if (UserToUpdateId !== user.userId) {
             // If an admin is updating a user, the user must be updated by the admin who created it
-            const affectedFieldsResult = await updateUser(updateUserDTO, [
-                new UserIdSpecification(UserToUpdateId),
-                new CreatedByAdminIdSpecification(user.userId)
+            const affectedUser = await updateUser(updateUserDTO, [
+                new UserIdSpecification(UserToUpdateId)
             ]);
 
-            if (affectedFieldsResult.isOk()) return {
-                affectedFields: affectedFieldsResult.value
-            };
+            if (affectedUser.isOk()) return affectedUser.value;
 
-            switch (affectedFieldsResult.error) {
+            switch (affectedUser.error) {
                 case UserError.USER_NOT_UPDATED:
-                    return handleHttp(res, UserError.USER_NOT_UPDATED);
+                    return handleHttp(res, UserError.USER_NOT_UPDATED, affectedUser.error, 400);
 
                 default:
-                    const _exhaustiveCheck: never = affectedFieldsResult.error;
-                    return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, _exhaustiveCheck)
+                    const _exhaustiveCheck: never = affectedUser.error;
+                    return handleHttp(res, UserError.USER_ERROR_CANNOT_UPDATE_USER, _exhaustiveCheck, 500)
             }
         }
 
@@ -101,12 +98,11 @@ export class UserController {
         try {
 
             return await deleteUser([
-                new UserIdSpecification(userId),
-                new CreatedByAdminIdSpecification(user.userId)
+                new UserIdSpecification(userId)
             ]);
 
         } catch (e) {
-            return handleHttp(res, UserError.USER_ERROR_CANNOT_DELETE_USER, e);
+            return handleHttp(res, UserError.USER_ERROR_CANNOT_DELETE_USER, e, 500);
         }
     }
 }
