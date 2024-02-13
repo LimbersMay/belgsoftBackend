@@ -1,8 +1,9 @@
 import {Column, HasOne, Model, PrimaryKey, Table, Unique} from "sequelize-typescript";
 import {UserSchema} from "./";
+import {Role} from "../interfaces/role.interface";
 
 @Table
-export class RoleSchema extends Model {
+export class RoleSchema extends Model<Role> {
 
     @PrimaryKey
     @Unique
