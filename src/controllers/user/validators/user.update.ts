@@ -48,4 +48,10 @@ export class UpdateUserDTO {
         message: 'Name is required'
     })
     password?: string;
+
+    @IsOptional()
+    @IsString({
+        message: 'UserStateId must be a string'
+    })
+    userStateId?: string;
 }
