@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsString} from "class-validator";
+import {IsNotEmpty, IsOptional, IsString, ValidateIf} from "class-validator";
 import {Type} from "class-transformer";
 import {ProductItemDTO} from "./product";
 
@@ -8,7 +8,7 @@ export class PrintOrderDTO {
         message: "productsInOrder is required"
     })
     @Type(() => ProductItemDTO)
-    productsInOrder!: ProductItemDTO[][];
+    productsInOrder!: ProductItemDTO[];
 
     @IsNotEmpty({
         message: "areaTitle is required"
@@ -25,4 +25,11 @@ export class PrintOrderDTO {
         message: "areaTitle must be a string"
     })
     tableTitle!: string;
+
+    @IsOptional()
+    @ValidateIf((o) => o.customerName !== undefined)
+    @IsString({
+        message: "customerName must be a string"
+    })
+    customerName!: string;
 }
