@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:21-alpine
 
 # Canvas dependencies
 RUN apk add --update --no-cache \
