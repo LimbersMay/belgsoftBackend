@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsString, IsUUID} from "class-validator";
+import {IsNotEmpty, IsOptional, IsString, IsUUID, ValidateIf} from "class-validator";
 import {IsAreaExists} from "./area-existance";
 import {AreaIdSpecification} from "../../../specifications";
 import {AreaError} from "../../../errors/area.error";
@@ -15,19 +15,16 @@ export class UpdateIdDTO {
 
 export class UpdateAreaDTO {
 
+    @IsOptional()
+    @ValidateIf((_v, value) => value !== undefined)
     @IsString({
         message: 'name must be a string'
     })
-    @IsNotEmpty({
-        message: 'name is required'
-    })
     name!: string;
 
+    @IsOptional()
     @IsString({
         message: 'description must be a string'
-    })
-    @IsNotEmpty({
-        message: 'description is required'
     })
     description!: string;
 }
