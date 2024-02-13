@@ -2,19 +2,26 @@ import {Response} from "express";
 import {
     Authorized,
     Body,
-    CurrentUser,
+    CurrentUser, Delete,
     Get,
-    JsonController, Params,
+    JsonController,
+    Params,
     Post,
     Put,
     Res,
     UseBefore
 } from "routing-controllers";
 import {IsAuthenticated} from "../../middlewares";
-import {createOrder, findAllOrders, updateOrder, printOrder} from "../../services";
+import {checkoutOrder, createOrder, deleteOrder, findAllOrders, printOrder, updateOrder} from "../../services";
 import {handleHttp} from "../../utils";
 import {UserResponse} from "../../mappers";
-import {BranchIdSpecification, OrderIdSpecification, UserIdSpecification, TableIdSpecification, AreaIdSpecification} from "../../specifications";
+import {
+    AreaIdSpecification,
+    BranchIdSpecification,
+    OrderIdSpecification,
+    TableIdSpecification,
+    UserIdSpecification
+} from "../../specifications";
 import {OrderErrors} from "../../errors";
 import {CreateOrderDTO} from "./validators/order.create";
 import {OrderIdDTO, UpdateOrderDTO} from "./validators/order.update";
@@ -26,7 +33,7 @@ import {TableIdDTO} from "../table/validators/table.update";
 export class OrderController {
 
     @Get('/')
-    @Authorized(['ADMIN', 'SUPER_USER'])
+    @Authorized(['ADMIN', 'SUPER_USER', 'WAITER'])
     public async getAll(
         @Res() res: Response,
         @CurrentUser() {branchId}: UserResponse
@@ -66,7 +73,7 @@ export class OrderController {
             ]);
 
             // Get all menus from the ordersId
-            return orders.map(order => order.menus);
+            return orders.map(order => order.menuItems);
         } catch (e) {
             return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_GET_ORDERS, e);
         }
@@ -101,7 +108,7 @@ export class OrderController {
     }
 
     @Put('/:id')
-    @Authorized(['ADMIN', 'SUPER_USER'])
+    @Authorized(['ADMIN', 'SUPER_USER', 'WAITER'])
     public async update(
         @Res() res: Response,
         @CurrentUser() {branchId}: UserResponse,
@@ -119,6 +126,45 @@ export class OrderController {
             }
         } catch (e) {
             return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_UPDATE_ORDER, e);
+        }
+    }
+
+    @Post('/:id/checkout')
+    @Authorized(['ADMIN', 'SUPER_USER', 'WAITER'])
+    public async checkout(
+        @Res() res: Response,
+        @CurrentUser() {branchId}: UserResponse,
+        @Params({ validate: true}) { id }: OrderIdDTO
+    ) {
+        try {
+            return await checkoutOrder([
+                new BranchIdSpecification(branchId),
+                new OrderIdSpecification(id)
+            ]);
+        } catch (e) {
+            return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_UPDATE_ORDER, e);
+        }
+    }
+
+
+    @Authorized(['ADMIN', 'SUPER_USER'])
+    @Delete('/:id')
+    public async delete(
+        @Res() res: Response,
+        @CurrentUser() {branchId}: UserResponse,
+        @Params({ validate: true}) { id }: OrderIdDTO
+    ) {
+        try {
+            const affectedCount = await deleteOrder([
+                new BranchIdSpecification(branchId),
+                new OrderIdSpecification(id)
+            ]);
+
+            return {
+                affectedCount: affectedCount
+            }
+        } catch (e) {
+            return handleHttp(res, OrderErrors.ORDER_ERROR_CANNOT_DELETE_ORDER, e);
         }
     }
 
