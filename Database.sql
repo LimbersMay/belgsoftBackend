@@ -166,7 +166,100 @@ CREATE TABLE OrderMenu
     updatedAt   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-# Stored procedures
+CREATE TABLE OrderAudit
+(
+    auditId          varchar(110) PRIMARY KEY NOT NULL,
+    orderId          varchar(110)             NOT NULL,
+    oldStatusId      varchar(110)             NOT NULL,
+    newStatusId      varchar(110)             NOT NULL,
+    modifiedByUserId varchar(110)             NOT NULL,
+    FOREIGN KEY (orderId) REFERENCES `Order` (orderId),
+    FOREIGN KEY (oldStatusId) REFERENCES OrderStatus (orderStatusId),
+    FOREIGN KEY (newStatusId) REFERENCES OrderStatus (orderStatusId),
+    FOREIGN KEY (modifiedByUserId) REFERENCES User (userId),
+    createdAt        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+DELIMITER $$
+CREATE TRIGGER `trgOrderStatusAudit`
+    AFTER UPDATE ON `Order`
+    FOR EACH ROW
+    BEGIN
+        IF NEW.orderStatusId <> OLD.orderStatusId THEN
+            INSERT INTO OrderAudit (auditId, orderId, oldStatusId, newStatusId, modifiedByUserId) VALUES (UUID(), NEW.orderId, OLD.orderStatusId, NEW.orderStatusId, NEW.userId);
+        END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE `spCreateTable`(
+    IN tableIdParam varchar(110),
+    IN branchIdParam varchar(110),
+    IN numberParam varchar(110),
+    IN customersParam int
+)
+BEGIN
+    INSERT INTO `Table` (tableId, branchId, number, customers)
+    VALUES (tableIdParam, branchIdParam, numberParam, customersParam);
+
+    SELECT tableId FROM `Table` WHERE tableId = tableIdParam;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE `spGetAllUsers`(
+    IN createdByUserIdParam varchar(110)
+)
+BEGIN
+    SELECT
+        userId, branchId, email, user.name,
+        role.name AS role,
+        userType.name AS userType,
+        userState.name AS userState
+    FROM
+        User user
+            INNER JOIN
+        Role role ON user.roleId = role.roleId
+            INNER JOIN
+        UserType userType ON user.userTypeId = userType.userTypeId
+            INNER JOIN
+        UserState userState ON user.userStateId = userState.userStateId
+    WHERE
+            user.createdByUserId = createdByUserIdParam;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE `spUpdateTable`(
+    IN tableIdParam varchar(110),
+    IN branchIdParam varchar(110),
+    IN numbers varchar(110),
+    IN customersParam int
+)
+BEGIN
+    UPDATE `Table`
+    SET number = numbers, customers = customersParam
+    WHERE tableId = tableIdParam AND branchId = branchIdParam;
+
+    SELECT tableId FROM `Table` WHERE tableId = tableIdParam;
+END$$
+
+# SP
+# After create a new order, we calculate the total price and the length of products in the order
+DELIMITER $$
+CREATE PROCEDURE `spCalculateOrderTotals`(
+    IN orderIdParam VARCHAR(110)
+)
+BEGIN
+    -- Update the order with the new values
+    UPDATE `Order`
+    SET price = (SELECT SUM(om.price * om.quantity) FROM OrderMenu om WHERE om.orderId = orderIdParam),
+    quantity = (SELECT SUM(om.quantity) FROM OrderMenu om WHERE om.orderId = orderIdParam)
+    WHERE orderId = orderIdParam;
+END$$
+DELIMITER ;
 
 
 INSERT INTO Role (roleId, name, value)
@@ -175,6 +268,8 @@ INSERT INTO Role (roleId, name, value)
 VALUES ('2', 'WAITER', 'waiter');
 INSERT INTO UserType (userTypeId, name, type)
 VALUES ('2', 'FREE', 'Free');
+INSERT INTO UserType (userTypeId, name, type)
+VALUES ('1', 'PAID', 'Paid');
 INSERT INTO UserState (userStateId, name, state)
 VALUES ('3', 'ACTIVE', 'Active');
 
