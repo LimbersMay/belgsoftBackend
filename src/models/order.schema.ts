@@ -32,7 +32,7 @@ export class OrderSchema extends Model<Order> {
     areaId!: string;
 
     @HasMany(() => MenuSchema, 'menuId')
-    menus!: MenuSchema[];
+    menuItems!: MenuSchema[];
 
     @BelongsTo(() => AreaSchema)
     area!: AreaSchema;
